@@ -68,6 +68,8 @@ export class Player {
     } else if (this.inputManager.isKeyPressed('d')) {
       this.moveRight();
     }
+
+    this.handleBorderWrap();
   }
 
   public updatePlayerAnimation(): void {
@@ -92,6 +94,25 @@ export class Player {
         this.playerSprite.textures = this.playerStandingTextures;
         this.playerSprite.play();
       }
+    }
+  }
+
+  private handleBorderWrap(): void {
+    const screenWidth = this.app.screen.width;
+    const screenHeight = this.app.screen.height;
+
+    // Check and handle border wrap-around horizontally
+    if (this.playerSprite.x < 0) {
+      this.playerSprite.x = screenWidth;
+    } else if (this.playerSprite.x > screenWidth) {
+      this.playerSprite.x = 0;
+    }
+
+    // Check and handle border wrap-around vertically
+    if (this.playerSprite.y < 0) {
+      this.playerSprite.y = screenHeight;
+    } else if (this.playerSprite.y > screenHeight) {
+      this.playerSprite.y = 0;
     }
   }
 }
