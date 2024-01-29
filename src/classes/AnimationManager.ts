@@ -13,4 +13,17 @@ export class AnimationManager {
 
     return texturePaths;
   }
+
+  public getPlayerMovingAnimation(): PIXI.Texture[] {
+    const texturePaths: PIXI.Texture[] = [];
+
+    for (let i = 20; i < 39; i++) {
+      const texturePath = PIXI.Texture.from(
+        `./public/Player/moving/moving${i}.png`
+      );
+      texturePaths.push(texturePath);
+    }
+
+    return texturePaths;
+  }
 }
