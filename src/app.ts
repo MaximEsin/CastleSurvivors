@@ -3,6 +3,7 @@ import { Background } from './classes/Background';
 import { AnimationManager } from './classes/AnimationManager';
 import { Player } from './classes/Player';
 import { InputManager } from './classes/InputManager';
+import { AudioManager } from './classes/AudioManager';
 
 // Create PIXI Application
 const app = new PIXI.Application({
@@ -20,8 +21,12 @@ const animationManager = new AnimationManager();
 
 const inputManager = new InputManager();
 
+const audioManager = new AudioManager();
+audioManager.playSound('ingameMusic');
+audioManager.setVolume('ingameMusic', 0.03);
+
 // Create a player instance
-const player = new Player(animationManager, app, inputManager);
+const player = new Player(animationManager, app, inputManager, audioManager);
 
 // Resize PIXI Application when the window is resized
 window.addEventListener('resize', () => {

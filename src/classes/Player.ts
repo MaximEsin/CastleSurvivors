@@ -1,11 +1,13 @@
 import * as PIXI from 'pixi.js';
 import { AnimationManager } from './AnimationManager';
 import { InputManager } from './InputManager';
+import { AudioManager } from './AudioManager';
 
 export class Player {
   private app: PIXI.Application;
   private animationManager: AnimationManager;
   private inputManager: InputManager;
+  private audioManager: AudioManager;
   private playerSprite: PIXI.AnimatedSprite;
   private playerStandingTextures: PIXI.Texture[];
   private playerMovingTextures: PIXI.Texture[];
@@ -13,10 +15,12 @@ export class Player {
   constructor(
     animationManager: AnimationManager,
     app: PIXI.Application,
-    inputManager: InputManager
+    inputManager: InputManager,
+    audioManager: AudioManager
   ) {
     this.animationManager = animationManager;
     this.inputManager = inputManager;
+    this.audioManager = audioManager;
     this.app = app;
     this.playerSprite = this.createPlayerSprite();
     this.playerStandingTextures =
@@ -40,20 +44,24 @@ export class Player {
 
   public moveUp(): void {
     this.playerSprite.y -= 5;
+    this.playMovingSound();
   }
 
   public moveDown(): void {
     this.playerSprite.y += 5;
+    this.playMovingSound();
   }
 
   public moveLeft(): void {
     this.playerSprite.x -= 5;
     this.playerSprite.scale.x = -1;
+    this.playMovingSound();
   }
 
   public moveRight(): void {
     this.playerSprite.x += 5;
     this.playerSprite.scale.x = 1;
+    this.playMovingSound();
   }
 
   public handlePlayerMovement(): void {
@@ -114,5 +122,10 @@ export class Player {
     } else if (this.playerSprite.y > screenHeight) {
       this.playerSprite.y = 0;
     }
+  }
+
+  playMovingSound() {
+    this.audioManager.playSound('walkingSound');
+    this.audioManager.setVolume('walkingSound', 0.5);
   }
 }
