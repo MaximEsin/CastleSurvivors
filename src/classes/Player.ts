@@ -30,7 +30,7 @@ export class Player {
     const animation = new PIXI.AnimatedSprite(playerTextures);
     animation.x = window.innerWidth / 2 - 100;
     animation.y = window.innerHeight / 2 - 100;
-    animation.animationSpeed = 0.2;
+    animation.animationSpeed = 0.1;
     animation.play();
 
     this.app.stage.addChild(animation);
@@ -48,10 +48,12 @@ export class Player {
 
   public moveLeft(): void {
     this.playerSprite.x -= 5;
+    this.playerSprite.scale.x = -1;
   }
 
   public moveRight(): void {
     this.playerSprite.x += 5;
+    this.playerSprite.scale.x = 1;
   }
 
   public handlePlayerMovement(): void {
