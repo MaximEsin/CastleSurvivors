@@ -1,27 +1,16 @@
 import * as PIXI from 'pixi.js';
 
 export class AnimationManager {
-  private app: PIXI.Application;
+  public getPlayerStandingAnimation(): PIXI.Texture[] {
+    const texturePaths: PIXI.Texture[] = [];
 
-  constructor(app: PIXI.Application) {
-    this.app = app;
-  }
+    for (let i = 0; i < 19; i++) {
+      const texturePath = PIXI.Texture.from(
+        `./public/Player/standing/standing${i}.png`
+      );
+      texturePaths.push(texturePath);
+    }
 
-  createAnimation(
-    texturePaths: string[],
-    x: number,
-    y: number
-  ): PIXI.AnimatedSprite {
-    const textures = texturePaths.map((path) => PIXI.Texture.from(path));
-    const animation = new PIXI.AnimatedSprite(textures);
-
-    animation.x = x;
-    animation.y = y;
-    animation.animationSpeed = 0.1;
-    animation.play();
-
-    this.app.stage.addChild(animation);
-
-    return animation;
+    return texturePaths;
   }
 }
