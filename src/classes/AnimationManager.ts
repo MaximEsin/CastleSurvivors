@@ -1,12 +1,16 @@
 import * as PIXI from 'pixi.js';
 
 export class AnimationManager {
-  public getPlayerStandingAnimation(): PIXI.Texture[] {
+  private createAnimation(
+    char: string,
+    action: string,
+    framesCount: number
+  ): PIXI.Texture[] {
     const texturePaths: PIXI.Texture[] = [];
 
-    for (let i = 1; i < 4; i++) {
+    for (let i = 1; i < framesCount; i++) {
       const texturePath = PIXI.Texture.from(
-        `./public/Player/standing/standing${i}.png`
+        `./public/${char}/${action}/${action}${i}.png`
       );
       texturePaths.push(texturePath);
     }
@@ -14,16 +18,11 @@ export class AnimationManager {
     return texturePaths;
   }
 
+  public getPlayerStandingAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Player', 'standing', 4);
+  }
+
   public getPlayerMovingAnimation(): PIXI.Texture[] {
-    const texturePaths: PIXI.Texture[] = [];
-
-    for (let i = 1; i < 8; i++) {
-      const texturePath = PIXI.Texture.from(
-        `./public/Player/moving/moving${i}.png`
-      );
-      texturePaths.push(texturePath);
-    }
-
-    return texturePaths;
+    return this.createAnimation('Player', 'moving', 8);
   }
 }
