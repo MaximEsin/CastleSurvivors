@@ -5,6 +5,7 @@ export class Enemy {
   protected app: PIXI.Application;
   protected animationManager: AnimationManager;
   protected enemySprite: PIXI.AnimatedSprite;
+  protected direction: PIXI.Point = new PIXI.Point(1, 0);
 
   constructor(animationManager: AnimationManager, app: PIXI.Application) {
     this.animationManager = animationManager;
@@ -43,5 +44,45 @@ export class Enemy {
     }
   }
 
-  public update(): void {}
+  protected moveRandomly(): void {
+    const speed = 2;
+
+    // Move the enemy in the current direction
+    this.enemySprite.x += this.direction.x * speed;
+    this.enemySprite.y += this.direction.y * speed;
+  }
+
+  protected updateAnimation(
+    standingFrames: PIXI.Texture[],
+    movingFrames: PIXI.Texture[]
+  ): void {
+    // Update the animation based on the movement state
+    if (
+      this.direction.x !== 0 || // Moving horizontally
+      this.direction.y !== 0 // Moving vertically
+    ) {
+      // Switch to moving animation
+      if (
+        !this.enemySprite.playing ||
+        this.enemySprite.textures !== movingFrames
+      ) {
+        this.enemySprite.textures = movingFrames;
+        this.enemySprite.play();
+      }
+    } else {
+      // Switch to standing animation
+      if (
+        !this.enemySprite.playing ||
+        this.enemySprite.textures !== standingFrames
+      ) {
+        this.enemySprite.textures = standingFrames;
+        this.enemySprite.play();
+      }
+    }
+
+    // Play the animation
+    if (!this.enemySprite.playing) {
+      this.enemySprite.play();
+    }
+  }
 }

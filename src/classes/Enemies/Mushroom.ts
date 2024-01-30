@@ -4,8 +4,13 @@ import { AnimationManager } from '../AnimationManager';
 import { Enemy } from './Enemy';
 
 export class Mushroom extends Enemy {
+  private standingAnimation: PIXI.Texture[];
+  private movingAnimation: PIXI.Texture[];
   constructor(animationManager: AnimationManager, app: PIXI.Application) {
     super(animationManager, app);
+    this.standingAnimation =
+      this.animationManager.getMushroomStandingAnimation();
+    this.movingAnimation = this.animationManager.getMushroomMovingAnimation();
   }
 
   protected createEnemySprite(): PIXI.AnimatedSprite {
@@ -25,5 +30,8 @@ export class Mushroom extends Enemy {
     return animation;
   }
 
-  public update(): void {}
+  public update(): void {
+    this.moveRandomly();
+    this.updateAnimation(this.standingAnimation, this.movingAnimation);
+  }
 }
