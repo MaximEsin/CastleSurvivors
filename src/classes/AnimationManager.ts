@@ -25,4 +25,12 @@ export class AnimationManager {
   public getPlayerMovingAnimation(): PIXI.Texture[] {
     return this.createAnimation('Player', 'moving', 8);
   }
+
+  public getMushroomStandingAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Enemies/Mushroom', 'standing', 4);
+  }
+
+  public getMushroomMovingAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Enemies/Mushroom', 'moving', 8);
+  }
 }

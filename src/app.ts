@@ -4,6 +4,7 @@ import { AnimationManager } from './classes/AnimationManager';
 import { Player } from './classes/Player';
 import { InputManager } from './classes/InputManager';
 import { AudioManager } from './classes/AudioManager';
+import { Mushroom } from './classes/Enemies/Mushroom';
 
 // Create PIXI Application
 const app = new PIXI.Application({
@@ -28,6 +29,8 @@ const audioManager = new AudioManager();
 // Create a player instance
 const player = new Player(animationManager, app, inputManager, audioManager);
 
+const mushroom = new Mushroom(animationManager, app);
+
 // Resize PIXI Application when the window is resized
 window.addEventListener('resize', () => {
   app.renderer.resize(window.innerWidth, window.innerHeight);
@@ -37,4 +40,6 @@ window.addEventListener('resize', () => {
 app.ticker.add(() => {
   player.handlePlayerMovement();
   player.updatePlayerAnimation();
+
+  mushroom.update();
 });
