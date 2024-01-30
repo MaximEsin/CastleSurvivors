@@ -26,11 +26,23 @@ export class AnimationManager {
     return this.createAnimation('Player', 'moving', 8);
   }
 
+  public getPlayerDamagedAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Player', 'damaged', 4);
+  }
+
+  public getPlayerDyingAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Player', 'dying', 4);
+  }
+
   public getMushroomStandingAnimation(): PIXI.Texture[] {
     return this.createAnimation('Enemies/Mushroom', 'standing', 4);
   }
 
   public getMushroomMovingAnimation(): PIXI.Texture[] {
     return this.createAnimation('Enemies/Mushroom', 'moving', 8);
+  }
+
+  public getMushroomAttackingAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Enemies/Mushroom', 'attacking', 8);
   }
 }
