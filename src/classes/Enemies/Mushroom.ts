@@ -1,4 +1,3 @@
-// Mushroom.ts
 import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../AnimationManager';
 import { Enemy } from './Enemy';

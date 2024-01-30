@@ -5,7 +5,7 @@ export class Enemy {
   protected app: PIXI.Application;
   protected animationManager: AnimationManager;
   protected enemySprite: PIXI.AnimatedSprite;
-  protected direction: PIXI.Point = new PIXI.Point(1, 0);
+  protected direction: PIXI.Point = new PIXI.Point(1, 1);
 
   constructor(animationManager: AnimationManager, app: PIXI.Application) {
     this.animationManager = animationManager;
@@ -56,7 +56,7 @@ export class Enemy {
 
   protected handleBorderWrap(): void {
     const screenWidth = this.app.screen.width;
-    const screenHeight = this.app.screen.height;
+    const screenHeight = this.app.screen.height * 0.8;
 
     // Check and handle border wrap-around horizontally
     if (this.enemySprite.x < 0) {

@@ -11,6 +11,7 @@ export class Player {
   private playerSprite: PIXI.AnimatedSprite;
   private playerStandingTextures: PIXI.Texture[];
   private playerMovingTextures: PIXI.Texture[];
+  private health: number;
 
   constructor(
     animationManager: AnimationManager,
@@ -22,6 +23,7 @@ export class Player {
     this.inputManager = inputManager;
     this.audioManager = audioManager;
     this.app = app;
+    this.health = 100;
     this.playerSprite = this.createPlayerSprite();
     this.playerStandingTextures =
       this.animationManager.getPlayerStandingAnimation();
@@ -107,7 +109,7 @@ export class Player {
 
   private handleBorderWrap(): void {
     const screenWidth = this.app.screen.width;
-    const screenHeight = this.app.screen.height;
+    const screenHeight = this.app.screen.height * 0.8;
 
     // Check and handle border wrap-around horizontally
     if (this.playerSprite.x < 0) {
@@ -127,5 +129,9 @@ export class Player {
   playMovingSound() {
     this.audioManager.playSound('walkingSound');
     this.audioManager.setVolume('walkingSound', 0.5);
+  }
+
+  getPlayerHealth() {
+    return this.health;
   }
 }
