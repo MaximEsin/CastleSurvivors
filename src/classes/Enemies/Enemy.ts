@@ -50,6 +50,39 @@ export class Enemy {
     // Move the enemy in the current direction
     this.enemySprite.x += this.direction.x * speed;
     this.enemySprite.y += this.direction.y * speed;
+
+    this.handleBorderWrap();
+  }
+
+  protected handleBorderWrap(): void {
+    const screenWidth = this.app.screen.width;
+    const screenHeight = this.app.screen.height;
+
+    // Check and handle border wrap-around horizontally
+    if (this.enemySprite.x < 0) {
+      // Invert the x direction
+      this.direction.x *= -1;
+      // Place the enemy inside the screen borders
+      this.enemySprite.x = 0;
+    } else if (this.enemySprite.x > screenWidth) {
+      // Invert the x direction
+      this.direction.x *= -1;
+      // Place the enemy inside the screen borders
+      this.enemySprite.x = screenWidth;
+    }
+
+    // Check and handle border wrap-around vertically
+    if (this.enemySprite.y < 0) {
+      // Invert the y direction
+      this.direction.y *= -1;
+      // Place the enemy inside the screen borders
+      this.enemySprite.y = 0;
+    } else if (this.enemySprite.y > screenHeight) {
+      // Invert the y direction
+      this.direction.y *= -1;
+      // Place the enemy inside the screen borders
+      this.enemySprite.y = screenHeight;
+    }
   }
 
   protected updateAnimation(
@@ -80,9 +113,7 @@ export class Enemy {
       }
     }
 
-    // Play the animation
-    if (!this.enemySprite.playing) {
-      this.enemySprite.play();
-    }
+    // Mirror the sprite based on movement direction
+    this.enemySprite.scale.x = this.direction.x < 0 ? -1 : 1;
   }
 }
