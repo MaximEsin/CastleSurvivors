@@ -44,6 +44,14 @@ export class PlayerInterface {
     text.x = width / 2;
     text.y = height - playerInterfaceHeight / 2 + iconSize / 2;
     this.centerContainer.addChild(text);
+
+    const knifeIconSize = playerInterfaceHeight * 2;
+    const knifeIcon = PIXI.Sprite.from('./public/Player/weapons/knife.png');
+    knifeIcon.anchor.set(0.5);
+    knifeIcon.width = knifeIcon.height = knifeIconSize;
+    knifeIcon.x = width * 0.05;
+    knifeIcon.y = height - playerInterfaceHeight / 2;
+    this.centerContainer.addChild(knifeIcon);
   }
 
   public updateHealthText(health: number): void {
