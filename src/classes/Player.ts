@@ -13,8 +13,10 @@ export class Player {
   private playerSprite: PIXI.AnimatedSprite;
   private playerStandingTextures: PIXI.Texture[];
   private playerMovingTextures: PIXI.Texture[];
-  private health: number;
+  private playerDamagedTextures: PIXI.Texture[];
   private playerInterface: PlayerInterface;
+  private health: number;
+  private isDamaged: boolean = false;
 
   constructor(
     animationManager: AnimationManager,
@@ -34,6 +36,8 @@ export class Player {
       this.animationManager.getPlayerStandingAnimation();
     this.playerMovingTextures =
       this.animationManager.getPlayerMovingAnimation();
+    this.playerDamagedTextures =
+      this.animationManager.getPlayerDamagedAnimation();
   }
 
   private createPlayerSprite(): PIXI.AnimatedSprite {
@@ -88,26 +92,43 @@ export class Player {
   }
 
   public updatePlayerAnimation(): void {
-    if (
-      this.inputManager.isKeyPressed('w') ||
-      this.inputManager.isKeyPressed('a') ||
-      this.inputManager.isKeyPressed('s') ||
-      this.inputManager.isKeyPressed('d')
-    ) {
+    if (this.isDamaged) {
+      // Play damaged animation once
       if (
         !this.playerSprite.playing ||
-        this.playerSprite.textures !== this.playerMovingTextures
+        this.playerSprite.textures !== this.playerDamagedTextures
       ) {
-        this.playerSprite.textures = this.playerMovingTextures;
+        this.playerSprite.textures = this.playerDamagedTextures;
+        this.playerSprite.loop = false;
+        this.playerSprite.onComplete = () => {
+          this.isDamaged = false;
+          this.playerSprite.textures = this.playerStandingTextures;
+          this.playerSprite.loop = true;
+        };
         this.playerSprite.play();
       }
     } else {
       if (
-        !this.playerSprite.playing ||
-        this.playerSprite.textures !== this.playerStandingTextures
+        this.inputManager.isKeyPressed('w') ||
+        this.inputManager.isKeyPressed('a') ||
+        this.inputManager.isKeyPressed('s') ||
+        this.inputManager.isKeyPressed('d')
       ) {
-        this.playerSprite.textures = this.playerStandingTextures;
-        this.playerSprite.play();
+        if (
+          !this.playerSprite.playing ||
+          this.playerSprite.textures !== this.playerMovingTextures
+        ) {
+          this.playerSprite.textures = this.playerMovingTextures;
+          this.playerSprite.play();
+        }
+      } else {
+        if (
+          !this.playerSprite.playing ||
+          this.playerSprite.textures !== this.playerStandingTextures
+        ) {
+          this.playerSprite.textures = this.playerStandingTextures;
+          this.playerSprite.play();
+        }
       }
     }
   }
@@ -151,6 +172,7 @@ export class Player {
 
   private receiveDamage(damage: number): void {
     this.health -= damage;
+    this.isDamaged = true;
 
     this.playerInterface.updateHealthText(this.health);
   }

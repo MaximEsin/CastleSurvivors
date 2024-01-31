@@ -41,8 +41,4 @@ export class AnimationManager {
   public getMushroomMovingAnimation(): PIXI.Texture[] {
     return this.createAnimation('Enemies/Mushroom', 'moving', 8);
   }
-
-  public getMushroomAttackingAnimation(): PIXI.Texture[] {
-    return this.createAnimation('Enemies/Mushroom', 'attacking', 8);
-  }
 }
