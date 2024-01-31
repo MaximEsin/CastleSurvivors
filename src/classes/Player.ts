@@ -5,6 +5,7 @@ import { AudioManager } from './AudioManager';
 import { Projectile } from './Projectile';
 import { PlayerInterface } from './UI/PlayerInterface';
 import { DeathScreen } from './UI/DeathScreen';
+import { Knife } from './Weapons/Knife';
 
 export class Player {
   private app: PIXI.Application;
@@ -20,6 +21,9 @@ export class Player {
   private health: number;
   private isDamaged: boolean = false;
   private stopGameCallback: () => void;
+  private knives: Knife[] = [];
+  private lastKnifeThrowTime: number = 0;
+  private knifeCooldown: number = 2000;
 
   constructor(
     animationManager: AnimationManager,
@@ -34,7 +38,7 @@ export class Player {
     this.inputManager = inputManager;
     this.audioManager = audioManager;
     this.app = app;
-    this.health = 10;
+    this.health = 100;
     this.playerInterface = playerInterface;
     this.stopGameCallback = stopGameCallback;
     this.playerSprite = this.createPlayerSprite();
@@ -82,7 +86,7 @@ export class Player {
     this.playMovingSound();
   }
 
-  public handlePlayerMovement(): void {
+  public handlePlayerInput(): void {
     if (this.inputManager.isKeyPressed('w')) {
       this.moveUp();
     } else if (this.inputManager.isKeyPressed('s')) {
@@ -93,6 +97,10 @@ export class Player {
       this.moveLeft();
     } else if (this.inputManager.isKeyPressed('d')) {
       this.moveRight();
+    }
+
+    if (this.inputManager.isKeyPressed('c')) {
+      this.throwKnife();
     }
 
     this.handleBorderWrap();
@@ -238,5 +246,38 @@ export class Player {
     this.playerInterface.updateHealthText(this.health);
 
     this.inputManager.enableInput();
+  }
+
+  private throwKnife(): void {
+    const currentTime = Date.now();
+
+    if (currentTime - this.lastKnifeThrowTime >= this.knifeCooldown) {
+      const direction = new PIXI.Point(
+        this.playerSprite.scale.x > 0 ? 1 : -1,
+        0
+      );
+
+      const length = Math.sqrt(direction.x ** 2 + direction.y ** 2);
+      direction.x /= length;
+      direction.y /= length;
+
+      const knife = new Knife(
+        this.app,
+        this.playerSprite.x,
+        this.playerSprite.y,
+        direction,
+        5
+      );
+
+      this.knives.push(knife);
+
+      this.app.stage.addChildAt(knife.getSprite(), 1);
+
+      this.lastKnifeThrowTime = currentTime;
+    }
+  }
+
+  public getKnives(): Knife[] {
+    return this.knives;
   }
 }

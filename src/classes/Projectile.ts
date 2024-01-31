@@ -1,11 +1,11 @@
 import * as PIXI from 'pixi.js';
 
 export class Projectile {
-  private app: PIXI.Application;
-  private projectileSprite: PIXI.Sprite;
-  private speed: number;
-  private direction: PIXI.Point;
-  private _isDestroyed: boolean = false;
+  protected app: PIXI.Application;
+  protected projectileSprite: PIXI.Sprite;
+  protected speed: number;
+  protected direction: PIXI.Point;
+  protected _isDestroyed: boolean = false;
   public damage: number;
 
   constructor(

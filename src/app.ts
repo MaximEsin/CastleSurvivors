@@ -63,8 +63,15 @@ export class Game {
 
   private gameLoop(): void {
     if (this.gameActive) {
-      this.player.handlePlayerMovement();
+      this.player.handlePlayerInput();
       this.player.updatePlayerAnimation();
+
+      const playerKnives = this.player.getKnives();
+
+      playerKnives.forEach((knife) => {
+        knife.update();
+        knife.mirrorImage();
+      });
 
       this.mushroom.update();
       this.player.checkProjectileCollision(this.mushroom.getProjectiles());
