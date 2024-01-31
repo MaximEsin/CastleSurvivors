@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { Enemy } from './Enemies/Enemy';
 
 export class Projectile {
   protected app: PIXI.Application;
@@ -7,6 +8,7 @@ export class Projectile {
   protected direction: PIXI.Point;
   protected _isDestroyed: boolean = false;
   public damage: number;
+  private collisionCooldown: boolean = false;
 
   constructor(
     app: PIXI.Application,
@@ -52,5 +54,31 @@ export class Projectile {
 
   get isDestroyed(): boolean {
     return this._isDestroyed;
+  }
+
+  public checkEnemyCollision(enemies: Enemy[]): void {
+    if (this.collisionCooldown) {
+      return;
+    }
+
+    for (const enemy of enemies) {
+      if (
+        this.projectileSprite
+          .getBounds()
+          .intersects(enemy.getSprite().getBounds())
+      ) {
+        enemy.receiveDamage(this.damage);
+        this.destroy();
+        this.setCollisionCooldown();
+        break;
+      }
+    }
+  }
+
+  private setCollisionCooldown(): void {
+    this.collisionCooldown = true;
+    setTimeout(() => {
+      this.collisionCooldown = false;
+    }, 1000);
   }
 }

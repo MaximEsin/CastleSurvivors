@@ -6,12 +6,14 @@ import { Projectile } from '../Projectile';
 export class Mushroom extends Enemy {
   private standingAnimation: PIXI.Texture[];
   private movingAnimation: PIXI.Texture[];
+  private damagedAnimation: PIXI.Texture[];
 
   constructor(animationManager: AnimationManager, app: PIXI.Application) {
-    super(animationManager, app);
+    super(animationManager, app, 10);
     this.standingAnimation =
       this.animationManager.getMushroomStandingAnimation();
     this.movingAnimation = this.animationManager.getMushroomMovingAnimation();
+    this.damagedAnimation = this.animationManager.getMushroomDamagedAnimation();
   }
 
   protected createEnemySprite(): PIXI.AnimatedSprite {
@@ -39,7 +41,7 @@ export class Mushroom extends Enemy {
     super.switchToStandingAnimation(this.standingAnimation);
   }
 
-  resetMushroom(): void {
+  public resetMushroom(): void {
     this.setRandomPosition(this.enemySprite);
     this.projectiles.forEach((projectile) => projectile.destroy());
     this.projectiles = [];
@@ -48,6 +50,10 @@ export class Mushroom extends Enemy {
   public update(): void {
     super.update();
     super.attack('./public/Enemies/Mushroom/projectile/projectile.png', 10);
-    this.updateAnimation(this.standingAnimation, this.movingAnimation);
+    this.updateAnimation(
+      this.standingAnimation,
+      this.movingAnimation,
+      this.damagedAnimation
+    );
   }
 }

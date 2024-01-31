@@ -10,10 +10,17 @@ export class Enemy {
   protected throwTimer: number = 0;
   protected throwInterval: number = Math.floor(Math.random() * 4000) + 5000;
   protected projectiles: Projectile[] = [];
+  protected health: number;
+  private isHit: boolean = false;
 
-  constructor(animationManager: AnimationManager, app: PIXI.Application) {
+  constructor(
+    animationManager: AnimationManager,
+    app: PIXI.Application,
+    health: number
+  ) {
     this.animationManager = animationManager;
     this.app = app;
+    this.health = health;
     this.enemySprite = this.createEnemySprite();
   }
 
@@ -91,29 +98,46 @@ export class Enemy {
 
   protected updateAnimation(
     standingFrames: PIXI.Texture[],
-    movingFrames: PIXI.Texture[]
+    movingFrames: PIXI.Texture[],
+    damagedFrames: PIXI.Texture[]
   ): void {
-    // Update the animation based on the movement state
-    if (
-      this.direction.x !== 0 || // Moving horizontally
-      this.direction.y !== 0 // Moving vertically
-    ) {
-      // Switch to moving animation
+    if (this.isHit) {
+      // Play damaged animation once
       if (
         !this.enemySprite.playing ||
-        this.enemySprite.textures !== movingFrames
+        this.enemySprite.textures !== damagedFrames
       ) {
-        this.enemySprite.textures = movingFrames;
+        this.enemySprite.textures = damagedFrames;
+        this.enemySprite.loop = false;
+        this.enemySprite.onComplete = () => {
+          this.isHit = false;
+          this.enemySprite.textures = movingFrames;
+          this.enemySprite.loop = true;
+        };
         this.enemySprite.play();
       }
     } else {
-      // Switch to standing animation
       if (
-        !this.enemySprite.playing ||
-        this.enemySprite.textures !== standingFrames
+        this.direction.x !== 0 || // Moving horizontally
+        this.direction.y !== 0 // Moving vertically
       ) {
-        this.enemySprite.textures = standingFrames;
-        this.enemySprite.play();
+        // Switch to moving animation
+        if (
+          !this.enemySprite.playing ||
+          this.enemySprite.textures !== movingFrames
+        ) {
+          this.enemySprite.textures = movingFrames;
+          this.enemySprite.play();
+        }
+      } else {
+        // Switch to standing animation
+        if (
+          !this.enemySprite.playing ||
+          this.enemySprite.textures !== standingFrames
+        ) {
+          this.enemySprite.textures = standingFrames;
+          this.enemySprite.play();
+        }
       }
     }
 
@@ -122,7 +146,11 @@ export class Enemy {
   }
 
   public switchToStandingAnimation(standingAnimation: PIXI.Texture[]): void {
-    this.updateAnimation(standingAnimation, standingAnimation);
+    this.updateAnimation(
+      standingAnimation,
+      standingAnimation,
+      standingAnimation
+    );
   }
 
   protected attack(projectileSprite: string, damage: number) {
@@ -149,9 +177,20 @@ export class Enemy {
     this.projectiles.push(projectile);
   }
 
+  public receiveDamage(damage: number): void {
+    if (!this.isHit) {
+      this.health -= damage;
+      this.isHit = true;
+    }
+  }
+
+  public getSprite() {
+    return this.enemySprite;
+  }
+
   public update() {
     this.moveRandomly();
-
+    console.log(this.health);
     for (const projectile of this.projectiles) {
       projectile.update();
     }

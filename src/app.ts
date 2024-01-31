@@ -71,6 +71,7 @@ export class Game {
       playerKnives.forEach((knife) => {
         knife.update();
         knife.mirrorImage();
+        knife.checkEnemyCollision([this.mushroom]);
       });
 
       this.mushroom.update();
