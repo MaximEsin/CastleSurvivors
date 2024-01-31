@@ -5,7 +5,7 @@ import { Player } from './classes/Player';
 import { InputManager } from './classes/InputManager';
 import { AudioManager } from './classes/AudioManager';
 import { Mushroom } from './classes/Enemies/Mushroom';
-import { PlayerInterface } from './classes/PlayerInterface';
+import { PlayerInterface } from './classes/UI/PlayerInterface';
 
 // Create PIXI Application
 const app = new PIXI.Application({
@@ -14,6 +14,8 @@ const app = new PIXI.Application({
 });
 
 document.body.appendChild(app.view as unknown as Node);
+
+let gameActive: boolean = true;
 
 const background = new Background('./public/Backgrounds/CastleBG.jpg', app);
 const animationManager = new AnimationManager();
@@ -31,6 +33,12 @@ const player = new Player(
 );
 const mushroom = new Mushroom(animationManager, app);
 
+export function stopGame(): void {
+  gameActive = false;
+
+  mushroom.switchToStandingAnimation();
+}
+
 // Resize PIXI Application when the window is resized
 window.addEventListener('resize', () => {
   app.renderer.resize(window.innerWidth, window.innerHeight);
@@ -39,9 +47,11 @@ window.addEventListener('resize', () => {
 
 // Main game loop
 app.ticker.add(() => {
-  player.handlePlayerMovement();
-  player.updatePlayerAnimation();
+  if (gameActive) {
+    player.handlePlayerMovement();
+    player.updatePlayerAnimation();
 
-  mushroom.update();
-  player.checkProjectileCollision(mushroom.getProjectiles());
+    mushroom.update();
+    player.checkProjectileCollision(mushroom.getProjectiles());
+  }
 });

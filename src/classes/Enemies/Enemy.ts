@@ -121,6 +121,10 @@ export class Enemy {
     this.enemySprite.scale.x = this.direction.x < 0 ? -1 : 1;
   }
 
+  public switchToStandingAnimation(standingAnimation: PIXI.Texture[]): void {
+    this.updateAnimation(standingAnimation, standingAnimation);
+  }
+
   protected attack(projectileSprite: string, damage: number) {
     this.throwTimer += this.app.ticker.elapsedMS;
 

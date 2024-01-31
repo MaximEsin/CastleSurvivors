@@ -3,7 +3,9 @@ import { AnimationManager } from './AnimationManager';
 import { InputManager } from './InputManager';
 import { AudioManager } from './AudioManager';
 import { Projectile } from './Projectile';
-import { PlayerInterface } from './PlayerInterface';
+import { PlayerInterface } from './UI/PlayerInterface';
+import { DeathScreen } from './UI/DeathScreen';
+import { stopGame } from '../app';
 
 export class Player {
   private app: PIXI.Application;
@@ -15,6 +17,7 @@ export class Player {
   private playerMovingTextures: PIXI.Texture[];
   private playerDamagedTextures: PIXI.Texture[];
   private playerInterface: PlayerInterface;
+  private deathScreen: DeathScreen;
   private health: number;
   private isDamaged: boolean = false;
 
@@ -38,6 +41,7 @@ export class Player {
       this.animationManager.getPlayerMovingAnimation();
     this.playerDamagedTextures =
       this.animationManager.getPlayerDamagedAnimation();
+    this.deathScreen = new DeathScreen(app);
   }
 
   private createPlayerSprite(): PIXI.AnimatedSprite {
@@ -175,5 +179,36 @@ export class Player {
     this.isDamaged = true;
 
     this.playerInterface.updateHealthText(this.health);
+
+    if (this.health <= 0) {
+      this.handlePlayerDefeat();
+    }
+  }
+
+  private handlePlayerDefeat(): void {
+    this.playDeathAnimation();
+
+    // Make the player unable to move
+    this.inputManager.disableInput();
+
+    stopGame();
+
+    setTimeout(() => {
+      this.deathScreen.showDeathScreen();
+    }, 900);
+  }
+
+  private playDeathAnimation(): void {
+    const deathTextures = this.animationManager.getPlayerDyingAnimation();
+    const deathAnimation = new PIXI.AnimatedSprite(deathTextures);
+    this.app.stage.removeChild(this.playerSprite);
+    deathAnimation.x = this.playerSprite.x;
+    deathAnimation.y = this.playerSprite.y;
+    deathAnimation.anchor.set(0.5);
+    deathAnimation.animationSpeed = 0.1;
+    deathAnimation.loop = false;
+    deathAnimation.play();
+
+    this.app.stage.addChild(deathAnimation);
   }
 }

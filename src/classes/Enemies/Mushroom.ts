@@ -35,6 +35,10 @@ export class Mushroom extends Enemy {
     return this.projectiles;
   }
 
+  public switchToStandingAnimation(): void {
+    super.switchToStandingAnimation(this.standingAnimation);
+  }
+
   public update(): void {
     super.update();
     super.attack('./public/Enemies/Mushroom/projectile/projectile.png', 10);
