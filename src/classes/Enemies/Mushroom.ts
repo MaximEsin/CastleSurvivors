@@ -39,6 +39,12 @@ export class Mushroom extends Enemy {
     super.switchToStandingAnimation(this.standingAnimation);
   }
 
+  resetMushroom(): void {
+    this.setRandomPosition(this.enemySprite);
+    this.projectiles.forEach((projectile) => projectile.destroy());
+    this.projectiles = [];
+  }
+
   public update(): void {
     super.update();
     super.attack('./public/Enemies/Mushroom/projectile/projectile.png', 10);

@@ -46,7 +46,7 @@ export class Projectile {
     this._isDestroyed = true;
   }
 
-  getSprite() {
+  public getSprite() {
     return this.projectileSprite;
   }
 

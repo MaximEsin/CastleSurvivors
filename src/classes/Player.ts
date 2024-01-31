@@ -5,7 +5,6 @@ import { AudioManager } from './AudioManager';
 import { Projectile } from './Projectile';
 import { PlayerInterface } from './UI/PlayerInterface';
 import { DeathScreen } from './UI/DeathScreen';
-import { stopGame } from '../app';
 
 export class Player {
   private app: PIXI.Application;
@@ -20,20 +19,24 @@ export class Player {
   private deathScreen: DeathScreen;
   private health: number;
   private isDamaged: boolean = false;
+  private stopGameCallback: () => void;
 
   constructor(
     animationManager: AnimationManager,
     app: PIXI.Application,
     inputManager: InputManager,
     audioManager: AudioManager,
-    playerInterface: PlayerInterface
+    playerInterface: PlayerInterface,
+    deathScreen: DeathScreen,
+    stopGameCallback: () => void
   ) {
     this.animationManager = animationManager;
     this.inputManager = inputManager;
     this.audioManager = audioManager;
     this.app = app;
-    this.health = 100;
+    this.health = 10;
     this.playerInterface = playerInterface;
+    this.stopGameCallback = stopGameCallback;
     this.playerSprite = this.createPlayerSprite();
     this.playerStandingTextures =
       this.animationManager.getPlayerStandingAnimation();
@@ -41,7 +44,7 @@ export class Player {
       this.animationManager.getPlayerMovingAnimation();
     this.playerDamagedTextures =
       this.animationManager.getPlayerDamagedAnimation();
-    this.deathScreen = new DeathScreen(app);
+    this.deathScreen = deathScreen;
   }
 
   private createPlayerSprite(): PIXI.AnimatedSprite {
@@ -156,12 +159,20 @@ export class Player {
     }
   }
 
-  playMovingSound() {
+  private playMovingSound() {
     this.audioManager.playSound('walkingSound');
     this.audioManager.setVolume('walkingSound', 0.5);
   }
 
-  checkProjectileCollision(projectiles: Projectile[]): void {
+  private playHitSound(): void {
+    this.audioManager.playSound('playerHit');
+  }
+
+  private playDeathSound(): void {
+    this.audioManager.playSound('playerDead');
+  }
+
+  public checkProjectileCollision(projectiles: Projectile[]): void {
     for (const projectile of projectiles) {
       if (
         this.playerSprite
@@ -178,6 +189,8 @@ export class Player {
     this.health -= damage;
     this.isDamaged = true;
 
+    this.playHitSound();
+
     this.playerInterface.updateHealthText(this.health);
 
     if (this.health <= 0) {
@@ -188,10 +201,9 @@ export class Player {
   private handlePlayerDefeat(): void {
     this.playDeathAnimation();
 
-    // Make the player unable to move
     this.inputManager.disableInput();
-
-    stopGame();
+    this.playDeathSound();
+    this.stopGameCallback();
 
     setTimeout(() => {
       this.deathScreen.showDeathScreen();
@@ -210,5 +222,21 @@ export class Player {
     deathAnimation.play();
 
     this.app.stage.addChild(deathAnimation);
+  }
+
+  public resetPlayer(): void {
+    this.app.stage.removeChild(this.playerSprite);
+
+    this.playerSprite = this.createPlayerSprite();
+    this.playerSprite.animationSpeed = 0.1;
+    this.playerSprite.play();
+
+    this.playerSprite.x = window.innerWidth / 2 - 100;
+    this.playerSprite.y = window.innerHeight / 2 - 100;
+    this.health = 10;
+    this.isDamaged = false;
+    this.playerInterface.updateHealthText(this.health);
+
+    this.inputManager.enableInput();
   }
 }

@@ -6,52 +6,86 @@ import { InputManager } from './classes/InputManager';
 import { AudioManager } from './classes/AudioManager';
 import { Mushroom } from './classes/Enemies/Mushroom';
 import { PlayerInterface } from './classes/UI/PlayerInterface';
+import { DeathScreen } from './classes/UI/DeathScreen';
 
-// Create PIXI Application
-const app = new PIXI.Application({
-  width: window.innerWidth,
-  height: window.innerHeight,
-});
+export class Game {
+  private app: PIXI.Application;
+  private background: Background;
+  private animationManager: AnimationManager;
+  private inputManager: InputManager;
+  private audioManager: AudioManager;
+  private playerInterface: PlayerInterface;
+  private player: Player;
+  private mushroom: Mushroom;
+  private deathScreen: DeathScreen;
+  private gameActive: boolean = true;
 
-document.body.appendChild(app.view as unknown as Node);
+  constructor() {
+    this.app = new PIXI.Application({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
 
-let gameActive: boolean = true;
+    document.body.appendChild(this.app.view as unknown as Node);
 
-const background = new Background('./public/Backgrounds/CastleBG.jpg', app);
-const animationManager = new AnimationManager();
-const inputManager = new InputManager();
-const audioManager = new AudioManager();
-const playerInterface = new PlayerInterface(app);
-// audioManager.playSound('ingameMusic');
-// audioManager.setVolume('ingameMusic', 0.03);
-const player = new Player(
-  animationManager,
-  app,
-  inputManager,
-  audioManager,
-  playerInterface
-);
-const mushroom = new Mushroom(animationManager, app);
+    this.background = new Background(
+      './public/Backgrounds/CastleBG.jpg',
+      this.app
+    );
+    this.animationManager = new AnimationManager();
+    this.inputManager = new InputManager();
+    this.audioManager = new AudioManager();
+    this.playerInterface = new PlayerInterface(this.app);
+    this.deathScreen = new DeathScreen(this.app, this.resetGame.bind(this));
+    this.player = new Player(
+      this.animationManager,
+      this.app,
+      this.inputManager,
+      this.audioManager,
+      this.playerInterface,
+      this.deathScreen,
+      this.stopGame.bind(this)
+    );
+    this.mushroom = new Mushroom(this.animationManager, this.app);
 
-export function stopGame(): void {
-  gameActive = false;
+    // Resize PIXI Application when the window is resized
+    window.addEventListener('resize', () => {
+      this.app.renderer.resize(window.innerWidth, window.innerHeight);
+      this.playerInterface.resizeInterface(
+        this.app.screen.width,
+        this.app.screen.height
+      );
+    });
 
-  mushroom.switchToStandingAnimation();
+    // Main game loop
+    this.app.ticker.add(this.gameLoop.bind(this));
+  }
+
+  private gameLoop(): void {
+    if (this.gameActive) {
+      this.player.handlePlayerMovement();
+      this.player.updatePlayerAnimation();
+
+      this.mushroom.update();
+      this.player.checkProjectileCollision(this.mushroom.getProjectiles());
+    }
+  }
+
+  stopGame(): void {
+    this.gameActive = false;
+    this.mushroom.switchToStandingAnimation();
+  }
+
+  resetGame(): void {
+    this.app.ticker.stop();
+
+    this.gameActive = true;
+
+    this.player.resetPlayer();
+    this.mushroom.resetMushroom();
+
+    this.app.ticker.start();
+  }
 }
 
-// Resize PIXI Application when the window is resized
-window.addEventListener('resize', () => {
-  app.renderer.resize(window.innerWidth, window.innerHeight);
-  playerInterface.resizeInterface(app.screen.width, app.screen.height);
-});
-
-// Main game loop
-app.ticker.add(() => {
-  if (gameActive) {
-    player.handlePlayerMovement();
-    player.updatePlayerAnimation();
-
-    mushroom.update();
-    player.checkProjectileCollision(mushroom.getProjectiles());
-  }
-});
+const game = new Game();
