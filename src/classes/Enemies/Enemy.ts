@@ -121,24 +121,25 @@ export class Enemy {
     this.enemySprite.scale.x = this.direction.x < 0 ? -1 : 1;
   }
 
-  protected countTimeToAttack(projectileSprite: string) {
+  protected attack(projectileSprite: string, damage: number) {
     this.throwTimer += this.app.ticker.elapsedMS;
 
     if (this.throwTimer >= this.throwInterval) {
-      this.throwProjectile(projectileSprite);
+      this.throwProjectile(projectileSprite, damage);
       this.throwTimer = 0;
       this.throwInterval = Math.floor(Math.random() * 4000) + 5000;
     }
   }
 
-  protected throwProjectile(projectileSprite: string): void {
+  protected throwProjectile(projectileSprite: string, damage: number): void {
     const projectile = new Projectile(
       this.app,
       this.enemySprite.x,
       this.enemySprite.y,
       5,
       projectileSprite,
-      new PIXI.Point(this.direction.x, this.direction.y)
+      new PIXI.Point(this.direction.x, this.direction.y),
+      damage
     );
 
     this.projectiles.push(projectile);

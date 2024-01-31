@@ -6,6 +6,7 @@ export class Projectile {
   private speed: number;
   private direction: PIXI.Point;
   private _isDestroyed: boolean = false;
+  public damage: number;
 
   constructor(
     app: PIXI.Application,
@@ -13,7 +14,8 @@ export class Projectile {
     y: number,
     speed: number,
     projectileSprite: string,
-    direction: PIXI.Point
+    direction: PIXI.Point,
+    damage: number
   ) {
     this.app = app;
     this.projectileSprite = new PIXI.Sprite(
@@ -23,6 +25,7 @@ export class Projectile {
     this.projectileSprite.position.set(x, y);
     this.speed = speed;
     this.direction = direction;
+    this.damage = damage;
 
     app.stage.addChild(this.projectileSprite);
   }
@@ -41,6 +44,10 @@ export class Projectile {
     // Remove projectile from the stage
     this.app.stage.removeChild(this.projectileSprite);
     this._isDestroyed = true;
+  }
+
+  getSprite() {
+    return this.projectileSprite;
   }
 
   get isDestroyed(): boolean {

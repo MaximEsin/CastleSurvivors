@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js';
 import { AnimationManager } from './AnimationManager';
 import { InputManager } from './InputManager';
 import { AudioManager } from './AudioManager';
+import { Projectile } from './Projectile';
+import { PlayerInterface } from './PlayerInterface';
 
 export class Player {
   private app: PIXI.Application;
@@ -12,18 +14,21 @@ export class Player {
   private playerStandingTextures: PIXI.Texture[];
   private playerMovingTextures: PIXI.Texture[];
   private health: number;
+  private playerInterface: PlayerInterface;
 
   constructor(
     animationManager: AnimationManager,
     app: PIXI.Application,
     inputManager: InputManager,
-    audioManager: AudioManager
+    audioManager: AudioManager,
+    playerInterface: PlayerInterface
   ) {
     this.animationManager = animationManager;
     this.inputManager = inputManager;
     this.audioManager = audioManager;
     this.app = app;
     this.health = 100;
+    this.playerInterface = playerInterface;
     this.playerSprite = this.createPlayerSprite();
     this.playerStandingTextures =
       this.animationManager.getPlayerStandingAnimation();
@@ -131,7 +136,22 @@ export class Player {
     this.audioManager.setVolume('walkingSound', 0.5);
   }
 
-  getPlayerHealth() {
-    return this.health;
+  checkProjectileCollision(projectiles: Projectile[]): void {
+    for (const projectile of projectiles) {
+      if (
+        this.playerSprite
+          .getBounds()
+          .contains(projectile.getSprite().x, projectile.getSprite().y)
+      ) {
+        this.receiveDamage(projectile.damage);
+        projectile.destroy();
+      }
+    }
+  }
+
+  private receiveDamage(damage: number): void {
+    this.health -= damage;
+
+    this.playerInterface.updateHealthText(this.health);
   }
 }

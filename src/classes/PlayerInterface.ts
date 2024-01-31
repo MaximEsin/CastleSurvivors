@@ -1,17 +1,14 @@
 import * as PIXI from 'pixi.js';
-import { Player } from './Player';
 
 export class PlayerInterface {
   private centerContainer: PIXI.Container;
   private backgroundSprite: PIXI.Sprite;
-  private player: Player;
 
-  constructor(app: PIXI.Application, player: Player) {
+  constructor(app: PIXI.Application) {
     this.centerContainer = new PIXI.Container();
     this.backgroundSprite = new PIXI.Sprite(
       PIXI.Texture.from('./public/Interface/Paper.jpg')
     );
-    this.player = player;
 
     this.createInterface(app.screen.width, app.screen.height);
     app.stage.addChild(this.backgroundSprite, this.centerContainer);
@@ -42,13 +39,20 @@ export class PlayerInterface {
       align: 'center',
     });
 
-    const health = this.player.getPlayerHealth();
-
-    const text = new PIXI.Text(`Health: ${health}`, textStyle);
+    const text = new PIXI.Text(`Health: 100`, textStyle);
     text.anchor.set(0.6);
     text.x = width / 2;
     text.y = height - playerInterfaceHeight / 2 + iconSize / 2;
     this.centerContainer.addChild(text);
+  }
+
+  public updateHealthText(health: number): void {
+    const healthText = this.centerContainer.getChildAt(1) as PIXI.Text;
+    healthText.text = `Health: ${health}`;
+  }
+
+  public getHealthText(): PIXI.Text {
+    return this.centerContainer.getChildAt(1) as PIXI.Text;
   }
 
   public resizeInterface(width: number, height: number): void {

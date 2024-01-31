@@ -19,11 +19,17 @@ const background = new Background('./public/Backgrounds/CastleBG.jpg', app);
 const animationManager = new AnimationManager();
 const inputManager = new InputManager();
 const audioManager = new AudioManager();
+const playerInterface = new PlayerInterface(app);
 // audioManager.playSound('ingameMusic');
 // audioManager.setVolume('ingameMusic', 0.03);
-const player = new Player(animationManager, app, inputManager, audioManager);
+const player = new Player(
+  animationManager,
+  app,
+  inputManager,
+  audioManager,
+  playerInterface
+);
 const mushroom = new Mushroom(animationManager, app);
-const playerInterface = new PlayerInterface(app, player);
 
 // Resize PIXI Application when the window is resized
 window.addEventListener('resize', () => {
@@ -37,4 +43,5 @@ app.ticker.add(() => {
   player.updatePlayerAnimation();
 
   mushroom.update();
+  player.checkProjectileCollision(mushroom.getProjectiles());
 });

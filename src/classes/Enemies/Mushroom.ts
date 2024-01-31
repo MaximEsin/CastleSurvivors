@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../AnimationManager';
 import { Enemy } from './Enemy';
+import { Projectile } from '../Projectile';
 
 export class Mushroom extends Enemy {
   private standingAnimation: PIXI.Texture[];
@@ -30,11 +31,13 @@ export class Mushroom extends Enemy {
     return animation;
   }
 
+  public getProjectiles(): Projectile[] {
+    return this.projectiles;
+  }
+
   public update(): void {
     super.update();
-    super.countTimeToAttack(
-      './public/Enemies/Mushroom/projectile/projectile.png'
-    );
+    super.attack('./public/Enemies/Mushroom/projectile/projectile.png', 10);
     this.updateAnimation(this.standingAnimation, this.movingAnimation);
   }
 }
