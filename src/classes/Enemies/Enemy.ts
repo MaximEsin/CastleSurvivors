@@ -1,11 +1,15 @@
 import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../AnimationManager';
+import { Projectile } from '../Projectile';
 
 export class Enemy {
   protected app: PIXI.Application;
   protected animationManager: AnimationManager;
   protected enemySprite: PIXI.AnimatedSprite;
   protected direction: PIXI.Point = new PIXI.Point(1, 1);
+  protected throwTimer: number = 0;
+  protected throwInterval: number = Math.floor(Math.random() * 4000) + 5000;
+  protected projectiles: Projectile[] = [];
 
   constructor(animationManager: AnimationManager, app: PIXI.Application) {
     this.animationManager = animationManager;
@@ -115,5 +119,40 @@ export class Enemy {
 
     // Mirror the sprite based on movement direction
     this.enemySprite.scale.x = this.direction.x < 0 ? -1 : 1;
+  }
+
+  protected countTimeToAttack(projectileSprite: string) {
+    this.throwTimer += this.app.ticker.elapsedMS;
+
+    if (this.throwTimer >= this.throwInterval) {
+      this.throwProjectile(projectileSprite);
+      this.throwTimer = 0;
+      this.throwInterval = Math.floor(Math.random() * 4000) + 5000;
+    }
+  }
+
+  protected throwProjectile(projectileSprite: string): void {
+    const projectile = new Projectile(
+      this.app,
+      this.enemySprite.x,
+      this.enemySprite.y,
+      5,
+      projectileSprite,
+      new PIXI.Point(this.direction.x, this.direction.y)
+    );
+
+    this.projectiles.push(projectile);
+  }
+
+  public update() {
+    this.moveRandomly();
+
+    for (const projectile of this.projectiles) {
+      projectile.update();
+    }
+
+    this.projectiles = this.projectiles.filter(
+      (projectile) => !projectile.isDestroyed
+    );
   }
 }

@@ -5,6 +5,7 @@ import { Enemy } from './Enemy';
 export class Mushroom extends Enemy {
   private standingAnimation: PIXI.Texture[];
   private movingAnimation: PIXI.Texture[];
+
   constructor(animationManager: AnimationManager, app: PIXI.Application) {
     super(animationManager, app);
     this.standingAnimation =
@@ -30,7 +31,10 @@ export class Mushroom extends Enemy {
   }
 
   public update(): void {
-    this.moveRandomly();
+    super.update();
+    super.countTimeToAttack(
+      './public/Enemies/Mushroom/projectile/projectile.png'
+    );
     this.updateAnimation(this.standingAnimation, this.movingAnimation);
   }
 }
