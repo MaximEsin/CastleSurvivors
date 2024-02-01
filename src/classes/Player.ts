@@ -21,7 +21,7 @@ export class Player {
   private deathScreen: DeathScreen;
   private health: number;
   private isDamaged: boolean = false;
-  private stopGameCallback: () => void;
+  private stopEnemiesCallback: () => void;
   private knives: Knife[] = [];
   private lastKnifeThrowTime: number = 0;
   private knifeCooldown: number = 2000;
@@ -33,7 +33,7 @@ export class Player {
     audioManager: AudioManager,
     playerInterface: PlayerInterface,
     deathScreen: DeathScreen,
-    stopGameCallback: () => void
+    stopEnemiesCallback: () => void
   ) {
     this.animationManager = animationManager;
     this.inputManager = inputManager;
@@ -41,7 +41,7 @@ export class Player {
     this.app = app;
     this.health = 10;
     this.playerInterface = playerInterface;
-    this.stopGameCallback = stopGameCallback;
+    this.stopEnemiesCallback = stopEnemiesCallback;
     this.playerSprite = this.createPlayerSprite();
     this.playerStandingTextures =
       this.animationManager.getPlayerStandingAnimation();
@@ -212,7 +212,7 @@ export class Player {
 
     this.inputManager.disableInput();
     this.playDeathSound();
-    this.stopGameCallback();
+    this.stopEnemiesCallback();
 
     setTimeout(() => {
       this.deathScreen.showDeathScreen();

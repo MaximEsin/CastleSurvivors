@@ -44,7 +44,7 @@ export class Game {
       this.audioManager,
       this.playerInterface,
       this.deathScreen,
-      this.stopGame.bind(this)
+      this.stopEnemies.bind(this)
     );
 
     this.createMushrooms();
@@ -56,6 +56,16 @@ export class Game {
         this.app.screen.width,
         this.app.screen.height
       );
+    });
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        if (this.app.ticker.started) {
+          this.app.ticker.stop();
+        } else {
+          this.app.ticker.start();
+        }
+      }
     });
 
     // Main game loop
@@ -99,7 +109,7 @@ export class Game {
     }
   }
 
-  stopGame(): void {
+  stopEnemies(): void {
     this.gameActive = false;
     for (const mushroom of this.mushrooms) {
       mushroom.switchToStandingAnimation();
