@@ -3,6 +3,9 @@ import * as PIXI from 'pixi.js';
 export class PlayerInterface {
   private centerContainer: PIXI.Container;
   private backgroundSprite: PIXI.Sprite;
+  private coinIcon!: PIXI.Sprite;
+  private coinText!: PIXI.Text;
+  private coinCount: number = 0;
 
   constructor(app: PIXI.Application) {
     this.centerContainer = new PIXI.Container();
@@ -22,7 +25,7 @@ export class PlayerInterface {
     this.backgroundSprite.height = playerInterfaceHeight;
     this.backgroundSprite.y = height - playerInterfaceHeight;
 
-    // Center Container (for icon and text)
+    // Center Container
     const iconSize = playerInterfaceHeight * 0.8;
 
     const icon = PIXI.Sprite.from('./public/Interface/heart.png');
@@ -52,6 +55,34 @@ export class PlayerInterface {
     knifeIcon.x = width * 0.05;
     knifeIcon.y = height - playerInterfaceHeight / 2;
     this.centerContainer.addChild(knifeIcon);
+
+    // Coin icon
+    const coinIconSize = playerInterfaceHeight;
+    this.coinIcon = PIXI.Sprite.from('./public/Shop/coin.png');
+    this.coinIcon.anchor.set(0.5);
+    this.coinIcon.width = this.coinIcon.height = coinIconSize;
+    this.coinIcon.x = width * 0.88;
+    this.coinIcon.y = height - playerInterfaceHeight / 2;
+    this.centerContainer.addChild(this.coinIcon);
+
+    // Coin count text
+    const coinTextStyle = new PIXI.TextStyle({
+      fill: 'black',
+      fontFamily: 'Times New Roman',
+      fontSize: playerInterfaceHeight * 0.4,
+      align: 'center',
+    });
+
+    this.coinText = new PIXI.Text(`Coins: ${this.coinCount}`, coinTextStyle);
+    this.coinText.anchor.set(0.5);
+    this.coinText.x = width * 0.94;
+    this.coinText.y = height - playerInterfaceHeight / 2;
+    this.centerContainer.addChild(this.coinText);
+  }
+
+  public updateCoinCount(): void {
+    this.coinCount++;
+    this.coinText.text = `Coins: ${this.coinCount}`;
   }
 
   public updateHealthText(health: number): void {

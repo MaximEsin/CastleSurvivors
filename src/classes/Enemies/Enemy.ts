@@ -185,10 +185,14 @@ export class Enemy {
     }
 
     if (this.health <= 0) {
-      this.isDead = true;
-      this.app.stage.removeChild(this.enemySprite);
-      this.projectiles.forEach((projectile) => projectile.destroy());
+      this.handleDeath();
     }
+  }
+
+  protected handleDeath() {
+    this.isDead = true;
+    this.app.stage.removeChild(this.enemySprite);
+    this.projectiles.forEach((projectile) => projectile.destroy());
   }
 
   public getDeathState() {

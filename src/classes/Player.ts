@@ -6,6 +6,7 @@ import { Projectile } from './Projectile';
 import { PlayerInterface } from './UI/PlayerInterface';
 import { DeathScreen } from './UI/DeathScreen';
 import { Knife } from './Weapons/Knife';
+import { Coin } from './Coin';
 
 export class Player {
   private app: PIXI.Application;
@@ -279,5 +280,20 @@ export class Player {
 
   public getKnives(): Knife[] {
     return this.knives;
+  }
+
+  public checkCoinCollision(coins: Coin[]): void {
+    const playerBounds = this.playerSprite.getBounds();
+
+    for (const coin of coins) {
+      const coinBounds = coin.getSprite().getBounds();
+
+      if (playerBounds.intersects(coinBounds)) {
+        if (!coin.getIsCollected()) {
+          coin.collect();
+          this.playerInterface.updateCoinCount();
+        }
+      }
+    }
   }
 }
