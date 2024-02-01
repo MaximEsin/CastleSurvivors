@@ -12,7 +12,7 @@ export class Enemy {
   protected projectiles: Projectile[] = [];
   protected health: number;
   private isHit: boolean = false;
-  private isDead: boolean = false;
+  public isDead: boolean = false;
 
   constructor(
     animationManager: AnimationManager,

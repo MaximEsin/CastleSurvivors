@@ -7,6 +7,7 @@ import { AudioManager } from './classes/AudioManager';
 import { Mushroom } from './classes/Enemies/Mushroom';
 import { PlayerInterface } from './classes/UI/PlayerInterface';
 import { DeathScreen } from './classes/UI/DeathScreen';
+import { Coin } from './classes/Coin';
 
 export class Game {
   private app: PIXI.Application;
@@ -19,6 +20,7 @@ export class Game {
   private deathScreen: DeathScreen;
   private gameActive: boolean = true;
   private mushrooms: Mushroom[] = [];
+  private coins: Coin[] = [];
 
   constructor() {
     this.app = new PIXI.Application({
@@ -73,7 +75,7 @@ export class Game {
   }
 
   private createMushrooms() {
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 2; i++) {
       const mushroom = new Mushroom(this.animationManager, this.app);
       this.app.stage.addChild(mushroom.getSprite());
       this.mushrooms.push(mushroom);
@@ -92,14 +94,26 @@ export class Game {
         knife.mirrorImage();
         for (const mushroom of this.mushrooms) {
           const deathState = mushroom.getDeathState();
+          if (deathState) {
+            const coin = new Coin(
+              this.app,
+              mushroom.getSprite().x,
+              mushroom.getSprite().y
+            );
+            this.coins.push(coin);
+
+            const index = this.mushrooms.indexOf(mushroom);
+            this.mushrooms.splice(index, 1);
+          }
           if (!deathState) {
             knife.checkEnemyCollision(this.mushrooms);
           }
         }
       });
 
+      this.player.checkCoinCollision(this.coins);
+
       for (const mushroom of this.mushrooms) {
-        this.player.checkCoinCollision(mushroom.getCoins());
         if (!mushroom.getDeathState()) {
           mushroom.update();
         }

@@ -39,7 +39,7 @@ export class Player {
     this.inputManager = inputManager;
     this.audioManager = audioManager;
     this.app = app;
-    this.health = 10;
+    this.health = 100;
     this.playerInterface = playerInterface;
     this.stopEnemiesCallback = stopEnemiesCallback;
     this.playerSprite = this.createPlayerSprite();
@@ -284,7 +284,6 @@ export class Player {
 
   public checkCoinCollision(coins: Coin[]): void {
     const playerBounds = this.playerSprite.getBounds();
-
     for (const coin of coins) {
       const coinBounds = coin.getSprite().getBounds();
 

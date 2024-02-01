@@ -2,13 +2,11 @@ import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../AnimationManager';
 import { Enemy } from './Enemy';
 import { Projectile } from '../Projectile';
-import { Coin } from '../Coin';
 
 export class Mushroom extends Enemy {
   private standingAnimation: PIXI.Texture[];
   private movingAnimation: PIXI.Texture[];
   private damagedAnimation: PIXI.Texture[];
-  private coins: Coin[] = [];
 
   constructor(animationManager: AnimationManager, app: PIXI.Application) {
     super(animationManager, app, 10);
@@ -55,15 +53,6 @@ export class Mushroom extends Enemy {
 
   override handleDeath(): void {
     super.handleDeath();
-    const coin = new Coin(this.app, this.enemySprite.x, this.enemySprite.y);
-    this.coins.push(coin);
-    if (coin.getIsCollected()) {
-      this.coins.filter((c) => c !== coin);
-    }
-  }
-
-  getCoins() {
-    return this.coins;
   }
 
   public update(): void {
