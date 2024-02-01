@@ -39,7 +39,7 @@ export class Player {
     this.inputManager = inputManager;
     this.audioManager = audioManager;
     this.app = app;
-    this.health = 100;
+    this.health = 10;
     this.playerInterface = playerInterface;
     this.stopGameCallback = stopGameCallback;
     this.playerSprite = this.createPlayerSprite();

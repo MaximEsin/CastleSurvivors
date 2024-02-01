@@ -85,6 +85,11 @@ export class PlayerInterface {
     this.coinText.text = `Coins: ${this.coinCount}`;
   }
 
+  public resetCoins() {
+    this.coinCount = 0;
+    this.coinText.text = `Coins: ${this.coinCount}`;
+  }
+
   public updateHealthText(health: number): void {
     const healthText = this.centerContainer.getChildAt(1) as PIXI.Text;
     healthText.text = `Health: ${health}`;

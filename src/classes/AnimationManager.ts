@@ -19,30 +19,30 @@ export class AnimationManager {
   }
 
   public getPlayerStandingAnimation(): PIXI.Texture[] {
-    return this.createAnimation('Player', 'standing', 4);
+    return this.createAnimation('Player', 'standing', 5);
   }
 
   public getPlayerMovingAnimation(): PIXI.Texture[] {
-    return this.createAnimation('Player', 'moving', 8);
+    return this.createAnimation('Player', 'moving', 9);
   }
 
   public getPlayerDamagedAnimation(): PIXI.Texture[] {
-    return this.createAnimation('Player', 'damaged', 4);
+    return this.createAnimation('Player', 'damaged', 5);
   }
 
   public getPlayerDyingAnimation(): PIXI.Texture[] {
-    return this.createAnimation('Player', 'dying', 4);
+    return this.createAnimation('Player', 'dying', 5);
   }
 
   public getMushroomStandingAnimation(): PIXI.Texture[] {
-    return this.createAnimation('Enemies/Mushroom', 'standing', 4);
+    return this.createAnimation('Enemies/Mushroom', 'standing', 5);
   }
 
   public getMushroomMovingAnimation(): PIXI.Texture[] {
-    return this.createAnimation('Enemies/Mushroom', 'moving', 8);
+    return this.createAnimation('Enemies/Mushroom', 'moving', 9);
   }
 
   public getMushroomDamagedAnimation(): PIXI.Texture[] {
-    return this.createAnimation('Enemies/Mushroom', 'damaged', 4);
+    return this.createAnimation('Enemies/Mushroom', 'damaged', 5);
   }
 }

@@ -16,9 +16,9 @@ export class Game {
   private audioManager: AudioManager;
   private playerInterface: PlayerInterface;
   private player: Player;
-  private mushroom: Mushroom;
   private deathScreen: DeathScreen;
   private gameActive: boolean = true;
+  private mushrooms: Mushroom[] = [];
 
   constructor() {
     this.app = new PIXI.Application({
@@ -46,7 +46,8 @@ export class Game {
       this.deathScreen,
       this.stopGame.bind(this)
     );
-    this.mushroom = new Mushroom(this.animationManager, this.app);
+
+    this.createMushrooms();
 
     // Resize PIXI Application when the window is resized
     window.addEventListener('resize', () => {
@@ -61,6 +62,14 @@ export class Game {
     this.app.ticker.add(this.gameLoop.bind(this));
   }
 
+  private createMushrooms() {
+    for (let i = 0; i < 6; i++) {
+      const mushroom = new Mushroom(this.animationManager, this.app);
+      this.app.stage.addChild(mushroom.getSprite());
+      this.mushrooms.push(mushroom);
+    }
+  }
+
   private gameLoop(): void {
     if (this.gameActive) {
       this.player.handlePlayerInput();
@@ -71,24 +80,30 @@ export class Game {
       playerKnives.forEach((knife) => {
         knife.update();
         knife.mirrorImage();
-        if (!this.mushroom.getDeathState()) {
-          knife.checkEnemyCollision([this.mushroom]);
+        for (const mushroom of this.mushrooms) {
+          const deathState = mushroom.getDeathState();
+          if (!deathState) {
+            knife.checkEnemyCollision(this.mushrooms);
+          }
         }
       });
 
-      this.player.checkCoinCollision([...this.mushroom.getCoins()]);
+      for (const mushroom of this.mushrooms) {
+        this.player.checkCoinCollision(mushroom.getCoins());
+        if (!mushroom.getDeathState()) {
+          mushroom.update();
+        }
 
-      if (!this.mushroom.getDeathState()) {
-        this.mushroom.update();
+        this.player.checkProjectileCollision(mushroom.getProjectiles());
       }
-
-      this.player.checkProjectileCollision(this.mushroom.getProjectiles());
     }
   }
 
   stopGame(): void {
     this.gameActive = false;
-    this.mushroom.switchToStandingAnimation();
+    for (const mushroom of this.mushrooms) {
+      mushroom.switchToStandingAnimation();
+    }
   }
 
   resetGame(): void {
@@ -97,7 +112,11 @@ export class Game {
     this.gameActive = true;
 
     this.player.resetPlayer();
-    this.mushroom.resetMushroom();
+    for (const mushroom of this.mushrooms) {
+      mushroom.resetMushroom();
+    }
+
+    this.playerInterface.resetCoins();
 
     this.app.ticker.start();
   }
