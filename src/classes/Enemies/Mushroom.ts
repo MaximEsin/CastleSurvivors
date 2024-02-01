@@ -47,6 +47,10 @@ export class Mushroom extends Enemy {
     this.projectiles = [];
   }
 
+  override getDeathState(): boolean {
+    return super.getDeathState();
+  }
+
   public update(): void {
     super.update();
     super.attack('./public/Enemies/Mushroom/projectile/projectile.png', 10);

@@ -12,6 +12,7 @@ export class Enemy {
   protected projectiles: Projectile[] = [];
   protected health: number;
   private isHit: boolean = false;
+  private isDead: boolean = false;
 
   constructor(
     animationManager: AnimationManager,
@@ -182,6 +183,16 @@ export class Enemy {
       this.health -= damage;
       this.isHit = true;
     }
+
+    if (this.health <= 0) {
+      this.isDead = true;
+      this.app.stage.removeChild(this.enemySprite);
+      this.projectiles.forEach((projectile) => projectile.destroy());
+    }
+  }
+
+  public getDeathState() {
+    return this.isDead;
   }
 
   public getSprite() {
@@ -190,7 +201,7 @@ export class Enemy {
 
   public update() {
     this.moveRandomly();
-    console.log(this.health);
+
     for (const projectile of this.projectiles) {
       projectile.update();
     }

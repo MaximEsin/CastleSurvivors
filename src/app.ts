@@ -74,7 +74,10 @@ export class Game {
         knife.checkEnemyCollision([this.mushroom]);
       });
 
-      this.mushroom.update();
+      if (!this.mushroom.getDeathState()) {
+        this.mushroom.update();
+      }
+
       this.player.checkProjectileCollision(this.mushroom.getProjectiles());
     }
   }
