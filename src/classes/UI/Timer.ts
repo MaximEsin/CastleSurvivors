@@ -14,6 +14,14 @@ export class Timer {
     }
   }
 
+  public getTime() {
+    return this.currentTime;
+  }
+
+  public resetTimer() {
+    this.currentTime = this.totalTime;
+  }
+
   public getTimeString(): string {
     const minutes = Math.floor(this.currentTime / 60);
     const seconds = Math.floor(this.currentTime % 60);

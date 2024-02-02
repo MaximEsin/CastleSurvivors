@@ -32,6 +32,8 @@ export class Game {
   private gameActive: boolean = true;
   private enemies: Enemy[] = [];
   private coins: Coin[] = [];
+  private waveIntervals: number[] = [300, 240, 180, 120, 60];
+  private currentWave: number = 0;
 
   constructor() {
     this.app = new PIXI.Application({
@@ -67,8 +69,6 @@ export class Game {
       this.player
     );
 
-    this.createEnemies();
-
     window.addEventListener('resize', () => {
       this.app.renderer.resize(window.innerWidth, window.innerHeight);
       this.playerInterface.resizeInterface(
@@ -88,26 +88,6 @@ export class Game {
     });
 
     this.app.ticker.add(this.gameLoop.bind(this));
-  }
-
-  private createEnemies() {
-    for (let i = 0; i < 2; i++) {
-      const mushroom = new Mushroom(this.animationManager, this.app);
-      this.app.stage.addChild(mushroom.getSprite());
-      this.enemies.push(mushroom);
-    }
-
-    for (let i = 0; i < 3; i++) {
-      const eye = new Eye(this.animationManager, this.app);
-      this.app.stage.addChild(eye.getSprite());
-      this.enemies.push(eye);
-    }
-
-    for (let i = 0; i < 1; i++) {
-      const skeleton = new Skeleton(this.animationManager, this.app);
-      this.app.stage.addChild(skeleton.getSprite());
-      this.enemies.push(skeleton);
-    }
   }
 
   private gameLoop(): void {
@@ -185,6 +165,7 @@ export class Game {
         this.player.checkProjectileCollision(enemy.getProjectiles());
       }
     }
+    this.checkForNewWave();
   }
 
   stopEnemies(): void {
@@ -200,8 +181,17 @@ export class Game {
     }
   }
 
+  private removeEnemies(): void {
+    for (const enemy of this.enemies) {
+      this.app.stage.removeChild(enemy.getSprite());
+    }
+    this.enemies = [];
+  }
+
   resetGame(): void {
     this.app.ticker.stop();
+
+    this.removeEnemies();
 
     this.gameActive = true;
 
@@ -212,7 +202,76 @@ export class Game {
 
     this.playerInterface.resetCoins();
 
+    this.currentWave = 0;
+
+    this.timer.resetTimer();
+
     this.app.ticker.start();
+  }
+
+  private checkForNewWave(): void {
+    const remainingTime = this.waveIntervals[this.currentWave];
+
+    if (this.timer.getTime() <= remainingTime) {
+      this.startWave();
+    }
+  }
+
+  private startWave(): void {
+    this.currentWave++;
+
+    this.spawnEnemiesForWave(this.currentWave);
+  }
+
+  private spawnEnemiesForWave(waveNumber: number): void {
+    switch (waveNumber) {
+      case 1:
+        for (let i = 0; i < 10; i++) {
+          const mushroom = new Mushroom(this.animationManager, this.app);
+          this.app.stage.addChild(mushroom.getSprite());
+          this.enemies.push(mushroom);
+        }
+        break;
+      case 2:
+        for (let i = 0; i < 5; i++) {
+          const mushroom = new Mushroom(this.animationManager, this.app);
+          this.app.stage.addChild(mushroom.getSprite());
+          this.enemies.push(mushroom);
+        }
+
+        for (let i = 0; i < 5; i++) {
+          const eye = new Eye(this.animationManager, this.app);
+          this.app.stage.addChild(eye.getSprite());
+          this.enemies.push(eye);
+        }
+        break;
+      case 3:
+        for (let i = 0; i < 15; i++) {
+          const eye = new Eye(this.animationManager, this.app);
+          this.app.stage.addChild(eye.getSprite());
+          this.enemies.push(eye);
+        }
+      case 4:
+        for (let i = 0; i < 5; i++) {
+          const eye = new Eye(this.animationManager, this.app);
+          this.app.stage.addChild(eye.getSprite());
+          this.enemies.push(eye);
+        }
+
+        for (let i = 0; i < 5; i++) {
+          const skeleton = new Skeleton(this.animationManager, this.app);
+          this.app.stage.addChild(skeleton.getSprite());
+          this.enemies.push(skeleton);
+        }
+        break;
+      case 5:
+        for (let i = 0; i < 15; i++) {
+          const skeleton = new Skeleton(this.animationManager, this.app);
+          this.app.stage.addChild(skeleton.getSprite());
+          this.enemies.push(skeleton);
+        }
+        break;
+    }
   }
 }
 

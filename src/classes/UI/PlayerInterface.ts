@@ -7,7 +7,7 @@ export class PlayerInterface {
   private coinIcon!: PIXI.Sprite;
   private coinText!: PIXI.Text;
   private timerText!: PIXI.Text;
-  private coinCount: number = 100;
+  private coinCount: number = 0;
 
   constructor(app: PIXI.Application) {
     this.app = app;
@@ -64,7 +64,7 @@ export class PlayerInterface {
     this.coinIcon = PIXI.Sprite.from('./public/Shop/coin.png');
     this.coinIcon.anchor.set(0.5);
     this.coinIcon.width = this.coinIcon.height = coinIconSize;
-    this.coinIcon.x = width * 0.88;
+    this.coinIcon.x = width * 0.87;
     this.coinIcon.y = height - playerInterfaceHeight / 2;
     this.centerContainer.addChild(this.coinIcon);
 
