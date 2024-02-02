@@ -16,6 +16,7 @@ import { MegaDiamond } from './classes/Money/MegaDiamond';
 import { Merchant } from './classes/Merchant';
 import { Knife } from './classes/Weapons/Knife';
 import { Kebab } from './classes/Weapons/Kebab';
+import { Timer } from './classes/UI/Timer';
 
 export class Game {
   private app: PIXI.Application;
@@ -27,6 +28,7 @@ export class Game {
   private player: Player;
   private merchant: Merchant;
   private deathScreen: DeathScreen;
+  private timer: Timer;
   private gameActive: boolean = true;
   private enemies: Enemy[] = [];
   private coins: Coin[] = [];
@@ -46,6 +48,7 @@ export class Game {
     this.animationManager = new AnimationManager();
     this.inputManager = new InputManager();
     this.audioManager = new AudioManager();
+    this.timer = new Timer(300);
     this.playerInterface = new PlayerInterface(this.app);
     this.deathScreen = new DeathScreen(this.app, this.resetGame.bind(this));
     this.player = new Player(
@@ -109,6 +112,10 @@ export class Game {
 
   private gameLoop(): void {
     if (this.gameActive) {
+      this.timer.update();
+      const timerString = this.timer.getTimeString();
+      this.playerInterface.updateTimer(timerString);
+
       this.player.handlePlayerInput();
       this.player.updatePlayerAnimation();
 

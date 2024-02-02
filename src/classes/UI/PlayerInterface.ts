@@ -1,13 +1,16 @@
 import * as PIXI from 'pixi.js';
 
 export class PlayerInterface {
+  private app: PIXI.Application;
   private centerContainer: PIXI.Container;
   private backgroundSprite: PIXI.Sprite;
   private coinIcon!: PIXI.Sprite;
   private coinText!: PIXI.Text;
+  private timerText!: PIXI.Text;
   private coinCount: number = 100;
 
   constructor(app: PIXI.Application) {
+    this.app = app;
     this.centerContainer = new PIXI.Container();
     this.backgroundSprite = new PIXI.Sprite(
       PIXI.Texture.from('./public/Interface/Paper.jpg')
@@ -78,6 +81,15 @@ export class PlayerInterface {
     this.coinText.x = width * 0.94;
     this.coinText.y = height - playerInterfaceHeight / 2;
     this.centerContainer.addChild(this.coinText);
+
+    this.timerText = new PIXI.Text('', { fill: 0xffffff });
+    this.timerText.anchor.set(0.5, 0);
+    this.timerText.position.set(this.app.screen.width / 2, 10);
+    this.app.stage.addChild(this.timerText);
+  }
+
+  public updateTimer(timerString: string): void {
+    this.timerText.text = timerString;
   }
 
   public addCursedEyeIcon(width: number, height: number) {
