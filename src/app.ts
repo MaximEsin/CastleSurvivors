@@ -121,7 +121,7 @@ export class Game {
                 this.app,
                 enemy.getSprite().x,
                 enemy.getSprite().y,
-                './public/Shop/coin.png'
+                '/Shop/coin.png'
               );
               this.coins.push(coin);
             }
@@ -130,7 +130,7 @@ export class Game {
                 this.app,
                 enemy.getSprite().x,
                 enemy.getSprite().y,
-                './public/Shop/diamond.png'
+                '/Shop/diamond.png'
               );
               this.coins.push(coin);
             }
@@ -139,7 +139,7 @@ export class Game {
                 this.app,
                 enemy.getSprite().x,
                 enemy.getSprite().y,
-                './public/Shop/megaDiamond.png'
+                '/Shop/megaDiamond.png'
               );
               this.coins.push(coin);
             }
