@@ -13,6 +13,7 @@ import { Enemy } from './classes/Enemies/Enemy';
 import { Skeleton } from './classes/Enemies/Skeleton';
 import { Diamond } from './classes/Money/Diamond';
 import { MegaDiamond } from './classes/Money/MegaDiamond';
+import { Merchant } from './classes/Merchant';
 
 export class Game {
   private app: PIXI.Application;
@@ -22,6 +23,7 @@ export class Game {
   private audioManager: AudioManager;
   private playerInterface: PlayerInterface;
   private player: Player;
+  private merchant: Merchant;
   private deathScreen: DeathScreen;
   private gameActive: boolean = true;
   private enemies: Enemy[] = [];
@@ -53,6 +55,7 @@ export class Game {
       this.deathScreen,
       this.stopEnemies.bind(this)
     );
+    this.merchant = new Merchant(this.app, this.animationManager);
 
     this.createEnemies();
 

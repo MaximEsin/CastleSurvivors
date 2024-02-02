@@ -65,4 +65,12 @@ export class AnimationManager {
   public getSkeletonDamagedAnimation(): PIXI.Texture[] {
     return this.createAnimation('Enemies/Skeleton', 'damaged', 5);
   }
+
+  public getMerchantStandingAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Merchant', 'standing', 12);
+  }
+
+  public getMerchantInteractAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Merchant', 'interact', 9);
+  }
 }
