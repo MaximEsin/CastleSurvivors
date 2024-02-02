@@ -10,7 +10,7 @@ export class AnimationManager {
 
     for (let i = 1; i < framesCount; i++) {
       const texturePath = PIXI.Texture.from(
-        `./public/${char}/${action}/${action}${i}.png`
+        `/${char}/${action}/${action}${i}.png`
       );
       texturePaths.push(texturePath);
     }

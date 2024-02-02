@@ -9,7 +9,7 @@ export class Kebab extends Projectile {
     direction: PIXI.Point,
     damage: number
   ) {
-    const kebabTexture = './public/Player/weapons/kebab.png';
+    const kebabTexture = '/Player/weapons/kebab.png';
     super(app, x, y, 8, kebabTexture, direction, damage);
   }
 

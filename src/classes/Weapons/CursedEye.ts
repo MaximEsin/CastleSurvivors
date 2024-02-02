@@ -9,7 +9,7 @@ export class CursedEye extends Projectile {
     direction: PIXI.Point,
     damage: number
   ) {
-    const eyeTexture = './public/Player/weapons/eye.png';
+    const eyeTexture = '/Player/weapons/eye.png';
     super(app, x, y, 8, eyeTexture, direction, damage);
   }
 

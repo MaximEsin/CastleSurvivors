@@ -46,7 +46,7 @@ export class Mushroom extends Enemy {
 
   public update(): void {
     super.update();
-    super.attack('./public/Enemies/Mushroom/projectile/projectile.png', 10);
+    super.attack('/Enemies/Mushroom/projectile/projectile.png', 10);
     this.updateAnimation(
       this.standingAnimation,
       this.movingAnimation,

@@ -13,7 +13,7 @@ export class PlayerInterface {
     this.app = app;
     this.centerContainer = new PIXI.Container();
     this.backgroundSprite = new PIXI.Sprite(
-      PIXI.Texture.from('./public/Interface/Paper.jpg')
+      PIXI.Texture.from('/Interface/Paper.jpg')
     );
 
     this.createInterface(app.screen.width, app.screen.height);
@@ -31,7 +31,7 @@ export class PlayerInterface {
     // Center Container
     const iconSize = playerInterfaceHeight * 0.8;
 
-    const icon = PIXI.Sprite.from('./public/Interface/heart.png');
+    const icon = PIXI.Sprite.from('/Interface/heart.png');
     icon.anchor.set(0.7);
     icon.width = icon.height = iconSize;
     icon.x = width / 2;
@@ -52,7 +52,7 @@ export class PlayerInterface {
     this.centerContainer.addChild(text);
 
     const knifeIconSize = playerInterfaceHeight * 2;
-    const knifeIcon = PIXI.Sprite.from('./public/Player/weapons/knife.png');
+    const knifeIcon = PIXI.Sprite.from('/Player/weapons/knife.png');
     knifeIcon.anchor.set(0.5);
     knifeIcon.width = knifeIcon.height = knifeIconSize;
     knifeIcon.x = width * 0.05;
@@ -61,7 +61,7 @@ export class PlayerInterface {
 
     // Coin icon
     const coinIconSize = playerInterfaceHeight;
-    this.coinIcon = PIXI.Sprite.from('./public/Shop/coin.png');
+    this.coinIcon = PIXI.Sprite.from('/Shop/coin.png');
     this.coinIcon.anchor.set(0.5);
     this.coinIcon.width = this.coinIcon.height = coinIconSize;
     this.coinIcon.x = width * 0.87;
@@ -94,7 +94,7 @@ export class PlayerInterface {
 
   public addCursedEyeIcon(width: number, height: number) {
     const eyeIconSize = this.backgroundSprite.height;
-    const eyeIcon = PIXI.Sprite.from('./public/Player/weapons/eye.png');
+    const eyeIcon = PIXI.Sprite.from('/Player/weapons/eye.png');
     eyeIcon.anchor.set(0.5);
     eyeIcon.width = eyeIcon.height = eyeIconSize;
     eyeIcon.x = width * 0.12;
@@ -104,7 +104,7 @@ export class PlayerInterface {
 
   public addKebabIcon(width: number, height: number) {
     const eyeIconSize = this.backgroundSprite.height * 0.9;
-    const eyeIcon = PIXI.Sprite.from('./public/Player/weapons/kebab.png');
+    const eyeIcon = PIXI.Sprite.from('/Player/weapons/kebab.png');
     eyeIcon.anchor.set(0.5);
     eyeIcon.width = eyeIcon.height = eyeIconSize;
     eyeIcon.x = width * 0.17;

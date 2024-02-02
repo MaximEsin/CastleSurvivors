@@ -9,7 +9,7 @@ export class DeathScreen {
   constructor(app: PIXI.Application, resetGameCallback: () => void) {
     this.app = app;
     this.container = new PIXI.Container();
-    this.deathSprite = PIXI.Sprite.from('./public/Interface/deathscreen.jpeg');
+    this.deathSprite = PIXI.Sprite.from('/Interface/deathscreen.jpeg');
     this.deathSprite.anchor.set(1);
     this.deathSprite.width = app.screen.width;
     this.deathSprite.height = app.screen.height;
@@ -23,7 +23,7 @@ export class DeathScreen {
   }
 
   private createResetButton(): PIXI.Sprite {
-    const resetButton = PIXI.Sprite.from('./public/Interface/resetbtn.png');
+    const resetButton = PIXI.Sprite.from('/Interface/resetbtn.png');
     resetButton.anchor.set(0.5);
     resetButton.position.set(
       this.app.screen.width / 2,

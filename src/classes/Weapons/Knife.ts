@@ -9,7 +9,7 @@ export class Knife extends Projectile {
     direction: PIXI.Point,
     damage: number
   ) {
-    const knifeTexture = './public/Player/weapons/knife.png';
+    const knifeTexture = '/Player/weapons/knife.png';
     super(app, x, y, 8, knifeTexture, direction, damage);
   }
 

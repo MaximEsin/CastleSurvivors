@@ -46,7 +46,7 @@ export class Skeleton extends Enemy {
 
   public update(): void {
     super.update();
-    super.attack('./public/Enemies/Skeleton/projectile/bones.png', 30);
+    super.attack('/Enemies/Skeleton/projectile/bones.png', 30);
     this.updateAnimation(
       this.standingAnimation,
       this.movingAnimation,

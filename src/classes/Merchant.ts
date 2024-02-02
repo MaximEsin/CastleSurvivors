@@ -46,14 +46,14 @@ export class Merchant {
     this.container.addChild(containerBackground);
 
     this.addWeaponImageWithText(
-      './public/Player/weapons/eye.png',
+      '/Player/weapons/eye.png',
       'Cursed Eye: 50',
       20,
       20,
       1
     );
     this.addWeaponImageWithText(
-      './public/Player/weapons/kebab.png',
+      '/Player/weapons/kebab.png',
       'Kebab: 50',
       180,
       40,

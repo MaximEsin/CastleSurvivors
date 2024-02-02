@@ -50,7 +50,7 @@ export class Eye extends Enemy {
 
   public update(): void {
     super.update();
-    super.attack('./public/Enemies/Eye/projectile/Slime.png', 20);
+    super.attack('/Enemies/Eye/projectile/Slime.png', 20);
     this.updateAnimation(
       this.standingAnimation,
       this.movingAnimation,

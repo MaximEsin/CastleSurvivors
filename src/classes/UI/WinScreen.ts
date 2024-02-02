@@ -9,7 +9,7 @@ export class WinScreen {
   constructor(app: PIXI.Application, resetGameCallback: () => void) {
     this.app = app;
     this.container = new PIXI.Container();
-    this.winSprite = PIXI.Sprite.from('./public/Interface/winscreen.avif');
+    this.winSprite = PIXI.Sprite.from('/Interface/winscreen.avif');
     this.winSprite.anchor.set(1);
     this.winSprite.width = app.screen.width;
     this.winSprite.height = app.screen.height;
@@ -23,7 +23,7 @@ export class WinScreen {
   }
 
   private createResetButton(): PIXI.Sprite {
-    const resetButton = PIXI.Sprite.from('./public/Interface/resetbtn.png');
+    const resetButton = PIXI.Sprite.from('/Interface/resetbtn.png');
     resetButton.anchor.set(0.5);
     resetButton.position.set(
       this.app.screen.width / 2,
