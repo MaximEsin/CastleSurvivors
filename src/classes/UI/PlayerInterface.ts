@@ -80,6 +80,16 @@ export class PlayerInterface {
     this.centerContainer.addChild(this.coinText);
   }
 
+  public addCursedEyeIcon(width: number, height: number) {
+    const eyeIconSize = this.backgroundSprite.height;
+    const eyeIcon = PIXI.Sprite.from('./public/Player/weapons/eye.png');
+    eyeIcon.anchor.set(0.5);
+    eyeIcon.width = eyeIcon.height = eyeIconSize;
+    eyeIcon.x = width * 0.12;
+    eyeIcon.y = height - this.backgroundSprite.height / 2;
+    this.centerContainer.addChild(eyeIcon);
+  }
+
   public updateCoinCount(value: number): void {
     this.coinCount += value;
     this.coinText.text = `Coins: ${this.coinCount}`;
@@ -93,10 +103,6 @@ export class PlayerInterface {
   public updateHealthText(health: number): void {
     const healthText = this.centerContainer.getChildAt(1) as PIXI.Text;
     healthText.text = `Health: ${health}`;
-  }
-
-  public getHealthText(): PIXI.Text {
-    return this.centerContainer.getChildAt(1) as PIXI.Text;
   }
 
   public resizeInterface(width: number, height: number): void {

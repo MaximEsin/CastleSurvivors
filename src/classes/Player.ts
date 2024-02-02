@@ -7,6 +7,7 @@ import { PlayerInterface } from './UI/PlayerInterface';
 import { DeathScreen } from './UI/DeathScreen';
 import { Knife } from './Weapons/Knife';
 import { Coin } from './Money/Coin';
+import { CursedEye } from './Weapons/CursedEye';
 
 export class Player {
   private app: PIXI.Application;
@@ -23,8 +24,11 @@ export class Player {
   private isDamaged: boolean = false;
   private stopEnemiesCallback: () => void;
   private knives: Knife[] = [];
+  private cursedEyes: CursedEye[] = [];
   private lastKnifeThrowTime: number = 0;
   private knifeCooldown: number = 2000;
+  private lastEyeThrowTime: number = 0;
+  private EyeCooldown: number = 3000;
 
   constructor(
     animationManager: AnimationManager,
@@ -102,6 +106,10 @@ export class Player {
 
     if (this.inputManager.isKeyPressed('c')) {
       this.throwKnife();
+    }
+
+    if (this.inputManager.isKeyPressed('v')) {
+      this.throwEye();
     }
 
     this.handleBorderWrap();
@@ -278,8 +286,41 @@ export class Player {
     }
   }
 
+  private throwEye(): void {
+    const currentTime = Date.now();
+
+    if (currentTime - this.lastEyeThrowTime >= this.EyeCooldown) {
+      const direction = new PIXI.Point(
+        this.playerSprite.scale.x > 0 ? 1 : -1,
+        0
+      );
+
+      const length = Math.sqrt(direction.x ** 2 + direction.y ** 2);
+      direction.x /= length;
+      direction.y /= length;
+
+      const eye = new CursedEye(
+        this.app,
+        this.playerSprite.x,
+        this.playerSprite.y,
+        direction,
+        20
+      );
+
+      this.cursedEyes.push(eye);
+
+      this.app.stage.addChildAt(eye.getSprite(), 1);
+
+      this.lastEyeThrowTime = currentTime;
+    }
+  }
+
   public getKnives(): Knife[] {
     return this.knives;
+  }
+
+  public getEyes(): CursedEye[] {
+    return this.cursedEyes;
   }
 
   public checkCoinCollision(coins: Coin[]): void {

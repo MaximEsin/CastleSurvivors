@@ -14,6 +14,7 @@ import { Skeleton } from './classes/Enemies/Skeleton';
 import { Diamond } from './classes/Money/Diamond';
 import { MegaDiamond } from './classes/Money/MegaDiamond';
 import { Merchant } from './classes/Merchant';
+import { Knife } from './classes/Weapons/Knife';
 
 export class Game {
   private app: PIXI.Application;
@@ -106,10 +107,14 @@ export class Game {
       this.player.updatePlayerAnimation();
 
       const playerKnives = this.player.getKnives();
+      const playerCursedEyes = this.player.getEyes();
+      const playerProjectiles = [...playerKnives, ...playerCursedEyes];
 
-      playerKnives.forEach((knife) => {
-        knife.update();
-        knife.mirrorImage();
+      playerProjectiles.forEach((projectile) => {
+        projectile.update();
+        if (projectile instanceof Knife) {
+          projectile.mirrorImage();
+        }
         for (const enemy of this.enemies) {
           const deathState = enemy.getDeathState();
           if (deathState) {
@@ -145,7 +150,7 @@ export class Game {
             this.enemies.splice(index, 1);
           }
           if (!deathState) {
-            knife.checkEnemyCollision(this.enemies);
+            projectile.checkEnemyCollision(this.enemies);
           }
         }
       });

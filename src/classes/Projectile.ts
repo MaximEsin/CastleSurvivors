@@ -43,7 +43,6 @@ export class Projectile {
   }
 
   public destroy(): void {
-    // Remove projectile from the stage
     this.app.stage.removeChild(this.projectileSprite);
     this._isDestroyed = true;
   }
