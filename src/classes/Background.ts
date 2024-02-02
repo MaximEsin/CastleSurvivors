@@ -18,4 +18,8 @@ export class Background {
       this.sprite.height = app.screen.height;
     });
   }
+
+  changeBackground() {
+    // This might be needed for future levels
+  }
 }

@@ -258,6 +258,7 @@ export class Game {
           this.app.stage.addChild(eye.getSprite());
           this.enemies.push(eye);
         }
+        break;
       case 4:
         for (let i = 0; i < 5; i++) {
           const eye = new Eye(this.animationManager, this.app);
@@ -280,6 +281,13 @@ export class Game {
         break;
     }
   }
+
+  start(): void {
+    // This was added to build the app
+    this.app.ticker.start();
+    this.background.changeBackground();
+  }
 }
 
 const game = new Game();
+game.start();
