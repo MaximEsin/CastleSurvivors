@@ -45,10 +45,7 @@ export class Game {
 
     document.body.appendChild(this.app.view as unknown as Node);
 
-    this.background = new Background(
-      './public/Backgrounds/CastleBG.jpg',
-      this.app
-    );
+    this.background = new Background('/Backgrounds/CastleBG.jpg', this.app);
     this.animationManager = new AnimationManager();
     this.inputManager = new InputManager();
     this.audioManager = new AudioManager();

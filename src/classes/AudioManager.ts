@@ -2,10 +2,10 @@ export class AudioManager {
   protected sounds: { [key: string]: HTMLAudioElement } = {};
 
   constructor() {
-    this.loadAudio('ingameMusic', './src/sounds/ingame.mp3');
-    this.loadAudio('walkingSound', './src/sounds/footsteps.mp3');
-    this.loadAudio('playerHit', './src/sounds/Hit.wav');
-    this.loadAudio('playerDead', './src/sounds/Death.wav');
+    this.loadAudio('ingameMusic', '/sounds/ingame.mp3');
+    this.loadAudio('walkingSound', '/sounds/footsteps.mp3');
+    this.loadAudio('playerHit', '/sounds/Hit.wav');
+    this.loadAudio('playerDead', '/sounds/Death.wav');
   }
 
   protected loadAudio(id: string, src: string): HTMLAudioElement {
