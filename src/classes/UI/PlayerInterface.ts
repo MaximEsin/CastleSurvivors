@@ -5,7 +5,7 @@ export class PlayerInterface {
   private backgroundSprite: PIXI.Sprite;
   private coinIcon!: PIXI.Sprite;
   private coinText!: PIXI.Text;
-  private coinCount: number = 0;
+  private coinCount: number = 100;
 
   constructor(app: PIXI.Application) {
     this.centerContainer = new PIXI.Container();
@@ -98,6 +98,19 @@ export class PlayerInterface {
     eyeIcon.x = width * 0.17;
     eyeIcon.y = height - this.backgroundSprite.height / 2;
     this.centerContainer.addChild(eyeIcon);
+  }
+
+  public handlePurchase(cost: number) {
+    this.coinCount -= cost;
+    this.coinText.text = `Coins: ${this.coinCount}`;
+  }
+
+  public canPlayerAfford(cost: number) {
+    if (cost <= this.coinCount) {
+      return true;
+    }
+
+    return false;
   }
 
   public updateCoinCount(value: number): void {

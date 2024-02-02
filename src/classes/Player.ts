@@ -33,6 +33,8 @@ export class Player {
   private EyeCooldown: number = 3000;
   private lastKebabThrowTime: number = 0;
   private kebabCooldown: number = 5000;
+  public isEyePurchased: boolean = false;
+  public isKebabPurchased: boolean = false;
 
   constructor(
     animationManager: AnimationManager,
@@ -113,11 +115,15 @@ export class Player {
     }
 
     if (this.inputManager.isKeyPressed('v')) {
-      this.throwEye();
+      if (this.isEyePurchased) {
+        this.throwEye();
+      }
     }
 
     if (this.inputManager.isKeyPressed('x')) {
-      this.throwKebab();
+      if (this.isKebabPurchased) {
+        this.throwKebab();
+      }
     }
 
     this.handleBorderWrap();

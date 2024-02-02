@@ -57,7 +57,12 @@ export class Game {
       this.deathScreen,
       this.stopEnemies.bind(this)
     );
-    this.merchant = new Merchant(this.app, this.animationManager);
+    this.merchant = new Merchant(
+      this.app,
+      this.animationManager,
+      this.playerInterface,
+      this.player
+    );
 
     this.createEnemies();
 
