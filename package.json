@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "pixi.js": "^7.4.0",
-    "rollup": "^4.9.6",
-    "vercel": "^33.4.1"
+    "rollup": "^4.9.6"
   }
 }
