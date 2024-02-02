@@ -7,10 +7,12 @@ import { AudioManager } from './classes/AudioManager';
 import { Mushroom } from './classes/Enemies/Mushroom';
 import { PlayerInterface } from './classes/UI/PlayerInterface';
 import { DeathScreen } from './classes/UI/DeathScreen';
-import { Coin } from './classes/Coin';
+import { Coin } from './classes/Money/Coin';
 import { Eye } from './classes/Enemies/Eye';
 import { Enemy } from './classes/Enemies/Enemy';
 import { Skeleton } from './classes/Enemies/Skeleton';
+import { Diamond } from './classes/Money/Diamond';
+import { MegaDiamond } from './classes/Money/MegaDiamond';
 
 export class Game {
   private app: PIXI.Application;
@@ -108,12 +110,33 @@ export class Game {
         for (const enemy of this.enemies) {
           const deathState = enemy.getDeathState();
           if (deathState) {
-            const coin = new Coin(
-              this.app,
-              enemy.getSprite().x,
-              enemy.getSprite().y
-            );
-            this.coins.push(coin);
+            if (enemy instanceof Mushroom) {
+              const coin = new Coin(
+                this.app,
+                enemy.getSprite().x,
+                enemy.getSprite().y,
+                './public/Shop/coin.png'
+              );
+              this.coins.push(coin);
+            }
+            if (enemy instanceof Eye) {
+              const coin = new Diamond(
+                this.app,
+                enemy.getSprite().x,
+                enemy.getSprite().y,
+                './public/Shop/diamond.png'
+              );
+              this.coins.push(coin);
+            }
+            if (enemy instanceof Skeleton) {
+              const coin = new MegaDiamond(
+                this.app,
+                enemy.getSprite().x,
+                enemy.getSprite().y,
+                './public/Shop/megaDiamond.png'
+              );
+              this.coins.push(coin);
+            }
 
             const index = this.enemies.indexOf(enemy);
             this.enemies.splice(index, 1);

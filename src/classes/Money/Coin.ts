@@ -1,15 +1,14 @@
 import * as PIXI from 'pixi.js';
 
 export class Coin {
-  private app: PIXI.Application;
-  private coinSprite: PIXI.Sprite;
-  private isCollected: boolean = false;
+  protected app: PIXI.Application;
+  protected coinSprite: PIXI.Sprite;
+  protected isCollected: boolean = false;
+  protected value: number = 1;
 
-  constructor(app: PIXI.Application, x: number, y: number) {
+  constructor(app: PIXI.Application, x: number, y: number, sprite: string) {
     this.app = app;
-    this.coinSprite = new PIXI.Sprite(
-      PIXI.Texture.from('./public/Shop/coin.png')
-    );
+    this.coinSprite = new PIXI.Sprite(PIXI.Texture.from(sprite));
     this.coinSprite.anchor.set(0.5);
     this.coinSprite.position.set(x, y);
 
@@ -29,6 +28,10 @@ export class Coin {
 
   public getSprite(): PIXI.Sprite {
     return this.coinSprite;
+  }
+
+  public getValue() {
+    return this.value;
   }
 
   public destroy(): void {

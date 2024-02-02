@@ -80,8 +80,8 @@ export class PlayerInterface {
     this.centerContainer.addChild(this.coinText);
   }
 
-  public updateCoinCount(): void {
-    this.coinCount++;
+  public updateCoinCount(value: number): void {
+    this.coinCount += value;
     this.coinText.text = `Coins: ${this.coinCount}`;
   }
 
