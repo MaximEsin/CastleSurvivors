@@ -195,12 +195,22 @@ export class Enemy {
     this.projectiles.forEach((projectile) => projectile.destroy());
   }
 
+  public resetEnemy(): void {
+    this.setRandomPosition(this.enemySprite);
+    this.projectiles.forEach((projectile) => projectile.destroy());
+    this.projectiles = [];
+  }
+
   public getDeathState() {
     return this.isDead;
   }
 
   public getSprite() {
     return this.enemySprite;
+  }
+
+  public getProjectiles(): Projectile[] {
+    return this.projectiles;
   }
 
   public update() {

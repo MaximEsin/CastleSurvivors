@@ -8,6 +8,8 @@ import { Mushroom } from './classes/Enemies/Mushroom';
 import { PlayerInterface } from './classes/UI/PlayerInterface';
 import { DeathScreen } from './classes/UI/DeathScreen';
 import { Coin } from './classes/Coin';
+import { Eye } from './classes/Enemies/Eye';
+import { Enemy } from './classes/Enemies/Enemy';
 
 export class Game {
   private app: PIXI.Application;
@@ -19,7 +21,7 @@ export class Game {
   private player: Player;
   private deathScreen: DeathScreen;
   private gameActive: boolean = true;
-  private mushrooms: Mushroom[] = [];
+  private enemies: Enemy[] = [];
   private coins: Coin[] = [];
 
   constructor() {
@@ -49,9 +51,8 @@ export class Game {
       this.stopEnemies.bind(this)
     );
 
-    this.createMushrooms();
+    this.createEnemies();
 
-    // Resize PIXI Application when the window is resized
     window.addEventListener('resize', () => {
       this.app.renderer.resize(window.innerWidth, window.innerHeight);
       this.playerInterface.resizeInterface(
@@ -70,15 +71,20 @@ export class Game {
       }
     });
 
-    // Main game loop
     this.app.ticker.add(this.gameLoop.bind(this));
   }
 
-  private createMushrooms() {
+  private createEnemies() {
     for (let i = 0; i < 2; i++) {
       const mushroom = new Mushroom(this.animationManager, this.app);
       this.app.stage.addChild(mushroom.getSprite());
-      this.mushrooms.push(mushroom);
+      this.enemies.push(mushroom);
+    }
+
+    for (let i = 0; i < 3; i++) {
+      const eye = new Eye(this.animationManager, this.app);
+      this.app.stage.addChild(eye.getSprite());
+      this.enemies.push(eye);
     }
   }
 
@@ -92,41 +98,43 @@ export class Game {
       playerKnives.forEach((knife) => {
         knife.update();
         knife.mirrorImage();
-        for (const mushroom of this.mushrooms) {
-          const deathState = mushroom.getDeathState();
+        for (const enemy of this.enemies) {
+          const deathState = enemy.getDeathState();
           if (deathState) {
             const coin = new Coin(
               this.app,
-              mushroom.getSprite().x,
-              mushroom.getSprite().y
+              enemy.getSprite().x,
+              enemy.getSprite().y
             );
             this.coins.push(coin);
 
-            const index = this.mushrooms.indexOf(mushroom);
-            this.mushrooms.splice(index, 1);
+            const index = this.enemies.indexOf(enemy);
+            this.enemies.splice(index, 1);
           }
           if (!deathState) {
-            knife.checkEnemyCollision(this.mushrooms);
+            knife.checkEnemyCollision(this.enemies);
           }
         }
       });
 
       this.player.checkCoinCollision(this.coins);
 
-      for (const mushroom of this.mushrooms) {
-        if (!mushroom.getDeathState()) {
-          mushroom.update();
+      for (const enemy of this.enemies) {
+        if (!enemy.getDeathState()) {
+          enemy.update();
         }
 
-        this.player.checkProjectileCollision(mushroom.getProjectiles());
+        this.player.checkProjectileCollision(enemy.getProjectiles());
       }
     }
   }
 
   stopEnemies(): void {
     this.gameActive = false;
-    for (const mushroom of this.mushrooms) {
-      mushroom.switchToStandingAnimation();
+    for (const enemy of this.enemies) {
+      if (enemy instanceof Mushroom || enemy instanceof Eye) {
+        enemy.switchToStandingAnimation();
+      }
     }
   }
 
@@ -136,8 +144,8 @@ export class Game {
     this.gameActive = true;
 
     this.player.resetPlayer();
-    for (const mushroom of this.mushrooms) {
-      mushroom.resetMushroom();
+    for (const enemy of this.enemies) {
+      enemy.resetEnemy();
     }
 
     this.playerInterface.resetCoins();

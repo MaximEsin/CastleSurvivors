@@ -2,23 +2,21 @@ import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../AnimationManager';
 import { Enemy } from './Enemy';
 
-export class Mushroom extends Enemy {
+export class Eye extends Enemy {
   private standingAnimation: PIXI.Texture[];
   private movingAnimation: PIXI.Texture[];
   private damagedAnimation: PIXI.Texture[];
 
   constructor(animationManager: AnimationManager, app: PIXI.Application) {
-    super(animationManager, app, 10);
-    this.standingAnimation =
-      this.animationManager.getMushroomStandingAnimation();
-    this.movingAnimation = this.animationManager.getMushroomMovingAnimation();
-    this.damagedAnimation = this.animationManager.getMushroomDamagedAnimation();
+    super(animationManager, app, 20);
+    this.standingAnimation = this.animationManager.getEyeFlyingAnimation();
+    this.movingAnimation = this.animationManager.getEyeFlyingAnimation();
+    this.damagedAnimation = this.animationManager.getEyeDamagedAnimation();
   }
 
   protected createEnemySprite(): PIXI.AnimatedSprite {
-    const mushroomTextures =
-      this.animationManager.getMushroomStandingAnimation();
-    const animation = new PIXI.AnimatedSprite(mushroomTextures);
+    const eyeTextures = this.animationManager.getMushroomStandingAnimation();
+    const animation = new PIXI.AnimatedSprite(eyeTextures);
 
     this.enemySprite = animation;
 
@@ -36,6 +34,12 @@ export class Mushroom extends Enemy {
     super.switchToStandingAnimation(this.standingAnimation);
   }
 
+  public resetEye(): void {
+    this.setRandomPosition(this.enemySprite);
+    this.projectiles.forEach((projectile) => projectile.destroy());
+    this.projectiles = [];
+  }
+
   override getDeathState(): boolean {
     return super.getDeathState();
   }
@@ -46,7 +50,7 @@ export class Mushroom extends Enemy {
 
   public update(): void {
     super.update();
-    super.attack('./public/Enemies/Mushroom/projectile/projectile.png', 10);
+    super.attack('./public/Enemies/Eye/projectile/Slime.png', 20);
     this.updateAnimation(
       this.standingAnimation,
       this.movingAnimation,

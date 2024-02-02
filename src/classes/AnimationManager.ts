@@ -45,4 +45,12 @@ export class AnimationManager {
   public getMushroomDamagedAnimation(): PIXI.Texture[] {
     return this.createAnimation('Enemies/Mushroom', 'damaged', 5);
   }
+
+  public getEyeDamagedAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Enemies/Eye', 'damaged', 5);
+  }
+
+  public getEyeFlyingAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Enemies/Eye', 'moving', 9);
+  }
 }
