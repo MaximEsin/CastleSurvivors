@@ -152,6 +152,8 @@ export class Game {
 
       this.player.checkCoinCollision(this.coins);
 
+      this.merchant.checkPlayerCollision(this.player);
+
       for (const enemy of this.enemies) {
         if (!enemy.getDeathState()) {
           enemy.update();
