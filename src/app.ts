@@ -195,10 +195,19 @@ export class Game {
     this.enemies = [];
   }
 
+  private removeCoins(): void {
+    for (const coin of this.coins) {
+      this.app.stage.removeChild(coin.getSprite());
+    }
+    this.coins = [];
+  }
+
   resetGame(): void {
     this.app.ticker.stop();
 
     this.removeEnemies();
+
+    this.removeCoins();
 
     this.gameActive = true;
 
