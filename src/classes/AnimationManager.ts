@@ -53,4 +53,16 @@ export class AnimationManager {
   public getEyeFlyingAnimation(): PIXI.Texture[] {
     return this.createAnimation('Enemies/Eye', 'moving', 9);
   }
+
+  public getSkeletonStandingAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Enemies/Skeleton', 'standing', 5);
+  }
+
+  public getSkeletonMovingAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Enemies/Skeleton', 'moving', 5);
+  }
+
+  public getSkeletonDamagedAnimation(): PIXI.Texture[] {
+    return this.createAnimation('Enemies/Skeleton', 'damaged', 5);
+  }
 }

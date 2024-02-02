@@ -197,7 +197,7 @@ export class Player {
   private receiveDamage(damage: number): void {
     this.health -= damage;
     this.isDamaged = true;
-
+    console.log(this.health);
     this.playHitSound();
 
     this.playerInterface.updateHealthText(this.health);
@@ -242,7 +242,7 @@ export class Player {
 
     this.playerSprite.x = window.innerWidth / 2 - 100;
     this.playerSprite.y = window.innerHeight / 2 - 100;
-    this.health = 10;
+    this.health = 100;
     this.isDamaged = false;
     this.playerInterface.updateHealthText(this.health);
 

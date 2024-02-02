@@ -10,6 +10,7 @@ import { DeathScreen } from './classes/UI/DeathScreen';
 import { Coin } from './classes/Coin';
 import { Eye } from './classes/Enemies/Eye';
 import { Enemy } from './classes/Enemies/Enemy';
+import { Skeleton } from './classes/Enemies/Skeleton';
 
 export class Game {
   private app: PIXI.Application;
@@ -86,6 +87,12 @@ export class Game {
       this.app.stage.addChild(eye.getSprite());
       this.enemies.push(eye);
     }
+
+    for (let i = 0; i < 1; i++) {
+      const skeleton = new Skeleton(this.animationManager, this.app);
+      this.app.stage.addChild(skeleton.getSprite());
+      this.enemies.push(skeleton);
+    }
   }
 
   private gameLoop(): void {
@@ -132,7 +139,11 @@ export class Game {
   stopEnemies(): void {
     this.gameActive = false;
     for (const enemy of this.enemies) {
-      if (enemy instanceof Mushroom || enemy instanceof Eye) {
+      if (
+        enemy instanceof Mushroom ||
+        enemy instanceof Eye ||
+        enemy instanceof Skeleton
+      ) {
         enemy.switchToStandingAnimation();
       }
     }
