@@ -1,20 +1,20 @@
 import * as PIXI from 'pixi.js';
 
-export class DeathScreen {
+export class WinScreen {
   private app: PIXI.Application;
   private container: PIXI.Container;
-  private deathSprite: PIXI.Sprite;
+  private winSprite: PIXI.Sprite;
   private resetGameCallback: () => void;
 
   constructor(app: PIXI.Application, resetGameCallback: () => void) {
     this.app = app;
     this.container = new PIXI.Container();
-    this.deathSprite = PIXI.Sprite.from('./public/Interface/deathscreen.jpeg');
-    this.deathSprite.anchor.set(1);
-    this.deathSprite.width = app.screen.width;
-    this.deathSprite.height = app.screen.height;
-    this.deathSprite.position.set(app.screen.width, app.screen.height);
-    this.container.addChild(this.deathSprite);
+    this.winSprite = PIXI.Sprite.from('./public/Interface/winscreen.avif');
+    this.winSprite.anchor.set(1);
+    this.winSprite.width = app.screen.width;
+    this.winSprite.height = app.screen.height;
+    this.winSprite.position.set(app.screen.width, app.screen.height);
+    this.container.addChild(this.winSprite);
     this.resetGameCallback = resetGameCallback;
 
     this.container.visible = false;
@@ -44,7 +44,7 @@ export class DeathScreen {
     }
   }
 
-  public showDeathScreen(): void {
+  public showWinScreen(): void {
     const resetButton = this.createResetButton();
     this.container.addChild(resetButton);
     this.container.visible = true;

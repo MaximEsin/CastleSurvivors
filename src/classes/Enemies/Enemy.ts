@@ -9,7 +9,7 @@ export class Enemy {
   protected direction: PIXI.Point = new PIXI.Point(1, 1);
   protected throwTimer: number = 0;
   protected throwInterval: number = Math.floor(Math.random() * 4000) + 5000;
-  protected projectiles: Projectile[] = [];
+  public projectiles: Projectile[] = [];
   protected health: number;
   private isHit: boolean = false;
   public isDead: boolean = false;
@@ -193,12 +193,6 @@ export class Enemy {
     this.isDead = true;
     this.app.stage.removeChild(this.enemySprite);
     this.projectiles.forEach((projectile) => projectile.destroy());
-  }
-
-  public resetEnemy(): void {
-    this.setRandomPosition(this.enemySprite);
-    this.projectiles.forEach((projectile) => projectile.destroy());
-    this.projectiles = [];
   }
 
   public getDeathState() {

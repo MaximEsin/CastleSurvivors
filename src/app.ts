@@ -17,6 +17,7 @@ import { Merchant } from './classes/Merchant';
 import { Knife } from './classes/Weapons/Knife';
 import { Kebab } from './classes/Weapons/Kebab';
 import { Timer } from './classes/UI/Timer';
+import { WinScreen } from './classes/UI/WinScreen';
 
 export class Game {
   private app: PIXI.Application;
@@ -29,6 +30,7 @@ export class Game {
   private merchant: Merchant;
   private deathScreen: DeathScreen;
   private timer: Timer;
+  private winScreen: WinScreen;
   private gameActive: boolean = true;
   private enemies: Enemy[] = [];
   private coins: Coin[] = [];
@@ -53,6 +55,7 @@ export class Game {
     this.timer = new Timer(300);
     this.playerInterface = new PlayerInterface(this.app);
     this.deathScreen = new DeathScreen(this.app, this.resetGame.bind(this));
+    this.winScreen = new WinScreen(this.app, this.resetGame.bind(this));
     this.player = new Player(
       this.animationManager,
       this.app,
@@ -166,6 +169,11 @@ export class Game {
       }
     }
     this.checkForNewWave();
+
+    if (this.timer.getTime() === 0) {
+      this.stopEnemies();
+      this.winScreen.showWinScreen();
+    }
   }
 
   stopEnemies(): void {
@@ -184,6 +192,8 @@ export class Game {
   private removeEnemies(): void {
     for (const enemy of this.enemies) {
       this.app.stage.removeChild(enemy.getSprite());
+      enemy.projectiles.forEach((projectile) => projectile.destroy());
+      enemy.projectiles = [];
     }
     this.enemies = [];
   }
@@ -196,9 +206,6 @@ export class Game {
     this.gameActive = true;
 
     this.player.resetPlayer();
-    for (const enemy of this.enemies) {
-      enemy.resetEnemy();
-    }
 
     this.playerInterface.resetCoins();
 
