@@ -8,6 +8,7 @@ import { DeathScreen } from './UI/DeathScreen';
 import { Knife } from './Weapons/Knife';
 import { Coin } from './Money/Coin';
 import { CursedEye } from './Weapons/CursedEye';
+import { Kebab } from './Weapons/Kebab';
 
 export class Player {
   private app: PIXI.Application;
@@ -25,10 +26,13 @@ export class Player {
   private stopEnemiesCallback: () => void;
   private knives: Knife[] = [];
   private cursedEyes: CursedEye[] = [];
+  private kebabs: Kebab[] = [];
   private lastKnifeThrowTime: number = 0;
   private knifeCooldown: number = 2000;
   private lastEyeThrowTime: number = 0;
   private EyeCooldown: number = 3000;
+  private lastKebabThrowTime: number = 0;
+  private kebabCooldown: number = 5000;
 
   constructor(
     animationManager: AnimationManager,
@@ -110,6 +114,10 @@ export class Player {
 
     if (this.inputManager.isKeyPressed('v')) {
       this.throwEye();
+    }
+
+    if (this.inputManager.isKeyPressed('x')) {
+      this.throwKebab();
     }
 
     this.handleBorderWrap();
@@ -315,12 +323,48 @@ export class Player {
     }
   }
 
+  private throwKebab(): void {
+    const currentTime = Date.now();
+
+    if (currentTime - this.lastKebabThrowTime >= this.kebabCooldown) {
+      const direction = new PIXI.Point(
+        this.playerSprite.scale.x > 0 ? 1 : -1,
+        0
+      );
+
+      const length = Math.sqrt(direction.x ** 2 + direction.y ** 2);
+      direction.x /= length;
+      direction.y /= length;
+
+      const kebab = new Kebab(
+        this.app,
+        this.playerSprite.x,
+        this.playerSprite.y,
+        direction,
+        10
+      );
+
+      this.health += 5;
+      this.playerInterface.updateHealthText(this.health);
+
+      this.kebabs.push(kebab);
+
+      this.app.stage.addChildAt(kebab.getSprite(), 1);
+
+      this.lastKebabThrowTime = currentTime;
+    }
+  }
+
   public getKnives(): Knife[] {
     return this.knives;
   }
 
   public getEyes(): CursedEye[] {
     return this.cursedEyes;
+  }
+
+  public getKebabs(): CursedEye[] {
+    return this.kebabs;
   }
 
   public checkCoinCollision(coins: Coin[]): void {

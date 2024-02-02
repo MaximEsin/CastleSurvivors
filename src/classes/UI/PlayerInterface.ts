@@ -90,6 +90,16 @@ export class PlayerInterface {
     this.centerContainer.addChild(eyeIcon);
   }
 
+  public addKebabIcon(width: number, height: number) {
+    const eyeIconSize = this.backgroundSprite.height * 0.9;
+    const eyeIcon = PIXI.Sprite.from('./public/Player/weapons/kebab.png');
+    eyeIcon.anchor.set(0.5);
+    eyeIcon.width = eyeIcon.height = eyeIconSize;
+    eyeIcon.x = width * 0.17;
+    eyeIcon.y = height - this.backgroundSprite.height / 2;
+    this.centerContainer.addChild(eyeIcon);
+  }
+
   public updateCoinCount(value: number): void {
     this.coinCount += value;
     this.coinText.text = `Coins: ${this.coinCount}`;

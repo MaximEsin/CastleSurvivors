@@ -15,6 +15,7 @@ import { Diamond } from './classes/Money/Diamond';
 import { MegaDiamond } from './classes/Money/MegaDiamond';
 import { Merchant } from './classes/Merchant';
 import { Knife } from './classes/Weapons/Knife';
+import { Kebab } from './classes/Weapons/Kebab';
 
 export class Game {
   private app: PIXI.Application;
@@ -108,11 +109,16 @@ export class Game {
 
       const playerKnives = this.player.getKnives();
       const playerCursedEyes = this.player.getEyes();
-      const playerProjectiles = [...playerKnives, ...playerCursedEyes];
+      const playerKebabs = this.player.getKebabs();
+      const playerProjectiles = [
+        ...playerKnives,
+        ...playerCursedEyes,
+        ...playerKebabs,
+      ];
 
       playerProjectiles.forEach((projectile) => {
         projectile.update();
-        if (projectile instanceof Knife) {
+        if (projectile instanceof Knife || projectile instanceof Kebab) {
           projectile.mirrorImage();
         }
         for (const enemy of this.enemies) {
