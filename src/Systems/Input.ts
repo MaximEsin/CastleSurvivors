@@ -4,8 +4,8 @@ export class InputSystem {
   static update(entities: Entity[]) {
     entities.forEach((entity) => {
       const positionComponent = entity.getComponent('position');
-      const playerInputComponent = entity.getComponent('playerInput');
-      if (positionComponent && playerInputComponent) {
+      const playerComponent = entity.getComponent('player');
+      if (positionComponent && playerComponent) {
         const speed = 5;
 
         if (InputSystem.isKeyDown('w')) {
@@ -40,5 +40,3 @@ export class InputSystem {
     return InputSystem.keyState[key];
   }
 }
-
-InputSystem.setupInputListeners();

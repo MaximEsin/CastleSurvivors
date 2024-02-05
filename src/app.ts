@@ -21,6 +21,7 @@ class Game {
 
   public initialize() {
     this.createEntities();
+    InputSystem.setupInputListeners();
     this.setupGameLoop();
   }
 
@@ -56,7 +57,7 @@ class Game {
       'render',
       new RenderComponent(playerAnimatedSprite)
     );
-    playerEntity.addComponent('playerInput', true);
+    playerEntity.addComponent('player', true);
 
     this.entities.push(playerEntity);
 
