@@ -4,6 +4,7 @@ import { PositionComponent } from './Components/Position';
 import { RenderComponent } from './Components/Render';
 import { RenderSystem } from './Systems/Render';
 import { BackgroundEntity } from './Entities/Background';
+import { InputSystem } from './Systems/Input';
 
 class Game {
   private app: PIXI.Application;
@@ -55,6 +56,7 @@ class Game {
       'render',
       new RenderComponent(playerAnimatedSprite)
     );
+    playerEntity.addComponent('playerInput', true);
 
     this.entities.push(playerEntity);
 
@@ -66,6 +68,7 @@ class Game {
   private setupGameLoop() {
     this.app.ticker.add(() => {
       RenderSystem.update(this.entities);
+      InputSystem.update(this.entities);
     });
   }
 }
