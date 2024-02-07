@@ -4,6 +4,7 @@ import { PlayerSystem } from './Player/PlayerSystem';
 import { AnimationSystem } from './Systems/Animation';
 import { PlayerMovementSystem } from './Player/PlayerMovementSystem';
 import { PlayerWrapSystem } from './Player/PlayerWrapSystem';
+import { AudioSystem } from './Systems/AudioSystem';
 
 export class Game {
   private app: PIXI.Application;
@@ -33,11 +34,13 @@ export class Game {
     const animationSystem = new AnimationSystem();
     const playerMovementSystem = new PlayerMovementSystem();
     const playerWrapSystem = new PlayerWrapSystem(this.app);
+    const audioSystem = new AudioSystem(playerMovementSystem);
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);
     engine.addSystem(playerMovementSystem);
     engine.addSystem(playerWrapSystem);
+    engine.addSystem(audioSystem);
 
     this.app.ticker.add((delta) => {
       engine.update(delta);

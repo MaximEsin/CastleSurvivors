@@ -8,7 +8,7 @@ import { Position } from '../Components/Position';
 export class AnimationSystem extends System {
   private lastPlayerPositions: Map<Entity, Position> = new Map();
 
-  update(delta: number) {
+  update() {
     const playerEntities: ReadonlyArray<Entity> = engine.entities.filter(
       (entity) => entity.has(PlayerComponent)
     );

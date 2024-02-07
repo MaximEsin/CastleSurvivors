@@ -5,6 +5,7 @@ import { Entity } from 'tick-knock';
 
 export class PlayerMovementSystem extends System {
   private keys: { [key: string]: boolean } = {};
+  public isPlayerMoving: boolean = false;
 
   constructor() {
     super();
@@ -20,18 +21,32 @@ export class PlayerMovementSystem extends System {
     this.keys[event.key] = false;
   }
 
-  update(delta: number) {
+  update() {
     const playerEntities: ReadonlyArray<Entity> = engine.entities.filter(
       (entity: Entity) => entity.has(Position)
     );
 
     playerEntities.forEach((entity: Entity) => {
       const position = entity.get(Position);
+      this.isPlayerMoving = false;
+
       if (!position) return;
-      if (this.keys['w']) position.y -= 5;
-      if (this.keys['s']) position.y += 5;
-      if (this.keys['a']) position.x -= 5;
-      if (this.keys['d']) position.x += 5;
+      if (this.keys['w']) {
+        this.isPlayerMoving = true;
+        position.y -= 5;
+      }
+      if (this.keys['s']) {
+        this.isPlayerMoving = true;
+        position.y += 5;
+      }
+      if (this.keys['a']) {
+        this.isPlayerMoving = true;
+        position.x -= 5;
+      }
+      if (this.keys['d']) {
+        this.isPlayerMoving = true;
+        position.x += 5;
+      }
     });
   }
 }

@@ -9,7 +9,7 @@ export class PlayerWrapSystem extends System {
     super();
   }
 
-  update(delta: number) {
+  update() {
     const playerEntities: ReadonlyArray<Entity> = this.engine.entities.filter(
       (entity) => entity.has(PlayerComponent)
     );

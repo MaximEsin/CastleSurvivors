@@ -49,7 +49,7 @@ export class PlayerSystem extends System {
     this.app.stage.addChild(playerSprite);
   }
 
-  update(delta: number) {
+  update() {
     if (this.playerEntity) {
       const position = this.playerEntity.get(Position);
       const playerSprite = this.playerEntity.get<PIXI.AnimatedSprite>(
