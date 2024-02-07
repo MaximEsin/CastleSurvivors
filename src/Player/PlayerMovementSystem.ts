@@ -2,6 +2,7 @@ import { System } from 'tick-knock';
 import { engine } from '../Engine';
 import { Position } from '../Components/Position';
 import { Entity } from 'tick-knock';
+import { PlayerComponent } from './PlayerComponent';
 
 export class PlayerMovementSystem extends System {
   private keys: { [key: string]: boolean } = {};
@@ -23,7 +24,7 @@ export class PlayerMovementSystem extends System {
 
   update() {
     const playerEntities: ReadonlyArray<Entity> = engine.entities.filter(
-      (entity: Entity) => entity.has(Position)
+      (entity: Entity) => entity.has(PlayerComponent)
     );
 
     playerEntities.forEach((entity: Entity) => {
