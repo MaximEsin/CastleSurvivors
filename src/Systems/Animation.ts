@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { System } from 'tick-knock';
 import { engine } from '../Engine';
-import { PlayerComponent } from '../Components/Player';
+import { PlayerComponent } from '../Player/PlayerComponent';
 import { Entity } from 'tick-knock';
 import { Position } from '../Components/Position';
 

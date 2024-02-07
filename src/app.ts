@@ -1,8 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { engine } from './Engine';
-import { PlayerSystem } from './Systems/Player';
+import { PlayerSystem } from './Player/PlayerSystem';
 import { AnimationSystem } from './Systems/Animation';
-import { PlayerMovementSystem } from './Systems/PlayerMovement';
+import { PlayerMovementSystem } from './Player/PlayerMovementSystem';
+import { PlayerWrapSystem } from './Player/PlayerWrapSystem';
 
 export class Game {
   private app: PIXI.Application;
@@ -31,10 +32,12 @@ export class Game {
     const playerSystem = new PlayerSystem(this.app);
     const animationSystem = new AnimationSystem();
     const playerMovementSystem = new PlayerMovementSystem();
+    const playerWrapSystem = new PlayerWrapSystem(this.app);
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);
     engine.addSystem(playerMovementSystem);
+    engine.addSystem(playerWrapSystem);
 
     this.app.ticker.add((delta) => {
       engine.update(delta);
