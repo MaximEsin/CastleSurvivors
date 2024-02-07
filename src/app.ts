@@ -5,6 +5,7 @@ import { AnimationSystem } from './Systems/Animation';
 import { PlayerMovementSystem } from './Player/PlayerMovementSystem';
 import { PlayerWrapSystem } from './Player/PlayerWrapSystem';
 import { AudioSystem } from './Systems/AudioSystem';
+import { MushroomSystem } from './Enemies/Systems/Mushroom';
 
 export class Game {
   private app: PIXI.Application;
@@ -35,12 +36,14 @@ export class Game {
     const playerMovementSystem = new PlayerMovementSystem();
     const playerWrapSystem = new PlayerWrapSystem(this.app);
     const audioSystem = new AudioSystem(playerMovementSystem);
+    const mushroomSystem = new MushroomSystem(this.app);
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);
     engine.addSystem(playerMovementSystem);
     engine.addSystem(playerWrapSystem);
     engine.addSystem(audioSystem);
+    engine.addSystem(mushroomSystem);
 
     this.app.ticker.add((delta) => {
       engine.update(delta);
