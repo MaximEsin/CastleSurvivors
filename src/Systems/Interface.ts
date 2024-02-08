@@ -1,5 +1,7 @@
 import { System } from 'tick-knock';
 import * as PIXI from 'pixi.js';
+import { Health } from '../Components/Health';
+import { PlayerComponent } from '../Player/PlayerComponent';
 
 export class PlayerInterfaceSystem extends System {
   private playerInterfaceContainer: PIXI.Container;
@@ -36,7 +38,7 @@ export class PlayerInterfaceSystem extends System {
       align: 'center',
     });
 
-    const text = new PIXI.Text(`Health: 100`, textStyle);
+    const text = new PIXI.Text('Health: 100', textStyle);
     text.anchor.set(0.6);
     text.x = app.screen.width / 2;
     text.y = app.screen.height - playerInterfaceHeight / 2 + iconSize / 2;
@@ -51,5 +53,17 @@ export class PlayerInterfaceSystem extends System {
     return this.playerInterfaceContainer;
   }
 
-  update() {}
+  update() {
+    this.engine.entities.forEach((entity) => {
+      if (entity.has(Health) && entity.has(PlayerComponent)) {
+        const health = entity.get(Health);
+        if (health) {
+          const healthText = this.playerInterfaceContainer.getChildAt(
+            2
+          ) as PIXI.Text;
+          healthText.text = `Health: ${health.value}`;
+        }
+      }
+    });
+  }
 }

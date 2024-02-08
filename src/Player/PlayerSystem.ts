@@ -3,6 +3,7 @@ import { System, Entity } from 'tick-knock';
 import { engine } from '../Engine';
 import { Position } from '../Components/Position';
 import { PlayerComponent } from './PlayerComponent';
+import { Health } from '../Components/Health';
 
 export class PlayerSystem extends System {
   private playerEntity: Entity | null = null;
@@ -21,6 +22,7 @@ export class PlayerSystem extends System {
     );
     this.playerEntity.add(position);
     this.playerEntity.add(new PlayerComponent());
+    this.playerEntity.add(new Health(100));
 
     const standingTextures = [];
     for (let i = 1; i <= 4; i++) {
