@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { System } from 'tick-knock';
 import { Entity } from 'tick-knock';
 import { Health } from '../Components/Health';
-import { PlayerComponent } from '../Player/PlayerComponent';
+import { PlayerComponent } from '../Player/Components/PlayerComponent';
 
 export class DeathScreen extends System {
   private deathScreen: PIXI.Sprite;
@@ -52,6 +52,10 @@ export class DeathScreen extends System {
 
   public isVisible(): boolean {
     return this.deathScreenVisible;
+  }
+
+  public getResetButton() {
+    return this.resetButton;
   }
 
   update(): void {

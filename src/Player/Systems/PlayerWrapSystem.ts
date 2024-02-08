@@ -1,8 +1,8 @@
 import * as PIXI from 'pixi.js';
 import { System } from 'tick-knock';
 import { Entity } from 'tick-knock';
-import { PlayerComponent } from './PlayerComponent';
-import { Position } from '../Components/Position';
+import { PlayerComponent } from '../Components/PlayerComponent';
+import { Position } from '../../Components/Position';
 
 export class PlayerWrapSystem extends System {
   constructor(private app: PIXI.Application) {

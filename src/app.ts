@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { engine } from './Engine';
-import { PlayerSystem } from './Player/PlayerSystem';
-import { AnimationSystem } from './Player/PlayerAnimation';
-import { PlayerMovementSystem } from './Player/PlayerMovementSystem';
-import { PlayerWrapSystem } from './Player/PlayerWrapSystem';
+import { PlayerSystem } from './Player/Systems/PlayerSystem';
+import { AnimationSystem } from './Player/Systems/PlayerAnimation';
+import { PlayerMovementSystem } from './Player/Systems/PlayerMovementSystem';
+import { PlayerWrapSystem } from './Player/Systems/PlayerWrapSystem';
 import { AudioSystem } from './Systems/AudioSystem';
 import { MushroomSystem } from './Enemies/Systems/Mushroom';
 import { EnemyMovementSystem } from './Enemies/Systems/Movement';
@@ -12,6 +12,8 @@ import { PlayerInterfaceSystem } from './Systems/Interface';
 import { ProjectileMovementSystem } from './Enemies/Systems/ProjectileMovement';
 import { EnemyAttackSystem } from './Enemies/Systems/Attack';
 import { DeathScreen } from './Screens/DeathScreen';
+import { AttackSystem } from './Player/Systems/PlayerAttackSystem';
+import { PlayerProjectileMovementSystem } from './Player/Systems/ProjectileMovementSystem';
 
 export class Game {
   private app: PIXI.Application;
@@ -59,6 +61,8 @@ export class Game {
     const projectileMovementSystem = new ProjectileMovementSystem(this.app);
     const enemyAttackSystem = new EnemyAttackSystem(this.app);
     const deathScreenSystem = new DeathScreen(this.app);
+    const playerProjectileSystem = new PlayerProjectileMovementSystem();
+    const playerAttackSystem = new AttackSystem(this.app);
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);
@@ -72,6 +76,8 @@ export class Game {
     engine.addSystem(enemyAttackSystem);
     engine.addSystem(projectileMovementSystem);
     engine.addSystem(deathScreenSystem);
+    engine.addSystem(playerAttackSystem);
+    engine.addSystem(playerProjectileSystem);
 
     this.app.ticker.add((delta) => {
       engine.update(delta);

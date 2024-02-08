@@ -1,8 +1,9 @@
 import { System } from 'tick-knock';
-import { engine } from '../Engine';
-import { Position } from '../Components/Position';
+import { engine } from '../../Engine';
+import { Position } from '../../Components/Position';
 import { Entity } from 'tick-knock';
-import { PlayerComponent } from './PlayerComponent';
+import { PlayerComponent } from '../Components/PlayerComponent';
+import { Direction } from '../../Components/Direction';
 
 export class PlayerMovementSystem extends System {
   private keys: { [key: string]: boolean } = {};
@@ -35,18 +36,22 @@ export class PlayerMovementSystem extends System {
       if (this.keys['w']) {
         this.isPlayerMoving = true;
         position.y -= 5;
+        entity.add(new Direction(0, -1));
       }
       if (this.keys['s']) {
         this.isPlayerMoving = true;
         position.y += 5;
+        entity.add(new Direction(0, 1));
       }
       if (this.keys['a']) {
         this.isPlayerMoving = true;
         position.x -= 5;
+        entity.add(new Direction(-1, 0));
       }
       if (this.keys['d']) {
         this.isPlayerMoving = true;
         position.x += 5;
+        entity.add(new Direction(1, 0));
       }
     });
   }

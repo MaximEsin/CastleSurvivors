@@ -1,7 +1,7 @@
 import { System } from 'tick-knock';
 import * as PIXI from 'pixi.js';
 import { Health } from '../Components/Health';
-import { PlayerComponent } from '../Player/PlayerComponent';
+import { PlayerComponent } from '../Player/Components/PlayerComponent';
 
 export class PlayerInterfaceSystem extends System {
   private playerInterfaceContainer: PIXI.Container;

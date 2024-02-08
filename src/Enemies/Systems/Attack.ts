@@ -5,7 +5,7 @@ import { EnemyProjectileEntity } from '../Entities/Projectile';
 import { EnemyComponent } from '../Components/Enemy';
 import { MushroomComponent } from '../Components/Mushroom';
 import { Velocity } from '../../Components/Velocity';
-import { PlayerComponent } from '../../Player/PlayerComponent';
+import { PlayerComponent } from '../../Player/Components/PlayerComponent';
 import { Health } from '../../Components/Health';
 import { DamageComponent } from '../../Components/Damage';
 

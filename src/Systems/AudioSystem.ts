@@ -1,5 +1,5 @@
 import { System } from 'tick-knock';
-import { PlayerMovementSystem } from '../Player/PlayerMovementSystem';
+import { PlayerMovementSystem } from '../Player/Systems/PlayerMovementSystem';
 
 export class AudioSystem extends System {
   private walkingSound: HTMLAudioElement;

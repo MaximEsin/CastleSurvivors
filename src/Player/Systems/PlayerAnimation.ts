@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { System } from 'tick-knock';
-import { engine } from '../Engine';
-import { PlayerComponent } from './PlayerComponent';
+import { engine } from '../../Engine';
+import { PlayerComponent } from '../Components/PlayerComponent';
 import { Entity } from 'tick-knock';
-import { Position } from '../Components/Position';
+import { Position } from '../../Components/Position';
 
 export class AnimationSystem extends System {
   private lastPlayerPositions: Map<Entity, Position> = new Map();
