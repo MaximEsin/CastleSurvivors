@@ -27,6 +27,16 @@ export class Game {
       this.app.renderer.resize(window.innerWidth, window.innerHeight);
     });
 
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        if (this.app.ticker.started) {
+          this.app.ticker.stop();
+        } else {
+          this.app.ticker.start();
+        }
+      }
+    });
+
     const background = PIXI.Sprite.from('/Backgrounds/CastleBG.jpg');
 
     background.width = this.app.screen.width;
