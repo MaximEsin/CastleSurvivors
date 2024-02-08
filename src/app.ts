@@ -9,6 +9,8 @@ import { MushroomSystem } from './Enemies/Systems/Mushroom';
 import { EnemyMovementSystem } from './Enemies/Systems/Movement';
 import { EnemyAnimationSystem } from './Enemies/Systems/Animation';
 import { PlayerInterfaceSystem } from './Systems/Interface';
+import { ProjectileMovementSystem } from './Enemies/Systems/ProjectileMovement';
+import { EnemyAttackSystem } from './Enemies/Systems/Attack';
 
 export class Game {
   private app: PIXI.Application;
@@ -43,6 +45,8 @@ export class Game {
     const enemyMovementSystem = new EnemyMovementSystem(this.app);
     const enemyAnimationSystem = new EnemyAnimationSystem(mushroomSystem);
     const playerInterfaceSystem = new PlayerInterfaceSystem(this.app);
+    const projectileMovementSystem = new ProjectileMovementSystem(this.app);
+    const enemyAttackSystem = new EnemyAttackSystem(this.app);
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);
@@ -53,6 +57,8 @@ export class Game {
     engine.addSystem(enemyMovementSystem);
     engine.addSystem(enemyAnimationSystem);
     engine.addSystem(playerInterfaceSystem);
+    engine.addSystem(enemyAttackSystem);
+    engine.addSystem(projectileMovementSystem);
 
     this.app.ticker.add((delta) => {
       engine.update(delta);
