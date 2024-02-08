@@ -11,6 +11,7 @@ import { EnemyAnimationSystem } from './Enemies/Systems/Animation';
 import { PlayerInterfaceSystem } from './Systems/Interface';
 import { ProjectileMovementSystem } from './Enemies/Systems/ProjectileMovement';
 import { EnemyAttackSystem } from './Enemies/Systems/Attack';
+import { DeathScreen } from './Screens/DeathScreen';
 
 export class Game {
   private app: PIXI.Application;
@@ -57,6 +58,7 @@ export class Game {
     const playerInterfaceSystem = new PlayerInterfaceSystem(this.app);
     const projectileMovementSystem = new ProjectileMovementSystem(this.app);
     const enemyAttackSystem = new EnemyAttackSystem(this.app);
+    const deathScreenSystem = new DeathScreen(this.app);
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);
@@ -69,6 +71,7 @@ export class Game {
     engine.addSystem(playerInterfaceSystem);
     engine.addSystem(enemyAttackSystem);
     engine.addSystem(projectileMovementSystem);
+    engine.addSystem(deathScreenSystem);
 
     this.app.ticker.add((delta) => {
       engine.update(delta);
