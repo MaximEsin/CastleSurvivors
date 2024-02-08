@@ -34,10 +34,10 @@ export class EnemyMovementSystem extends System {
             sprite.scale.x = 1;
           }
 
-          if (position.x < 0 || position.x > this.app.screen.width) {
+          if (position.x < 20 || position.x > this.app.screen.width - 20) {
             enemyData.enemyDirectionX *= -1;
           }
-          if (position.y < 0 || position.y > this.app.screen.height) {
+          if (position.y < 30 || position.y > this.app.screen.height * 0.85) {
             enemyData.enemyDirectionY *= -1;
           }
 

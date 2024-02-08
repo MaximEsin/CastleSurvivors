@@ -4,7 +4,6 @@ import { Position } from '../../Components/Position';
 import { EnemyComponent } from '../Components/Enemy';
 import { MushroomSystem } from './Mushroom';
 import { MushroomComponent } from '../Components/Mushroom';
-import { PlayerComponent } from '../../Player/PlayerComponent';
 
 export class EnemyAnimationSystem extends System {
   private mushroomSystem: MushroomSystem;

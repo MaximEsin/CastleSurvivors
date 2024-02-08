@@ -43,7 +43,7 @@ export class MushroomSystem extends System {
       this.mushroomEntity.add(new MushroomComponent());
 
       const x = Math.random() * this.app.screen.width;
-      const y = Math.random() * this.app.screen.height;
+      const y = Math.random() * this.app.screen.height * 0.85;
 
       const position = new Position(x, y);
       mushroomEntity.add(position);

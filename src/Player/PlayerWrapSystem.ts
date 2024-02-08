@@ -18,16 +18,16 @@ export class PlayerWrapSystem extends System {
       const position = entity.get<Position>(Position);
       if (!position) return;
 
-      if (position.x < 0) {
-        position.x = this.app.screen.width;
-      } else if (position.x > this.app.screen.width) {
-        position.x = 0;
+      if (position.x < 20) {
+        position.x = this.app.screen.width - 20;
+      } else if (position.x > this.app.screen.width - 20) {
+        position.x = 20;
       }
 
-      if (position.y < 0) {
-        position.y = this.app.screen.height;
-      } else if (position.y > this.app.screen.height) {
-        position.y = 0;
+      if (position.y < 20) {
+        position.y = this.app.screen.height * 0.85;
+      } else if (position.y > this.app.screen.height * 0.85) {
+        position.y = 20;
       }
     });
   }

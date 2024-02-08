@@ -8,6 +8,7 @@ import { AudioSystem } from './Systems/AudioSystem';
 import { MushroomSystem } from './Enemies/Systems/Mushroom';
 import { EnemyMovementSystem } from './Enemies/Systems/Movement';
 import { EnemyAnimationSystem } from './Enemies/Systems/Animation';
+import { PlayerInterfaceSystem } from './Systems/Interface';
 
 export class Game {
   private app: PIXI.Application;
@@ -41,6 +42,7 @@ export class Game {
     const mushroomSystem = new MushroomSystem(this.app);
     const enemyMovementSystem = new EnemyMovementSystem(this.app);
     const enemyAnimationSystem = new EnemyAnimationSystem(mushroomSystem);
+    const playerInterfaceSystem = new PlayerInterfaceSystem(this.app);
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);
@@ -50,6 +52,7 @@ export class Game {
     engine.addSystem(mushroomSystem);
     engine.addSystem(enemyMovementSystem);
     engine.addSystem(enemyAnimationSystem);
+    engine.addSystem(playerInterfaceSystem);
 
     this.app.ticker.add((delta) => {
       engine.update(delta);
