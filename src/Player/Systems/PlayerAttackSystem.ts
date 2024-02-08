@@ -7,6 +7,8 @@ import { ProjectileComponent } from '../Components/Projectile';
 import { Entity } from 'tick-knock';
 import * as PIXI from 'pixi.js';
 import { PlayerComponent } from '../Components/PlayerComponent';
+import { MushroomComponent } from '../../Enemies/Components/Mushroom';
+import { Health } from '../../Components/Health';
 
 export class AttackSystem extends System {
   private app: PIXI.Application;
@@ -79,6 +81,50 @@ export class AttackSystem extends System {
           projectileSprite.x = position.x;
           projectileSprite.y = position.y;
         }
+      }
+    });
+
+    this.engine.entities.forEach((entity) => {
+      if (entity.has(MushroomComponent) && entity.has(Position)) {
+        const enemyPosition = entity.get(Position);
+        const enemySprite = entity.get<PIXI.AnimatedSprite>(
+          PIXI.AnimatedSprite
+        );
+
+        this.engine.entities.forEach((projectileEntity) => {
+          if (
+            projectileEntity.has(ProjectileComponent) &&
+            projectileEntity.has(Position)
+          ) {
+            const projectilePosition = projectileEntity.get(Position);
+            const projectileSprite = projectileEntity.get<PIXI.Sprite>(
+              PIXI.Sprite
+            );
+
+            if (projectilePosition && enemyPosition) {
+              if (
+                Math.sqrt(
+                  Math.pow(projectilePosition.x - enemyPosition.x, 2) +
+                    Math.pow(projectilePosition.y - enemyPosition.y, 2)
+                ) < 70
+              ) {
+                const mushroomHealth = entity.get(Health);
+                if (mushroomHealth) {
+                  mushroomHealth.value -= 5;
+
+                  if (mushroomHealth.value <= 0) {
+                    this.engine.removeEntity(entity);
+                    if (enemySprite) this.app.stage.removeChild(enemySprite);
+                  }
+                }
+
+                this.engine.removeEntity(projectileEntity);
+                if (projectileSprite)
+                  this.app.stage.removeChild(projectileSprite);
+              }
+            }
+          }
+        });
       }
     });
   }

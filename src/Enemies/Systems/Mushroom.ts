@@ -3,6 +3,7 @@ import { System, Entity } from 'tick-knock';
 import { Position } from '../../Components/Position';
 import { EnemyComponent } from '../Components/Enemy';
 import { MushroomComponent } from '../Components/Mushroom';
+import { Health } from '../../Components/Health';
 
 export class MushroomSystem extends System {
   private app: PIXI.Application;
@@ -41,6 +42,7 @@ export class MushroomSystem extends System {
       const mushroomEntity = new Entity();
       this.mushroomEntity = mushroomEntity;
       this.mushroomEntity.add(new MushroomComponent());
+      this.mushroomEntity.add(new Health(10));
 
       const x = Math.floor(Math.random() * (this.app.screen.width - 40)) + 20;
       const y =

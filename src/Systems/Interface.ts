@@ -44,6 +44,14 @@ export class PlayerInterfaceSystem extends System {
     text.y = app.screen.height - playerInterfaceHeight / 2 + iconSize / 2;
     playerInterfaceContainer.addChild(text);
 
+    const knifeIconSize = playerInterfaceHeight * 2;
+    const knifeIcon = PIXI.Sprite.from('/Player/weapons/knife.png');
+    knifeIcon.anchor.set(0.5);
+    knifeIcon.width = knifeIcon.height = knifeIconSize;
+    knifeIcon.x = app.screen.width * 0.05;
+    knifeIcon.y = app.screen.height - playerInterfaceHeight / 2;
+    playerInterfaceContainer.addChild(knifeIcon);
+
     app.stage.addChild(playerInterfaceContainer);
 
     return playerInterfaceContainer;
