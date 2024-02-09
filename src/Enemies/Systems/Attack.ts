@@ -9,6 +9,7 @@ import { PlayerComponent } from '../../Player/Components/PlayerComponent';
 import { Health } from '../../Components/Health';
 import { DamageComponent } from '../../Components/Damage';
 import { EyeComponent } from '../Components/Eye';
+import { SkeletonComponent } from '../Components/Skeleton';
 
 export class EnemyAttackSystem extends System {
   private app: PIXI.Application;
@@ -100,6 +101,10 @@ export class EnemyAttackSystem extends System {
       PIXI.Texture.from('/Enemies/Eye/projectile/Slime.png')
     );
 
+    const skeletonProjectileSprite = new PIXI.Sprite(
+      PIXI.Texture.from('/Enemies/Skeleton/projectile/bones.png')
+    );
+
     if (entity.has(MushroomComponent)) {
       sprite = mushroomProjectileSprite;
       damage = 10;
@@ -108,6 +113,11 @@ export class EnemyAttackSystem extends System {
     if (entity.has(EyeComponent)) {
       sprite = eyeProjectileSprite;
       damage = 20;
+    }
+
+    if (entity.has(SkeletonComponent)) {
+      sprite = skeletonProjectileSprite;
+      damage = 30;
     }
 
     const projectile = new EnemyProjectileEntity(

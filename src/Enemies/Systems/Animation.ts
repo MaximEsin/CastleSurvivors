@@ -4,13 +4,17 @@ import { Position } from '../../Components/Position';
 import { EnemyComponent } from '../Components/Enemy';
 import { MushroomSystem } from './Mushroom';
 import { MushroomComponent } from '../Components/Mushroom';
+import { SkeletonComponent } from '../Components/Skeleton';
+import { SkeletonSystem } from './Skeleton';
 
 export class EnemyAnimationSystem extends System {
   private mushroomSystem: MushroomSystem;
+  private skeletonSystem: SkeletonSystem;
 
-  constructor(mushroomSystem: MushroomSystem) {
+  constructor(mushroomSystem: MushroomSystem, skeletonSystem: SkeletonSystem) {
     super();
     this.mushroomSystem = mushroomSystem;
+    this.skeletonSystem = skeletonSystem;
   }
 
   update() {
@@ -30,6 +34,11 @@ export class EnemyAnimationSystem extends System {
         if (entity.has(MushroomComponent)) {
           movingTextures = this.mushroomSystem.getMovingTextures();
           standingTextures = this.mushroomSystem.getStandingTextures();
+        }
+
+        if (entity.has(SkeletonComponent)) {
+          movingTextures = this.skeletonSystem.getMovingTextures();
+          standingTextures = this.skeletonSystem.getStandingTextures();
         }
 
         if (position && enemyComponent && sprite) {
