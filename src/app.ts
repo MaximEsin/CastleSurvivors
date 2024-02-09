@@ -16,6 +16,7 @@ import { AttackSystem } from './Player/Systems/PlayerAttackSystem';
 import { PlayerProjectileMovementSystem } from './Player/Systems/ProjectileMovementSystem';
 import { EyeSystem } from './Enemies/Systems/Eye';
 import { SkeletonSystem } from './Enemies/Systems/Skeleton';
+import { CoinSystem } from './Money/Systems/Coin';
 
 export class Game {
   private app: PIXI.Application;
@@ -70,6 +71,7 @@ export class Game {
     const deathScreenSystem = new DeathScreen(this.app);
     const playerProjectileSystem = new PlayerProjectileMovementSystem();
     const playerAttackSystem = new AttackSystem(this.app);
+    const coinSystem = new CoinSystem(this.app, playerInterfaceSystem);
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);
@@ -87,6 +89,7 @@ export class Game {
     engine.addSystem(deathScreenSystem);
     engine.addSystem(playerAttackSystem);
     engine.addSystem(playerProjectileSystem);
+    engine.addSystem(coinSystem);
 
     this.app.ticker.add((delta) => {
       engine.update(delta);

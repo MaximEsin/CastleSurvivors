@@ -5,6 +5,9 @@ import { PlayerComponent } from '../Player/Components/PlayerComponent';
 
 export class PlayerInterfaceSystem extends System {
   private playerInterfaceContainer: PIXI.Container;
+  private coinIcon!: PIXI.Sprite;
+  private coinText!: PIXI.Text;
+  private coinCount: number = 0;
 
   constructor(app: PIXI.Application) {
     super();
@@ -52,6 +55,27 @@ export class PlayerInterfaceSystem extends System {
     knifeIcon.y = app.screen.height - playerInterfaceHeight / 2;
     playerInterfaceContainer.addChild(knifeIcon);
 
+    const coinIconSize = playerInterfaceHeight;
+    this.coinIcon = PIXI.Sprite.from('/Shop/coin.png');
+    this.coinIcon.anchor.set(0.5);
+    this.coinIcon.width = this.coinIcon.height = coinIconSize;
+    this.coinIcon.x = app.screen.width * 0.88;
+    this.coinIcon.y = app.screen.height - playerInterfaceHeight / 2;
+    playerInterfaceContainer.addChild(this.coinIcon);
+
+    const coinTextStyle = new PIXI.TextStyle({
+      fill: 'black',
+      fontFamily: 'Times New Roman',
+      fontSize: playerInterfaceHeight * 0.4,
+      align: 'center',
+    });
+
+    this.coinText = new PIXI.Text(`Coins: ${this.coinCount}`, coinTextStyle);
+    this.coinText.anchor.set(0.5);
+    this.coinText.x = app.screen.width * 0.94;
+    this.coinText.y = app.screen.height - playerInterfaceHeight / 2;
+    playerInterfaceContainer.addChild(this.coinText);
+
     app.stage.addChild(playerInterfaceContainer);
 
     return playerInterfaceContainer;
@@ -59,6 +83,11 @@ export class PlayerInterfaceSystem extends System {
 
   getContainer(): PIXI.Container {
     return this.playerInterfaceContainer;
+  }
+
+  increaseCoinCount(amount: number) {
+    this.coinCount += amount;
+    this.coinText.text = `Coins: ${this.coinCount}`;
   }
 
   update() {
