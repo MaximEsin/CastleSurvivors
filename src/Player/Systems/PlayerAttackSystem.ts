@@ -9,6 +9,7 @@ import * as PIXI from 'pixi.js';
 import { PlayerComponent } from '../Components/PlayerComponent';
 import { MushroomComponent } from '../../Enemies/Components/Mushroom';
 import { Health } from '../../Components/Health';
+import { EyeComponent } from '../../Enemies/Components/Eye';
 
 export class AttackSystem extends System {
   private app: PIXI.Application;
@@ -85,7 +86,10 @@ export class AttackSystem extends System {
     });
 
     this.engine.entities.forEach((entity) => {
-      if (entity.has(MushroomComponent) && entity.has(Position)) {
+      if (
+        (entity.has(MushroomComponent) || entity.has(EyeComponent)) &&
+        entity.has(Position)
+      ) {
         const enemyPosition = entity.get(Position);
         const enemySprite = entity.get<PIXI.AnimatedSprite>(
           PIXI.AnimatedSprite

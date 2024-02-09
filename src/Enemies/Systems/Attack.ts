@@ -8,6 +8,7 @@ import { Velocity } from '../../Components/Velocity';
 import { PlayerComponent } from '../../Player/Components/PlayerComponent';
 import { Health } from '../../Components/Health';
 import { DamageComponent } from '../../Components/Damage';
+import { EyeComponent } from '../Components/Eye';
 
 export class EnemyAttackSystem extends System {
   private app: PIXI.Application;
@@ -90,12 +91,23 @@ export class EnemyAttackSystem extends System {
   ) {
     let sprite: PIXI.Sprite | undefined;
     let damage: number | undefined;
+
     const mushroomProjectileSprite = new PIXI.Sprite(
       PIXI.Texture.from('/Enemies/Mushroom/projectile/projectile.png')
     );
+
+    const eyeProjectileSprite = new PIXI.Sprite(
+      PIXI.Texture.from('/Enemies/Eye/projectile/Slime.png')
+    );
+
     if (entity.has(MushroomComponent)) {
       sprite = mushroomProjectileSprite;
       damage = 10;
+    }
+
+    if (entity.has(EyeComponent)) {
+      sprite = eyeProjectileSprite;
+      damage = 20;
     }
 
     const projectile = new EnemyProjectileEntity(

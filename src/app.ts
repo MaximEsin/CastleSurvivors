@@ -14,6 +14,7 @@ import { EnemyAttackSystem } from './Enemies/Systems/Attack';
 import { DeathScreen } from './Screens/DeathScreen';
 import { AttackSystem } from './Player/Systems/PlayerAttackSystem';
 import { PlayerProjectileMovementSystem } from './Player/Systems/ProjectileMovementSystem';
+import { EyeSystem } from './Enemies/Systems/Eye';
 
 export class Game {
   private app: PIXI.Application;
@@ -55,6 +56,7 @@ export class Game {
     const playerWrapSystem = new PlayerWrapSystem(this.app);
     const audioSystem = new AudioSystem(playerMovementSystem);
     const mushroomSystem = new MushroomSystem(this.app);
+    const eyeSystem = new EyeSystem(this.app);
     const enemyMovementSystem = new EnemyMovementSystem(this.app);
     const enemyAnimationSystem = new EnemyAnimationSystem(mushroomSystem);
     const playerInterfaceSystem = new PlayerInterfaceSystem(this.app);
@@ -70,6 +72,7 @@ export class Game {
     engine.addSystem(playerWrapSystem);
     engine.addSystem(audioSystem);
     engine.addSystem(mushroomSystem);
+    engine.addSystem(eyeSystem);
     engine.addSystem(enemyMovementSystem);
     engine.addSystem(enemyAnimationSystem);
     engine.addSystem(playerInterfaceSystem);

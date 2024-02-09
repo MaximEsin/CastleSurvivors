@@ -22,7 +22,7 @@ export class PlayerSystem extends System {
     );
     this.playerEntity.add(position);
     this.playerEntity.add(new PlayerComponent());
-    this.playerEntity.add(new Health(10));
+    this.playerEntity.add(new Health(50));
 
     const standingTextures = [];
     for (let i = 1; i <= 4; i++) {
