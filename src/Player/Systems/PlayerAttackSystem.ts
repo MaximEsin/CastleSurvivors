@@ -12,6 +12,8 @@ import { Health } from '../../Components/Health';
 import { EyeComponent } from '../../Enemies/Components/Eye';
 import { SkeletonComponent } from '../../Enemies/Components/Skeleton';
 import { CoinEntity } from '../../Money/Entities/Coin';
+import { DiamondEntity } from '../../Money/Entities/Diamond';
+import { MegaDiamondEntity } from '../../Money/Entities/MegaDiamond';
 
 export class AttackSystem extends System {
   private app: PIXI.Application;
@@ -81,6 +83,20 @@ export class AttackSystem extends System {
     if (coinSprite) this.app.stage.addChild(coinSprite);
   }
 
+  private spawnDiamond(position: Position) {
+    const coinEntity = new DiamondEntity(position);
+    this.engine.addEntity(coinEntity);
+    const coinSprite = coinEntity.get<PIXI.Sprite>(PIXI.Sprite);
+    if (coinSprite) this.app.stage.addChild(coinSprite);
+  }
+
+  private spawnMegaDiamond(position: Position) {
+    const coinEntity = new MegaDiamondEntity(position);
+    this.engine.addEntity(coinEntity);
+    const coinSprite = coinEntity.get<PIXI.Sprite>(PIXI.Sprite);
+    if (coinSprite) this.app.stage.addChild(coinSprite);
+  }
+
   update() {
     this.engine.entities.forEach((entity) => {
       if (entity.has(ProjectileComponent) && entity.has(Position)) {
@@ -130,6 +146,12 @@ export class AttackSystem extends System {
                   if (enemyHealth.value <= 0) {
                     if (entity.has(MushroomComponent)) {
                       this.spawnCoin(enemyPosition);
+                    }
+                    if (entity.has(EyeComponent)) {
+                      this.spawnDiamond(enemyPosition);
+                    }
+                    if (entity.has(SkeletonComponent)) {
+                      this.spawnMegaDiamond(enemyPosition);
                     }
                     this.engine.removeEntity(entity);
                     if (enemySprite) this.app.stage.removeChild(enemySprite);

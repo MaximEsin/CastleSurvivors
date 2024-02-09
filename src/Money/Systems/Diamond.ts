@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js';
 import { System } from 'tick-knock';
 import { Position } from '../../Components/Position';
-import { CoinComponent } from '../Components/Coint';
+import { DiamondComponent } from '../Components/Diamond';
 import { PlayerComponent } from '../../Player/Components/PlayerComponent';
 import { Entity } from 'tick-knock';
 import { PlayerInterfaceSystem } from '../../Systems/Interface';
 
-export class CoinSystem extends System {
+export class DiamondSystem extends System {
   private app: PIXI.Application;
   private playerInterface: PlayerInterfaceSystem;
 
@@ -25,7 +25,7 @@ export class CoinSystem extends System {
     const playerPosition = playerEntity.get(Position);
 
     this.engine.entities.forEach((entity) => {
-      if (entity.has(Position) && entity.has(CoinComponent)) {
+      if (entity.has(Position) && entity.has(DiamondComponent)) {
         const coinPosition = entity.get(Position);
 
         if (playerPosition && coinPosition) {
@@ -46,6 +46,6 @@ export class CoinSystem extends System {
     this.engine.removeEntity(coinEntity);
     const coinSprite = coinEntity.get<PIXI.Sprite>(PIXI.Sprite);
     if (coinSprite) this.app.stage.removeChild(coinSprite);
-    this.playerInterface.increaseCoinCount(1);
+    this.playerInterface.increaseCoinCount(5);
   }
 }

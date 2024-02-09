@@ -17,6 +17,8 @@ import { PlayerProjectileMovementSystem } from './Player/Systems/ProjectileMovem
 import { EyeSystem } from './Enemies/Systems/Eye';
 import { SkeletonSystem } from './Enemies/Systems/Skeleton';
 import { CoinSystem } from './Money/Systems/Coin';
+import { DiamondSystem } from './Money/Systems/Diamond';
+import { MegaDiamondSystem } from './Money/Systems/MegaDiamond';
 
 export class Game {
   private app: PIXI.Application;
@@ -72,6 +74,11 @@ export class Game {
     const playerProjectileSystem = new PlayerProjectileMovementSystem();
     const playerAttackSystem = new AttackSystem(this.app);
     const coinSystem = new CoinSystem(this.app, playerInterfaceSystem);
+    const diamondSystem = new DiamondSystem(this.app, playerInterfaceSystem);
+    const megaDiamondSystem = new MegaDiamondSystem(
+      this.app,
+      playerInterfaceSystem
+    );
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);
@@ -90,6 +97,8 @@ export class Game {
     engine.addSystem(playerAttackSystem);
     engine.addSystem(playerProjectileSystem);
     engine.addSystem(coinSystem);
+    engine.addSystem(diamondSystem);
+    engine.addSystem(megaDiamondSystem);
 
     this.app.ticker.add((delta) => {
       engine.update(delta);
