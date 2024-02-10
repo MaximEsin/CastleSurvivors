@@ -34,7 +34,7 @@ Castle Survivors is a pixel-art survival game where you, the player, must naviga
    - Discover a healty weapon.
 
 7. **Game Timer:**
-   - Survive through waves within the time limit to win.
+   - Survive as long as you can!
 
 ## Controls
 
@@ -44,24 +44,6 @@ Castle Survivors is a pixel-art survival game where you, the player, must naviga
 - X: Kebab attack
 - "Escape" key: Pause/Resume
 
-## Weapons
-
-1. **Knife:**
-
-   - Basic weapon.
-   - 2 seconds cooldown
-
-2. **Cursed Eye:**
-
-   - Powerful weapon.
-   - 3 seconds cooldown.
-
-3. **Kebab:**
-   - Weapon that heals upon use.
-   - 5 econds cooldown.
-
-All weapons have their own cooldowns.
-
 ## Merchant
 
 Visit the merchant to purchase weapons and upgrades using collected coins.
@@ -69,12 +51,10 @@ Visit the merchant to purchase weapons and upgrades using collected coins.
 ## Tips
 
 - Strategically use different weapons against various enemies.
-- Keep an eye on the game timer and plan your moves accordingly.
 - Explore the castle to discover hidden coins and power-ups.
 
 ## Timer
 
-- You need to survive 5 minutes.
-- Each minute a wave of monsters spawn, so make sure to clear them as fast as possible.
+- Enemies spawn every few seconds, beat them as long as you can!
 
 Enjoy playing Castle Survivors!
