@@ -141,6 +141,38 @@ export class PlayerInterface {
   }
 
   public resizeInterface(width: number, height: number): void {
-    this.createInterface(width, height);
+    const playerInterfaceHeight = height * 0.1;
+
+    this.backgroundSprite.width = width;
+    this.backgroundSprite.height = playerInterfaceHeight;
+    this.backgroundSprite.y = height - playerInterfaceHeight;
+
+    const iconSize = playerInterfaceHeight * 0.8;
+    const icon = this.centerContainer.getChildAt(0) as PIXI.Sprite;
+    icon.width = icon.height = iconSize;
+    icon.x = width / 2;
+    icon.y = height - playerInterfaceHeight / 2;
+
+    const text = this.centerContainer.getChildAt(1) as PIXI.Text;
+    text.style.fontSize = playerInterfaceHeight * 0.4;
+    text.x = width / 2;
+    text.y = height - playerInterfaceHeight / 2 + iconSize / 2;
+
+    const knifeIconSize = playerInterfaceHeight * 2;
+    const knifeIcon = this.centerContainer.getChildAt(2) as PIXI.Sprite;
+    knifeIcon.width = knifeIcon.height = knifeIconSize;
+    knifeIcon.x = width * 0.05;
+    knifeIcon.y = height - playerInterfaceHeight / 2;
+
+    const coinIconSize = playerInterfaceHeight;
+    this.coinIcon.width = this.coinIcon.height = coinIconSize;
+    this.coinIcon.x = width * 0.87;
+    this.coinIcon.y = height - playerInterfaceHeight / 2;
+
+    this.coinText.style.fontSize = playerInterfaceHeight * 0.4;
+    this.coinText.x = width * 0.94;
+    this.coinText.y = height - playerInterfaceHeight / 2;
+
+    this.timerText.position.set(width / 2, 10);
   }
 }
