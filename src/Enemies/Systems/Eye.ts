@@ -10,6 +10,8 @@ export class EyeSystem extends System {
   private app: PIXI.Application;
   private readonly movingTextures: PIXI.Texture[];
   private eyeEntity: Entity | null = null;
+  private eyeSpawnTimer = 0;
+  private eyeSpawnInterval = 2000;
 
   constructor(app: PIXI.Application) {
     super();
@@ -28,7 +30,9 @@ export class EyeSystem extends System {
   }
 
   update() {
-    if (!this.eyeEntity) {
+    this.eyeSpawnTimer += 10;
+    if (this.eyeSpawnTimer >= this.eyeSpawnInterval) {
+      this.eyeSpawnTimer = 0;
       const eyeEntity = new Entity();
       this.eyeEntity = eyeEntity;
       this.eyeEntity.add(new EyeComponent());

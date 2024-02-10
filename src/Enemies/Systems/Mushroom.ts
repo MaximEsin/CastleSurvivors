@@ -10,6 +10,8 @@ export class MushroomSystem extends System {
   private readonly standingTextures: PIXI.Texture[];
   private readonly movingTextures: PIXI.Texture[];
   private mushroomEntity: Entity | null = null;
+  private mushroomSpawnTimer = 0;
+  private mushroomSpawnInterval = 1000;
 
   constructor(app: PIXI.Application) {
     super();
@@ -38,7 +40,9 @@ export class MushroomSystem extends System {
   }
 
   update() {
-    if (!this.mushroomEntity) {
+    this.mushroomSpawnTimer += 10;
+    if (this.mushroomSpawnTimer >= this.mushroomSpawnInterval) {
+      this.mushroomSpawnTimer = 0;
       const mushroomEntity = new Entity();
       this.mushroomEntity = mushroomEntity;
       this.mushroomEntity.add(new MushroomComponent());

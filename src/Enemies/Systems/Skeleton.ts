@@ -11,6 +11,8 @@ export class SkeletonSystem extends System {
   private readonly movingTextures: PIXI.Texture[];
   private readonly standingTextures: PIXI.Texture[];
   private skeletonEntity: Entity | null = null;
+  private skeletonSpawnTimer = 0;
+  private skeletonSpawnInterval = 3000;
 
   constructor(app: PIXI.Application) {
     super();
@@ -40,7 +42,9 @@ export class SkeletonSystem extends System {
   }
 
   update() {
-    if (!this.skeletonEntity) {
+    this.skeletonSpawnTimer += 10;
+    if (this.skeletonSpawnTimer >= this.skeletonSpawnInterval) {
+      this.skeletonSpawnTimer = 0;
       const skeletonEntity = new Entity();
       this.skeletonEntity = skeletonEntity;
       this.skeletonEntity.add(new SkeletonComponent());
