@@ -80,7 +80,7 @@ export class Game {
       this.app,
       playerInterfaceSystem
     );
-    const merchantSystem = new MerchantSystem(this.app);
+    const merchantSystem = new MerchantSystem(this.app, playerInterfaceSystem);
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);

@@ -31,22 +31,42 @@ export class AttackSystem extends System {
     );
 
     playerEntities.forEach((entity) => {
-      if (event.key === 'c' || event.key === 'v' || event.key === 'x') {
-        const playerPosition = entity.get(Position);
-        const playerDirection = entity.get(Direction);
-        const sprite = entity.get<PIXI.AnimatedSprite>(PIXI.AnimatedSprite);
-        if (playerPosition && playerDirection && sprite) {
-          const projectilePosition = this.calculateProjectileStartPosition(
-            playerPosition,
-            playerDirection,
-            sprite
-          );
+      const playerPosition = entity.get(Position);
+      const playerDirection = entity.get(Direction);
+      const sprite = entity.get<PIXI.AnimatedSprite>(PIXI.AnimatedSprite);
+      if (playerPosition && playerDirection && sprite) {
+        const projectilePosition = this.calculateProjectileStartPosition(
+          playerPosition,
+          playerDirection,
+          sprite
+        );
+        if (event.key === 'c') {
           this.createProjectile(
             projectilePosition,
             playerDirection,
             event.key,
             entity
           );
+        }
+        if (event.key === 'v') {
+          if (entity.hasTag('EyePurchased')) {
+            this.createProjectile(
+              projectilePosition,
+              playerDirection,
+              event.key,
+              entity
+            );
+          }
+        }
+        if (event.key === 'x') {
+          if (entity.hasTag('kebabPurchased')) {
+            this.createProjectile(
+              projectilePosition,
+              playerDirection,
+              event.key,
+              entity
+            );
+          }
         }
       }
     });

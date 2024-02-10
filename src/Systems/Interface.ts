@@ -81,6 +81,39 @@ export class PlayerInterfaceSystem extends System {
     return playerInterfaceContainer;
   }
 
+  public addCursedEyeIcon(width: number, height: number) {
+    const eyeIconSize = height * 0.1;
+    const eyeIcon = PIXI.Sprite.from('/Player/weapons/eye.png');
+    eyeIcon.anchor.set(0.5);
+    eyeIcon.width = eyeIcon.height = eyeIconSize;
+    eyeIcon.x = width * 0.12;
+    eyeIcon.y = height - 30;
+    this.playerInterfaceContainer.addChild(eyeIcon);
+  }
+
+  public addKebabIcon(width: number, height: number) {
+    const eyeIconSize = height * 0.1;
+    const eyeIcon = PIXI.Sprite.from('/Player/weapons/kebab.png');
+    eyeIcon.anchor.set(0.5);
+    eyeIcon.width = eyeIcon.height = eyeIconSize;
+    eyeIcon.x = width * 0.17;
+    eyeIcon.y = height - 30;
+    this.playerInterfaceContainer.addChild(eyeIcon);
+  }
+
+  public handlePurchase(cost: number) {
+    this.coinCount -= cost;
+    this.coinText.text = `Coins: ${this.coinCount}`;
+  }
+
+  public canPlayerAfford(cost: number) {
+    if (cost <= this.coinCount) {
+      return true;
+    }
+
+    return false;
+  }
+
   getContainer(): PIXI.Container {
     return this.playerInterfaceContainer;
   }
