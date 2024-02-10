@@ -63,7 +63,37 @@ export class Enemy {
     this.enemySprite.x += this.direction.x * speed;
     this.enemySprite.y += this.direction.y * speed;
 
+    this.adjustEnemyRotation();
+
     this.handleBorderWrap();
+  }
+
+  protected adjustEnemyRotation(): void {
+    if (this.direction.x !== 0 && this.direction.y !== 0) {
+      if (this.direction.x > 0 && this.direction.y < 0) {
+        // Moving up-right: rotate the enemy sprite 7/4 * PI
+        this.enemySprite.rotation = 7 * (Math.PI / 4);
+      }
+      if (this.direction.x > 0 && this.direction.y > 0) {
+        // Moving down-right: rotate the enemy sprite PI / 4
+        this.enemySprite.rotation = Math.PI / 4;
+      }
+      if (this.direction.x < 0 && this.direction.y < 0) {
+        // Moving up-left: rotate the enemy sprite 5/4 * PI
+        this.enemySprite.rotation = 1.5 * (Math.PI / 4);
+      }
+      if (this.direction.x < 0 && this.direction.y > 0) {
+        // Moving down-left: rotate the enemy sprite 3/4 * PI
+        this.enemySprite.rotation = 7 * (Math.PI / 4);
+      }
+      if (this.direction.x < 0 && this.direction.y === 0) {
+        // Moving left: rotate the enemy sprite PI
+        this.enemySprite.rotation = Math.PI;
+      }
+    } else {
+      // No rotation for straight horizontal or vertical movement
+      this.enemySprite.rotation = 0;
+    }
   }
 
   protected handleBorderWrap(): void {
