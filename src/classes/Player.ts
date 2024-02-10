@@ -404,6 +404,10 @@ export class Player {
     return this.kebabs;
   }
 
+  public getSprite() {
+    return this.playerSprite;
+  }
+
   public checkCoinCollision(coins: Coin[]): void {
     const playerBounds = this.playerSprite.getBounds();
     for (const coin of coins) {

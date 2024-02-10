@@ -22,6 +22,10 @@ export class Background {
     });
   }
 
+  public getSprite() {
+    return this.tilingSprite;
+  }
+
   changeBackground() {
     // This might be needed for future levels
   }

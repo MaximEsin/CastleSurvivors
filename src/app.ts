@@ -90,6 +90,25 @@ export class Game {
     this.app.ticker.add(this.gameLoop.bind(this));
   }
 
+  private updateRenderingOrder(): void {
+    // Sort enemies based on their y-coordinate
+    this.enemies.sort((a, b) => a.getSprite().y - b.getSprite().y);
+
+    // Remove and re-add enemies to the stage in the correct order
+    this.enemies.forEach((enemy) => {
+      this.app.stage.removeChild(enemy.getSprite());
+      this.app.stage.addChild(enemy.getSprite());
+    });
+
+    // Ensure player is rendered on top of enemies
+    this.app.stage.removeChild(this.player.getSprite());
+    this.app.stage.addChild(this.player.getSprite());
+
+    // Ensure background is rendered behind everything
+    this.app.stage.removeChild(this.background.getSprite());
+    this.app.stage.addChildAt(this.background.getSprite(), 0);
+  }
+
   private gameLoop(): void {
     if (this.gameActive) {
       this.timer.update();
@@ -156,6 +175,8 @@ export class Game {
       this.player.checkCoinCollision(this.coins);
 
       this.merchant.checkPlayerCollision(this.player);
+
+      this.updateRenderingOrder();
 
       for (const enemy of this.enemies) {
         if (!enemy.getDeathState()) {
