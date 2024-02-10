@@ -14,6 +14,7 @@ import { SkeletonComponent } from '../../Enemies/Components/Skeleton';
 import { CoinEntity } from '../../Money/Entities/Coin';
 import { DiamondEntity } from '../../Money/Entities/Diamond';
 import { MegaDiamondEntity } from '../../Money/Entities/MegaDiamond';
+import { DamageComponent } from '../../Components/Damage';
 
 export class AttackSystem extends System {
   private app: PIXI.Application;
@@ -30,7 +31,7 @@ export class AttackSystem extends System {
     );
 
     playerEntities.forEach((entity) => {
-      if (event.key === 'c') {
+      if (event.key === 'c' || event.key === 'v' || event.key === 'x') {
         const playerPosition = entity.get(Position);
         const playerDirection = entity.get(Direction);
         const sprite = entity.get<PIXI.AnimatedSprite>(PIXI.AnimatedSprite);
@@ -40,7 +41,12 @@ export class AttackSystem extends System {
             playerDirection,
             sprite
           );
-          this.createProjectile(projectilePosition, playerDirection);
+          this.createProjectile(
+            projectilePosition,
+            playerDirection,
+            event.key,
+            entity
+          );
         }
       }
     });
@@ -58,22 +64,47 @@ export class AttackSystem extends System {
     return new Position(projectileX, projectileY);
   }
 
-  private createProjectile(position: Position, direction: Direction) {
+  private createProjectile(
+    position: Position,
+    direction: Direction,
+    key: string,
+    player: Entity
+  ) {
     const projectileEntity = new ProjectileEntity();
-    const projectileSprite = PIXI.Sprite.from('/Player/weapons/knife.png');
-    if (direction.x < 0) {
-      projectileSprite.scale.x = -1;
-    } else if (direction.y < 0) {
-      projectileSprite.rotation = -Math.PI / 2;
-    } else if (direction.y > 0) {
-      projectileSprite.rotation = Math.PI / 2;
+    let projectileSprite: PIXI.Sprite | undefined;
+
+    if (key === 'c') {
+      projectileSprite = PIXI.Sprite.from('/Player/weapons/knife.png');
+      projectileEntity.add(new DamageComponent(5));
     }
-    projectileEntity.add(new Position(position.x, position.y));
-    projectileEntity.add(new Velocity(direction.x * 5, direction.y * 5));
-    projectileEntity.add(new ProjectileComponent());
-    projectileEntity.add(projectileSprite);
-    this.engine.addEntity(projectileEntity);
-    this.app.stage.addChild(projectileSprite);
+
+    if (key === 'v') {
+      projectileSprite = PIXI.Sprite.from('/Player/weapons/eye.png');
+      projectileEntity.add(new DamageComponent(20));
+    }
+
+    if (key === 'x') {
+      projectileSprite = PIXI.Sprite.from('/Player/weapons/kebab.png');
+      projectileEntity.add(new DamageComponent(10));
+      const playerHealth = player.get(Health);
+      if (playerHealth) playerHealth.value += 5;
+    }
+
+    if (projectileSprite) {
+      if (direction.x < 0) {
+        projectileSprite.scale.x = -1;
+      } else if (direction.y < 0) {
+        projectileSprite.rotation = -Math.PI / 2;
+      } else if (direction.y > 0) {
+        projectileSprite.rotation = Math.PI / 2;
+      }
+      projectileEntity.add(new Position(position.x, position.y));
+      projectileEntity.add(new Velocity(direction.x * 5, direction.y * 5));
+      projectileEntity.add(new ProjectileComponent());
+      projectileEntity.add(projectileSprite);
+      this.engine.addEntity(projectileEntity);
+      this.app.stage.addChild(projectileSprite);
+    }
   }
 
   private spawnCoin(position: Position) {
@@ -140,8 +171,9 @@ export class AttackSystem extends System {
                 ) < 70
               ) {
                 const enemyHealth = entity.get(Health);
-                if (enemyHealth) {
-                  enemyHealth.value -= 5;
+                const damageComponent = projectileEntity.get(DamageComponent);
+                if (enemyHealth && damageComponent) {
+                  enemyHealth.value -= damageComponent.damage;
 
                   if (enemyHealth.value <= 0) {
                     if (entity.has(MushroomComponent)) {
