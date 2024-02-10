@@ -25,6 +25,7 @@ export class Skeleton extends Enemy {
     this.setRandomPosition(animation);
 
     animation.animationSpeed = 0.1;
+    animation.anchor.set(0.5);
     animation.play();
 
     this.app.stage.addChild(animation);

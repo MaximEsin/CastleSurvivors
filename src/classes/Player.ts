@@ -67,6 +67,7 @@ export class Player {
     const animation = new PIXI.AnimatedSprite(playerTextures);
     animation.x = window.innerWidth / 2 - 100;
     animation.y = window.innerHeight / 2 - 100;
+    animation.anchor.set(0.5);
     animation.animationSpeed = 0.1;
     animation.play();
 
