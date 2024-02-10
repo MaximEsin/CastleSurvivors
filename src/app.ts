@@ -19,6 +19,7 @@ import { SkeletonSystem } from './Enemies/Systems/Skeleton';
 import { CoinSystem } from './Money/Systems/Coin';
 import { DiamondSystem } from './Money/Systems/Diamond';
 import { MegaDiamondSystem } from './Money/Systems/MegaDiamond';
+import { MerchantSystem } from './Merchant/MerchantSystem';
 
 export class Game {
   private app: PIXI.Application;
@@ -79,6 +80,7 @@ export class Game {
       this.app,
       playerInterfaceSystem
     );
+    const merchantSystem = new MerchantSystem(this.app);
 
     engine.addSystem(playerSystem);
     engine.addSystem(animationSystem);
@@ -99,6 +101,7 @@ export class Game {
     engine.addSystem(coinSystem);
     engine.addSystem(diamondSystem);
     engine.addSystem(megaDiamondSystem);
+    engine.addSystem(merchantSystem);
 
     this.app.ticker.add((delta) => {
       engine.update(delta);

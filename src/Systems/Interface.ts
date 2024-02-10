@@ -7,7 +7,7 @@ export class PlayerInterfaceSystem extends System {
   private playerInterfaceContainer: PIXI.Container;
   private coinIcon!: PIXI.Sprite;
   private coinText!: PIXI.Text;
-  private coinCount: number = 0;
+  private coinCount: number = 50;
 
   constructor(app: PIXI.Application) {
     super();
