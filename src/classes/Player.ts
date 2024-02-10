@@ -78,24 +78,54 @@ export class Player {
 
   public moveUp(): void {
     this.playerSprite.y -= 5;
+    this.adjustPlayerRotation();
     this.playMovingSound();
   }
 
   public moveDown(): void {
     this.playerSprite.y += 5;
+    this.adjustPlayerRotation();
     this.playMovingSound();
   }
 
   public moveLeft(): void {
     this.playerSprite.x -= 5;
     this.playerSprite.scale.x = -1;
+    this.adjustPlayerRotation();
     this.playMovingSound();
   }
 
   public moveRight(): void {
     this.playerSprite.x += 5;
     this.playerSprite.scale.x = 1;
+    this.adjustPlayerRotation();
     this.playMovingSound();
+  }
+
+  private adjustPlayerRotation(): void {
+    if (
+      this.inputManager.isKeyPressed('w') &&
+      this.inputManager.isKeyPressed('a')
+    ) {
+      this.playerSprite.rotation = 1.5 * (Math.PI / 4); // Rotate 45 degrees counter-clockwise when moving diagonally up-left
+    } else if (
+      this.inputManager.isKeyPressed('w') &&
+      this.inputManager.isKeyPressed('d')
+    ) {
+      this.playerSprite.rotation = 7 * (Math.PI / 4); // Rotate 45 degrees clockwise when moving diagonally up-right
+    } else if (
+      this.inputManager.isKeyPressed('s') &&
+      this.inputManager.isKeyPressed('a')
+    ) {
+      this.playerSprite.rotation = 7 * (Math.PI / 4); // Rotate 45 degrees clockwise when moving diagonally down-left
+    } else if (
+      this.inputManager.isKeyPressed('s') &&
+      this.inputManager.isKeyPressed('d')
+    ) {
+      this.playerSprite.rotation = Math.PI / 4; // Rotate 45 degrees counter-clockwise when moving diagonally down-right
+    } else {
+      this.playerSprite.rotation = 0; // No rotation for other cases
+    }
   }
 
   public handlePlayerInput(): void {
