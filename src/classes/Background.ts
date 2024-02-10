@@ -1,21 +1,24 @@
 import * as PIXI from 'pixi.js';
 
 export class Background {
-  private sprite: PIXI.Sprite;
+  private tilingSprite: PIXI.TilingSprite;
 
   constructor(imagePath: string, app: PIXI.Application) {
-    this.sprite = PIXI.Sprite.from(imagePath);
-    this.sprite.width = app.screen.width;
-    this.sprite.height = app.screen.height;
-    app.stage.addChild(this.sprite);
+    const texture = PIXI.Texture.from(imagePath);
+    this.tilingSprite = new PIXI.TilingSprite(
+      texture,
+      app.screen.width,
+      app.screen.height
+    );
+    app.stage.addChild(this.tilingSprite);
 
     this.addResizeListener(app);
   }
-  // Resize the background when the window is resized
+
   private addResizeListener(app: PIXI.Application): void {
     window.addEventListener('resize', () => {
-      this.sprite.width = app.screen.width;
-      this.sprite.height = app.screen.height;
+      this.tilingSprite.width = app.screen.width;
+      this.tilingSprite.height = app.screen.height;
     });
   }
 
