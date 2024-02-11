@@ -107,23 +107,23 @@ export class Player {
 
   private adjustPlayerRotation(): void {
     if (
-      this.inputManager.isKeyPressed('w') &&
-      this.inputManager.isKeyPressed('a')
+      this.inputManager.isKeyPressed('KeyW') &&
+      this.inputManager.isKeyPressed('KeyA')
     ) {
       this.playerSprite.rotation = 1.5 * (Math.PI / 4);
     } else if (
-      this.inputManager.isKeyPressed('w') &&
-      this.inputManager.isKeyPressed('d')
+      this.inputManager.isKeyPressed('KeyW') &&
+      this.inputManager.isKeyPressed('KeyD')
     ) {
       this.playerSprite.rotation = 7 * (Math.PI / 4);
     } else if (
-      this.inputManager.isKeyPressed('s') &&
-      this.inputManager.isKeyPressed('a')
+      this.inputManager.isKeyPressed('KeyS') &&
+      this.inputManager.isKeyPressed('KeyA')
     ) {
       this.playerSprite.rotation = 7 * (Math.PI / 4);
     } else if (
-      this.inputManager.isKeyPressed('s') &&
-      this.inputManager.isKeyPressed('d')
+      this.inputManager.isKeyPressed('KeyS') &&
+      this.inputManager.isKeyPressed('KeyD')
     ) {
       this.playerSprite.rotation = Math.PI / 4;
     } else {
@@ -132,29 +132,29 @@ export class Player {
   }
 
   public handlePlayerInput(): void {
-    if (this.inputManager.isKeyPressed('w')) {
+    if (this.inputManager.isKeyPressed('KeyW')) {
       this.moveUp();
-    } else if (this.inputManager.isKeyPressed('s')) {
+    } else if (this.inputManager.isKeyPressed('KeyS')) {
       this.moveDown();
     }
 
-    if (this.inputManager.isKeyPressed('a')) {
+    if (this.inputManager.isKeyPressed('KeyA')) {
       this.moveLeft();
-    } else if (this.inputManager.isKeyPressed('d')) {
+    } else if (this.inputManager.isKeyPressed('KeyD')) {
       this.moveRight();
     }
 
-    if (this.inputManager.isKeyPressed('c')) {
+    if (this.inputManager.isKeyPressed('KeyC')) {
       this.throwKnife();
     }
 
-    if (this.inputManager.isKeyPressed('v')) {
+    if (this.inputManager.isKeyPressed('KeyV')) {
       if (this.isEyePurchased) {
         this.throwEye();
       }
     }
 
-    if (this.inputManager.isKeyPressed('x')) {
+    if (this.inputManager.isKeyPressed('KeyX')) {
       if (this.isKebabPurchased) {
         this.throwKebab();
       }
@@ -181,10 +181,10 @@ export class Player {
       }
     } else {
       if (
-        this.inputManager.isKeyPressed('w') ||
-        this.inputManager.isKeyPressed('a') ||
-        this.inputManager.isKeyPressed('s') ||
-        this.inputManager.isKeyPressed('d')
+        this.inputManager.isKeyPressed('KeyW') ||
+        this.inputManager.isKeyPressed('KeyA') ||
+        this.inputManager.isKeyPressed('KeyS') ||
+        this.inputManager.isKeyPressed('KeyD')
       ) {
         if (
           !this.playerSprite.playing ||

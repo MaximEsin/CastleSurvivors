@@ -9,13 +9,13 @@ export class InputManager {
 
   private handleKeyDown(event: KeyboardEvent): void {
     if (!this.disabled) {
-      this.keys[event.key] = true;
+      this.keys[event.code] = true;
     }
   }
 
   private handleKeyUp(event: KeyboardEvent): void {
     if (!this.disabled) {
-      this.keys[event.key] = false;
+      this.keys[event.code] = false;
     }
   }
 
