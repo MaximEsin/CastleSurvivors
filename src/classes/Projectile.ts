@@ -3,6 +3,7 @@ import { Enemy } from './Enemies/Enemy';
 
 export class Projectile {
   protected app: PIXI.Application;
+  protected layer: PIXI.Container<PIXI.DisplayObject>;
   protected projectileSprite: PIXI.Sprite;
   protected speed: number;
   protected direction: PIXI.Point;
@@ -12,6 +13,7 @@ export class Projectile {
 
   constructor(
     app: PIXI.Application,
+    layer: PIXI.Container<PIXI.DisplayObject>,
     x: number,
     y: number,
     speed: number,
@@ -20,6 +22,7 @@ export class Projectile {
     damage: number
   ) {
     this.app = app;
+    this.layer = layer;
     this.projectileSprite = new PIXI.Sprite(
       PIXI.Texture.from(projectileSprite)
     );
@@ -29,7 +32,7 @@ export class Projectile {
     this.direction = direction;
     this.damage = damage;
 
-    app.stage.addChild(this.projectileSprite);
+    layer.addChild(this.projectileSprite);
   }
 
   public update(): void {
@@ -43,7 +46,7 @@ export class Projectile {
   }
 
   public destroy(): void {
-    this.app.stage.removeChild(this.projectileSprite);
+    this.layer.removeChild(this.projectileSprite);
     this._isDestroyed = true;
   }
 

@@ -4,13 +4,14 @@ import { Projectile } from '../Projectile';
 export class CursedEye extends Projectile {
   constructor(
     app: PIXI.Application,
+    layer: PIXI.Container<PIXI.DisplayObject>,
     x: number,
     y: number,
     direction: PIXI.Point,
     damage: number
   ) {
     const eyeTexture = '/Player/weapons/eye.png';
-    super(app, x, y, 8, eyeTexture, direction, damage);
+    super(app, layer, x, y, 8, eyeTexture, direction, damage);
   }
 
   public update(): void {

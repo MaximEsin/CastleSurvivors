@@ -4,13 +4,14 @@ import { Projectile } from '../Projectile';
 export class Knife extends Projectile {
   constructor(
     app: PIXI.Application,
+    layer: PIXI.Container<PIXI.DisplayObject>,
     x: number,
     y: number,
     direction: PIXI.Point,
     damage: number
   ) {
     const knifeTexture = '/Player/weapons/knife.png';
-    super(app, x, y, 8, knifeTexture, direction, damage);
+    super(app, layer, x, y, 8, knifeTexture, direction, damage);
   }
 
   public mirrorImage(): void {

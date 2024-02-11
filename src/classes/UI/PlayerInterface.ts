@@ -9,18 +9,25 @@ export class PlayerInterface {
   private timerText!: PIXI.Text;
   private coinCount: number = 0;
 
-  constructor(app: PIXI.Application) {
+  constructor(
+    app: PIXI.Application,
+    layer: PIXI.Container<PIXI.DisplayObject>
+  ) {
     this.app = app;
     this.centerContainer = new PIXI.Container();
     this.backgroundSprite = new PIXI.Sprite(
       PIXI.Texture.from('/Interface/Paper.jpg')
     );
 
-    this.createInterface(app.screen.width, app.screen.height);
-    app.stage.addChild(this.backgroundSprite, this.centerContainer);
+    this.createInterface(app.screen.width, app.screen.height, layer);
+    layer.addChild(this.backgroundSprite, this.centerContainer);
   }
 
-  private createInterface(width: number, height: number): void {
+  private createInterface(
+    width: number,
+    height: number,
+    layer: PIXI.Container<PIXI.DisplayObject>
+  ): void {
     const playerInterfaceHeight = height * 0.1;
 
     // Background
@@ -85,7 +92,7 @@ export class PlayerInterface {
     this.timerText = new PIXI.Text('', { fill: 0xffffff });
     this.timerText.anchor.set(0.5, 0);
     this.timerText.position.set(this.app.screen.width / 2, 10);
-    this.app.stage.addChild(this.timerText);
+    layer.addChild(this.timerText);
   }
 
   public updateTimer(timerString: string): void {

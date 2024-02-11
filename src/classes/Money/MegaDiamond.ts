@@ -4,8 +4,14 @@ import { Coin } from './Coin';
 export class MegaDiamond extends Coin {
   protected value: number = 10;
 
-  constructor(app: PIXI.Application, x: number, y: number, sprite: string) {
-    super(app, x, y, sprite);
+  constructor(
+    app: PIXI.Application,
+    x: number,
+    y: number,
+    sprite: string,
+    layer: PIXI.Container<PIXI.DisplayObject>
+  ) {
+    super(app, x, y, sprite, layer);
     this.value = 10;
   }
 

@@ -21,6 +21,7 @@ import { WinScreen } from './classes/UI/WinScreen';
 
 export class Game {
   private app: PIXI.Application;
+  private layers: PIXI.Container[] = [];
   private background: Background;
   private animationManager: AnimationManager;
   private inputManager: InputManager;
@@ -45,14 +46,38 @@ export class Game {
 
     document.body.appendChild(this.app.view as unknown as Node);
 
-    this.background = new Background('/Backgrounds/CastleBG.webp', this.app);
+    const backgroundLayer = new PIXI.Container();
+    const gameLayer = new PIXI.Container();
+    const interfaceLayer = new PIXI.Container();
+    const endScreenLayer = new PIXI.Container();
+
+    this.layers.push(backgroundLayer);
+    this.layers.push(gameLayer);
+    this.layers.push(interfaceLayer);
+    this.layers.push(endScreenLayer);
+
+    this.layers.forEach((layer) => this.app.stage.addChild(layer));
+
+    this.background = new Background(
+      '/Backgrounds/CastleBG.webp',
+      this.app,
+      backgroundLayer
+    );
     this.animationManager = new AnimationManager();
     this.inputManager = new InputManager();
     this.audioManager = new AudioManager();
     this.timer = new Timer(300);
-    this.playerInterface = new PlayerInterface(this.app);
-    this.deathScreen = new DeathScreen(this.app, this.resetGame.bind(this));
-    this.winScreen = new WinScreen(this.app, this.resetGame.bind(this));
+    this.playerInterface = new PlayerInterface(this.app, interfaceLayer);
+    this.deathScreen = new DeathScreen(
+      this.app,
+      this.resetGame.bind(this),
+      endScreenLayer
+    );
+    this.winScreen = new WinScreen(
+      this.app,
+      this.resetGame.bind(this),
+      endScreenLayer
+    );
     this.player = new Player(
       this.animationManager,
       this.app,
@@ -60,10 +85,12 @@ export class Game {
       this.audioManager,
       this.playerInterface,
       this.deathScreen,
-      this.stopEnemies.bind(this)
+      this.stopEnemies.bind(this),
+      gameLayer
     );
     this.merchant = new Merchant(
       this.app,
+      gameLayer,
       this.animationManager,
       this.playerInterface,
       this.player
@@ -91,22 +118,20 @@ export class Game {
   }
 
   private updateRenderingOrder(): void {
-    // Sort enemies based on their y-coordinate
     this.enemies.sort((a, b) => a.getSprite().y - b.getSprite().y);
 
-    // Remove and re-add enemies to the stage in the correct order
     this.enemies.forEach((enemy) => {
-      this.app.stage.removeChild(enemy.getSprite());
-      this.app.stage.addChild(enemy.getSprite());
+      this.layers[1].removeChild(enemy.getSprite());
+      this.layers[1].addChild(enemy.getSprite());
     });
 
     // Ensure player is rendered on top of enemies
-    this.app.stage.removeChild(this.player.getSprite());
-    this.app.stage.addChild(this.player.getSprite());
+    this.layers[1].removeChild(this.player.getSprite());
+    this.layers[1].addChild(this.player.getSprite());
 
     // Ensure background is rendered behind everything
-    this.app.stage.removeChild(this.background.getSprite());
-    this.app.stage.addChildAt(this.background.getSprite(), 0);
+    this.layers[0].removeChild(this.background.getSprite());
+    this.layers[0].addChildAt(this.background.getSprite(), 0);
   }
 
   private gameLoop(): void {
@@ -140,7 +165,8 @@ export class Game {
                 this.app,
                 enemy.getSprite().x,
                 enemy.getSprite().y,
-                '/Shop/coin.png'
+                '/Shop/coin.png',
+                this.layers[1]
               );
               this.coins.push(coin);
             }
@@ -149,7 +175,8 @@ export class Game {
                 this.app,
                 enemy.getSprite().x,
                 enemy.getSprite().y,
-                '/Shop/diamond.png'
+                '/Shop/diamond.png',
+                this.layers[1]
               );
               this.coins.push(coin);
             }
@@ -158,7 +185,8 @@ export class Game {
                 this.app,
                 enemy.getSprite().x,
                 enemy.getSprite().y,
-                '/Shop/megaDiamond.png'
+                '/Shop/megaDiamond.png',
+                this.layers[1]
               );
               this.coins.push(coin);
             }
@@ -177,6 +205,7 @@ export class Game {
       this.merchant.checkPlayerCollision(this.player);
 
       this.updateRenderingOrder();
+      this.spriteCleaner();
 
       for (const enemy of this.enemies) {
         if (!enemy.getDeathState()) {
@@ -209,7 +238,7 @@ export class Game {
 
   private removeEnemies(): void {
     for (const enemy of this.enemies) {
-      this.app.stage.removeChild(enemy.getSprite());
+      this.layers[1].removeChild(enemy.getSprite());
       enemy.projectiles.forEach((projectile) => projectile.destroy());
       enemy.projectiles = [];
     }
@@ -218,9 +247,17 @@ export class Game {
 
   private removeCoins(): void {
     for (const coin of this.coins) {
-      this.app.stage.removeChild(coin.getSprite());
+      this.layers[1].removeChild(coin.getSprite());
     }
     this.coins = [];
+  }
+
+  private spriteCleaner() {
+    this.enemies.forEach((enemy) => {
+      if (enemy.isDead) {
+        this.layers[1].removeChild(enemy.getSprite());
+      }
+    });
   }
 
   resetGame(): void {
@@ -261,48 +298,64 @@ export class Game {
     switch (waveNumber) {
       case 1:
         for (let i = 0; i < 10; i++) {
-          const mushroom = new Mushroom(this.animationManager, this.app);
-          this.app.stage.addChild(mushroom.getSprite());
+          const mushroom = new Mushroom(
+            this.animationManager,
+            this.app,
+            this.layers[1]
+          );
+          this.layers[1].addChild(mushroom.getSprite());
           this.enemies.push(mushroom);
         }
         break;
       case 2:
         for (let i = 0; i < 5; i++) {
-          const mushroom = new Mushroom(this.animationManager, this.app);
-          this.app.stage.addChild(mushroom.getSprite());
+          const mushroom = new Mushroom(
+            this.animationManager,
+            this.app,
+            this.layers[1]
+          );
+          this.layers[1].addChild(mushroom.getSprite());
           this.enemies.push(mushroom);
         }
 
         for (let i = 0; i < 5; i++) {
-          const eye = new Eye(this.animationManager, this.app);
-          this.app.stage.addChild(eye.getSprite());
+          const eye = new Eye(this.animationManager, this.app, this.layers[1]);
+          this.layers[1].addChild(eye.getSprite());
           this.enemies.push(eye);
         }
         break;
       case 3:
         for (let i = 0; i < 15; i++) {
-          const eye = new Eye(this.animationManager, this.app);
-          this.app.stage.addChild(eye.getSprite());
+          const eye = new Eye(this.animationManager, this.app, this.layers[1]);
+          this.layers[1].addChild(eye.getSprite());
           this.enemies.push(eye);
         }
         break;
       case 4:
         for (let i = 0; i < 5; i++) {
-          const eye = new Eye(this.animationManager, this.app);
-          this.app.stage.addChild(eye.getSprite());
+          const eye = new Eye(this.animationManager, this.app, this.layers[1]);
+          this.layers[1].addChild(eye.getSprite());
           this.enemies.push(eye);
         }
 
         for (let i = 0; i < 5; i++) {
-          const skeleton = new Skeleton(this.animationManager, this.app);
-          this.app.stage.addChild(skeleton.getSprite());
+          const skeleton = new Skeleton(
+            this.animationManager,
+            this.app,
+            this.layers[1]
+          );
+          this.layers[1].addChild(skeleton.getSprite());
           this.enemies.push(skeleton);
         }
         break;
       case 5:
         for (let i = 0; i < 15; i++) {
-          const skeleton = new Skeleton(this.animationManager, this.app);
-          this.app.stage.addChild(skeleton.getSprite());
+          const skeleton = new Skeleton(
+            this.animationManager,
+            this.app,
+            this.layers[1]
+          );
+          this.layers[1].addChild(skeleton.getSprite());
           this.enemies.push(skeleton);
         }
         break;

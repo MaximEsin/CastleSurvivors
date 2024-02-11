@@ -3,12 +3,18 @@ import { AnimationManager } from '../AnimationManager';
 import { Enemy } from './Enemy';
 
 export class Eye extends Enemy {
+  protected layer: PIXI.Container<PIXI.DisplayObject>;
   private standingAnimation: PIXI.Texture[];
   private movingAnimation: PIXI.Texture[];
   private damagedAnimation: PIXI.Texture[];
 
-  constructor(animationManager: AnimationManager, app: PIXI.Application) {
-    super(animationManager, app, 20);
+  constructor(
+    animationManager: AnimationManager,
+    app: PIXI.Application,
+    layer: PIXI.Container<PIXI.DisplayObject>
+  ) {
+    super(animationManager, app, 20, layer);
+    this.layer = layer;
     this.standingAnimation = this.animationManager.getEyeFlyingAnimation();
     this.movingAnimation = this.animationManager.getEyeFlyingAnimation();
     this.damagedAnimation = this.animationManager.getEyeDamagedAnimation();
@@ -26,7 +32,7 @@ export class Eye extends Enemy {
     animation.anchor.set(0.5);
     animation.play();
 
-    this.app.stage.addChild(animation);
+    this.layer.addChild(animation);
 
     return animation;
   }

@@ -5,6 +5,7 @@ import { PlayerInterface } from './UI/PlayerInterface';
 
 export class Merchant {
   private app: PIXI.Application;
+  private layer: PIXI.Container<PIXI.DisplayObject>;
   private animationManager: AnimationManager;
   private merchantSprite: PIXI.AnimatedSprite;
   private playerInterface: PlayerInterface;
@@ -20,11 +21,13 @@ export class Merchant {
 
   constructor(
     app: PIXI.Application,
+    layer: PIXI.Container<PIXI.DisplayObject>,
     animationManager: AnimationManager,
     playerInterface: PlayerInterface,
     player: Player
   ) {
     this.app = app;
+    this.layer = layer;
     this.animationManager = animationManager;
     this.playerInterface = playerInterface;
     this.player = player;
@@ -36,7 +39,7 @@ export class Merchant {
       this.animationManager.getMerchantInteractAnimation();
     this.merchantSprite = this.createMerchantSprite();
 
-    this.app.stage.addChild(this.container);
+    this.layer.addChild(this.container);
     this.container.visible = false;
 
     const containerBackground = new PIXI.Graphics();
@@ -129,7 +132,7 @@ export class Merchant {
     ));
     animation.animationSpeed = 0.1;
     animation.play();
-    this.app.stage.addChild(animation);
+    this.layer.addChild(animation);
     this.spawnRandomly();
 
     return animation;

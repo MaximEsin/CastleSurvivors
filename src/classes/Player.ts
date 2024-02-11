@@ -22,6 +22,7 @@ export class Player {
   private playerInterface: PlayerInterface;
   private deathScreen: DeathScreen;
   private health: number;
+  private layer: PIXI.Container<PIXI.DisplayObject>;
   private isDamaged: boolean = false;
   private stopEnemiesCallback: () => void;
   private knives: Knife[] = [];
@@ -43,12 +44,14 @@ export class Player {
     audioManager: AudioManager,
     playerInterface: PlayerInterface,
     deathScreen: DeathScreen,
-    stopEnemiesCallback: () => void
+    stopEnemiesCallback: () => void,
+    layer: PIXI.Container<PIXI.DisplayObject>
   ) {
     this.animationManager = animationManager;
     this.inputManager = inputManager;
     this.audioManager = audioManager;
     this.app = app;
+    this.layer = layer;
     this.health = 100;
     this.playerInterface = playerInterface;
     this.stopEnemiesCallback = stopEnemiesCallback;
@@ -71,7 +74,7 @@ export class Player {
     animation.animationSpeed = 0.1;
     animation.play();
 
-    this.app.stage.addChild(animation);
+    this.layer.addChild(animation);
 
     return animation;
   }
@@ -275,7 +278,7 @@ export class Player {
   private playDeathAnimation(): void {
     const deathTextures = this.animationManager.getPlayerDyingAnimation();
     const deathAnimation = new PIXI.AnimatedSprite(deathTextures);
-    this.app.stage.removeChild(this.playerSprite);
+    this.layer.removeChild(this.playerSprite);
     deathAnimation.x = this.playerSprite.x;
     deathAnimation.y = this.playerSprite.y;
     deathAnimation.anchor.set(0.5);
@@ -283,11 +286,11 @@ export class Player {
     deathAnimation.loop = false;
     deathAnimation.play();
 
-    this.app.stage.addChild(deathAnimation);
+    this.layer.addChild(deathAnimation);
   }
 
   public resetPlayer(): void {
-    this.app.stage.removeChild(this.playerSprite);
+    this.layer.removeChild(this.playerSprite);
 
     this.playerSprite = this.createPlayerSprite();
     this.playerSprite.animationSpeed = 0.1;
@@ -317,6 +320,7 @@ export class Player {
 
       const knife = new Knife(
         this.app,
+        this.layer,
         this.playerSprite.x,
         this.playerSprite.y,
         direction,
@@ -325,7 +329,7 @@ export class Player {
 
       this.knives.push(knife);
 
-      this.app.stage.addChildAt(knife.getSprite(), 1);
+      this.layer.addChildAt(knife.getSprite(), 1);
 
       this.lastKnifeThrowTime = currentTime;
     }
@@ -346,6 +350,7 @@ export class Player {
 
       const eye = new CursedEye(
         this.app,
+        this.layer,
         this.playerSprite.x,
         this.playerSprite.y,
         direction,
@@ -354,7 +359,7 @@ export class Player {
 
       this.cursedEyes.push(eye);
 
-      this.app.stage.addChildAt(eye.getSprite(), 1);
+      this.layer.addChildAt(eye.getSprite(), 1);
 
       this.lastEyeThrowTime = currentTime;
     }
@@ -375,6 +380,7 @@ export class Player {
 
       const kebab = new Kebab(
         this.app,
+        this.layer,
         this.playerSprite.x,
         this.playerSprite.y,
         direction,
@@ -386,7 +392,7 @@ export class Player {
 
       this.kebabs.push(kebab);
 
-      this.app.stage.addChildAt(kebab.getSprite(), 1);
+      this.layer.addChildAt(kebab.getSprite(), 1);
 
       this.lastKebabThrowTime = currentTime;
     }

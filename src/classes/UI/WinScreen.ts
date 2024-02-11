@@ -6,7 +6,11 @@ export class WinScreen {
   private winSprite: PIXI.Sprite;
   private resetGameCallback: () => void;
 
-  constructor(app: PIXI.Application, resetGameCallback: () => void) {
+  constructor(
+    app: PIXI.Application,
+    resetGameCallback: () => void,
+    layer: PIXI.Container<PIXI.DisplayObject>
+  ) {
     this.app = app;
     this.container = new PIXI.Container();
     this.winSprite = PIXI.Sprite.from('/Interface/winscreen.avif');
@@ -19,7 +23,7 @@ export class WinScreen {
 
     this.container.visible = false;
 
-    app.stage.addChild(this.container);
+    layer.addChild(this.container);
   }
 
   private createResetButton(): PIXI.Sprite {

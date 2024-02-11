@@ -4,6 +4,7 @@ import { Projectile } from '../Projectile';
 
 export class Enemy {
   protected app: PIXI.Application;
+  protected layer: PIXI.Container<PIXI.DisplayObject>;
   protected animationManager: AnimationManager;
   protected enemySprite: PIXI.AnimatedSprite;
   protected direction: PIXI.Point = new PIXI.Point(1, 1);
@@ -17,10 +18,12 @@ export class Enemy {
   constructor(
     animationManager: AnimationManager,
     app: PIXI.Application,
-    health: number
+    health: number,
+    layer: PIXI.Container<PIXI.DisplayObject>
   ) {
     this.animationManager = animationManager;
     this.app = app;
+    this.layer = layer;
     this.health = health;
     this.enemySprite = this.createEnemySprite();
   }
@@ -191,6 +194,7 @@ export class Enemy {
   protected throwProjectile(projectileSprite: string, damage: number): void {
     const projectile = new Projectile(
       this.app,
+      this.layer,
       this.enemySprite.x,
       this.enemySprite.y,
       5,
@@ -215,7 +219,7 @@ export class Enemy {
 
   protected handleDeath() {
     this.isDead = true;
-    this.app.stage.removeChild(this.enemySprite);
+    this.layer.removeChild(this.enemySprite);
     this.projectiles.forEach((projectile) => projectile.destroy());
   }
 

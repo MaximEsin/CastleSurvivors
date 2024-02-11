@@ -3,14 +3,18 @@ import * as PIXI from 'pixi.js';
 export class Background {
   private tilingSprite: PIXI.TilingSprite;
 
-  constructor(imagePath: string, app: PIXI.Application) {
+  constructor(
+    imagePath: string,
+    app: PIXI.Application,
+    layer: PIXI.Container<PIXI.DisplayObject>
+  ) {
     const texture = PIXI.Texture.from(imagePath);
     this.tilingSprite = new PIXI.TilingSprite(
       texture,
       app.screen.width,
       app.screen.height
     );
-    app.stage.addChild(this.tilingSprite);
+    layer.addChild(this.tilingSprite);
 
     this.addResizeListener(app);
   }

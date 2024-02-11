@@ -4,13 +4,14 @@ import { Projectile } from '../Projectile';
 export class Kebab extends Projectile {
   constructor(
     app: PIXI.Application,
+    layer: PIXI.Container<PIXI.DisplayObject>,
     x: number,
     y: number,
     direction: PIXI.Point,
     damage: number
   ) {
     const kebabTexture = '/Player/weapons/kebab.png';
-    super(app, x, y, 8, kebabTexture, direction, damage);
+    super(app, layer, x, y, 8, kebabTexture, direction, damage);
   }
 
   public mirrorImage(): void {

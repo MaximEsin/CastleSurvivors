@@ -2,17 +2,25 @@ import * as PIXI from 'pixi.js';
 
 export class Coin {
   protected app: PIXI.Application;
+  protected layer: PIXI.Container<PIXI.DisplayObject>;
   protected coinSprite: PIXI.Sprite;
   protected isCollected: boolean = false;
   protected value: number = 1;
 
-  constructor(app: PIXI.Application, x: number, y: number, sprite: string) {
+  constructor(
+    app: PIXI.Application,
+    x: number,
+    y: number,
+    sprite: string,
+    layer: PIXI.Container<PIXI.DisplayObject>
+  ) {
     this.app = app;
+    this.layer = layer;
     this.coinSprite = new PIXI.Sprite(PIXI.Texture.from(sprite));
     this.coinSprite.anchor.set(0.5);
     this.coinSprite.position.set(x, y);
 
-    app.stage.addChild(this.coinSprite);
+    this.layer.addChild(this.coinSprite);
   }
 
   public collect(): void {
@@ -35,6 +43,6 @@ export class Coin {
   }
 
   public destroy(): void {
-    this.app.stage.removeChild(this.coinSprite);
+    this.layer.removeChild(this.coinSprite);
   }
 }
