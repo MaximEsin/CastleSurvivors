@@ -8,16 +8,13 @@ export class Knife extends Projectile {
     x: number,
     y: number,
     direction: PIXI.Point,
-    damage: number
+    damage: number,
+    rotation: number
   ) {
     const knifeTexture = '/Player/weapons/knife.png';
     super(app, layer, x, y, 8, knifeTexture, direction, damage);
-  }
 
-  public mirrorImage(): void {
-    if (this.direction.x < 0) {
-      this.getSprite().scale.x = -1;
-    }
+    this.getSprite().rotation = rotation;
   }
 
   public update(): void {

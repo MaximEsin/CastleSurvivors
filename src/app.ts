@@ -14,8 +14,6 @@ import { Skeleton } from './classes/Enemies/Skeleton';
 import { Diamond } from './classes/Money/Diamond';
 import { MegaDiamond } from './classes/Money/MegaDiamond';
 import { Merchant } from './classes/Merchant';
-import { Knife } from './classes/Weapons/Knife';
-import { Kebab } from './classes/Weapons/Kebab';
 import { Timer } from './classes/UI/Timer';
 import { WinScreen } from './classes/UI/WinScreen';
 
@@ -154,9 +152,6 @@ export class Game {
 
       playerProjectiles.forEach((projectile) => {
         projectile.update();
-        if (projectile instanceof Knife || projectile instanceof Kebab) {
-          projectile.mirrorImage();
-        }
         for (const enemy of this.enemies) {
           const deathState = enemy.getDeathState();
           if (deathState) {

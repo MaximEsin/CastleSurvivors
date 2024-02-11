@@ -8,16 +8,13 @@ export class Kebab extends Projectile {
     x: number,
     y: number,
     direction: PIXI.Point,
-    damage: number
+    damage: number,
+    rotation: number
   ) {
     const kebabTexture = '/Player/weapons/kebab.png';
     super(app, layer, x, y, 8, kebabTexture, direction, damage);
-  }
 
-  public mirrorImage(): void {
-    if (this.direction.x < 0) {
-      this.getSprite().scale.x = -1;
-    }
+    this.getSprite().rotation = rotation;
   }
 
   public update(): void {

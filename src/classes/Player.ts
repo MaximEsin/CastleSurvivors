@@ -290,14 +290,17 @@ export class Player {
     const currentTime = Date.now();
 
     if (currentTime - this.lastKnifeThrowTime >= this.knifeCooldown) {
-      const direction = new PIXI.Point(
-        this.playerSprite.scale.x > 0 ? 1 : -1,
-        0
-      );
+      // Calculate the direction vector from player to mouse cursor
+      const dx = this.inputManager.getMousePosition().x - this.playerSprite.x;
+      const dy = this.inputManager.getMousePosition().y - this.playerSprite.y;
 
-      const length = Math.sqrt(direction.x ** 2 + direction.y ** 2);
-      direction.x /= length;
-      direction.y /= length;
+      // Calculate the length of the direction vector
+      const length = Math.sqrt(dx ** 2 + dy ** 2);
+
+      // Normalize the direction vector to get a unit vector
+      const direction = new PIXI.Point(dx / length, dy / length);
+
+      const rotation = Math.atan2(dy, dx);
 
       const knife = new Knife(
         this.app,
@@ -305,7 +308,8 @@ export class Player {
         this.playerSprite.x,
         this.playerSprite.y,
         direction,
-        5
+        5,
+        rotation
       );
 
       this.knives.push(knife);
@@ -320,14 +324,17 @@ export class Player {
     const currentTime = Date.now();
 
     if (currentTime - this.lastEyeThrowTime >= this.EyeCooldown) {
-      const direction = new PIXI.Point(
-        this.playerSprite.scale.x > 0 ? 1 : -1,
-        0
-      );
+      // Calculate the direction vector from player to mouse cursor
+      const dx = this.inputManager.getMousePosition().x - this.playerSprite.x;
+      const dy = this.inputManager.getMousePosition().y - this.playerSprite.y;
 
-      const length = Math.sqrt(direction.x ** 2 + direction.y ** 2);
-      direction.x /= length;
-      direction.y /= length;
+      // Calculate the length of the direction vector
+      const length = Math.sqrt(dx ** 2 + dy ** 2);
+
+      // Normalize the direction vector to get a unit vector
+      const direction = new PIXI.Point(dx / length, dy / length);
+
+      const rotation = Math.atan2(dy, dx);
 
       const eye = new CursedEye(
         this.app,
@@ -335,7 +342,8 @@ export class Player {
         this.playerSprite.x,
         this.playerSprite.y,
         direction,
-        20
+        20,
+        rotation
       );
 
       this.cursedEyes.push(eye);
@@ -350,14 +358,17 @@ export class Player {
     const currentTime = Date.now();
 
     if (currentTime - this.lastKebabThrowTime >= this.kebabCooldown) {
-      const direction = new PIXI.Point(
-        this.playerSprite.scale.x > 0 ? 1 : -1,
-        0
-      );
+      // Calculate the direction vector from player to mouse cursor
+      const dx = this.inputManager.getMousePosition().x - this.playerSprite.x;
+      const dy = this.inputManager.getMousePosition().y - this.playerSprite.y;
 
-      const length = Math.sqrt(direction.x ** 2 + direction.y ** 2);
-      direction.x /= length;
-      direction.y /= length;
+      // Calculate the length of the direction vector
+      const length = Math.sqrt(dx ** 2 + dy ** 2);
+
+      // Normalize the direction vector to get a unit vector
+      const direction = new PIXI.Point(dx / length, dy / length);
+
+      const rotation = Math.atan2(dy, dx);
 
       const kebab = new Kebab(
         this.app,
@@ -365,7 +376,8 @@ export class Player {
         this.playerSprite.x,
         this.playerSprite.y,
         direction,
-        10
+        10,
+        rotation
       );
 
       this.health += 5;
