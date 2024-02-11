@@ -24,6 +24,7 @@ export class Player {
   private health: number;
   private layer: PIXI.Container<PIXI.DisplayObject>;
   private isDamaged: boolean = false;
+  private isMoving: boolean = false;
   private stopEnemiesCallback: () => void;
   private knives: Knife[] = [];
   private cursedEyes: CursedEye[] = [];
@@ -79,69 +80,30 @@ export class Player {
     return animation;
   }
 
-  public moveUp(): void {
-    this.playerSprite.y -= 5;
-    this.adjustPlayerRotation();
-    this.playMovingSound();
-  }
-
-  public moveDown(): void {
-    this.playerSprite.y += 5;
-    this.adjustPlayerRotation();
-    this.playMovingSound();
-  }
-
-  public moveLeft(): void {
-    this.playerSprite.x -= 5;
-    this.playerSprite.scale.x = -1;
-    this.adjustPlayerRotation();
-    this.playMovingSound();
-  }
-
-  public moveRight(): void {
-    this.playerSprite.x += 5;
-    this.playerSprite.scale.x = 1;
-    this.adjustPlayerRotation();
-    this.playMovingSound();
-  }
-
-  private adjustPlayerRotation(): void {
-    if (
-      this.inputManager.isKeyPressed('KeyW') &&
-      this.inputManager.isKeyPressed('KeyA')
-    ) {
-      this.playerSprite.rotation = 1.5 * (Math.PI / 4);
-    } else if (
-      this.inputManager.isKeyPressed('KeyW') &&
-      this.inputManager.isKeyPressed('KeyD')
-    ) {
-      this.playerSprite.rotation = 7 * (Math.PI / 4);
-    } else if (
-      this.inputManager.isKeyPressed('KeyS') &&
-      this.inputManager.isKeyPressed('KeyA')
-    ) {
-      this.playerSprite.rotation = 7 * (Math.PI / 4);
-    } else if (
-      this.inputManager.isKeyPressed('KeyS') &&
-      this.inputManager.isKeyPressed('KeyD')
-    ) {
-      this.playerSprite.rotation = Math.PI / 4;
-    } else {
-      this.playerSprite.rotation = 0;
-    }
-  }
-
   public handlePlayerInput(): void {
-    if (this.inputManager.isKeyPressed('KeyW')) {
-      this.moveUp();
-    } else if (this.inputManager.isKeyPressed('KeyS')) {
-      this.moveDown();
+    const playerPosition = this.playerSprite.position;
+    const mousePosition = this.inputManager.getMousePosition();
+
+    const dx = mousePosition.x - playerPosition.x;
+    const dy = mousePosition.y - playerPosition.y;
+
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > 30) {
+      this.isMoving = true;
+      this.playMovingSound();
+
+      const directionX = dx / distance;
+      const directionY = dy / distance;
+
+      playerPosition.x += directionX * 5;
+      playerPosition.y += directionY * 5;
+
+      this.playerSprite.rotation = Math.atan2(dy, dx);
     }
 
-    if (this.inputManager.isKeyPressed('KeyA')) {
-      this.moveLeft();
-    } else if (this.inputManager.isKeyPressed('KeyD')) {
-      this.moveRight();
+    if (distance < 30) {
+      this.isMoving = false;
     }
 
     if (this.inputManager.isKeyPressed('KeyC')) {
@@ -161,11 +123,35 @@ export class Player {
     }
 
     this.handleBorderWrap();
+    this.adjustPlayerRotation();
+  }
+
+  private adjustPlayerRotation(): void {
+    const mouseX = this.inputManager.getMousePosition().x;
+    const playerX = this.playerSprite.x;
+
+    const dx = mouseX - playerX;
+
+    const direction = dx > 0 ? 1 : -1;
+
+    if (direction === -1) {
+      this.playerSprite.scale.x = -1;
+    } else {
+      this.playerSprite.scale.x = 1;
+    }
+
+    const dy = this.inputManager.getMousePosition().y - this.playerSprite.y;
+    const rotation = Math.atan2(dy, dx);
+
+    if (direction === -1) {
+      this.playerSprite.rotation = rotation + Math.PI;
+    } else {
+      this.playerSprite.rotation = rotation;
+    }
   }
 
   public updatePlayerAnimation(): void {
     if (this.isDamaged) {
-      // Play damaged animation once
       if (
         !this.playerSprite.playing ||
         this.playerSprite.textures !== this.playerDamagedTextures
@@ -180,12 +166,7 @@ export class Player {
         this.playerSprite.play();
       }
     } else {
-      if (
-        this.inputManager.isKeyPressed('KeyW') ||
-        this.inputManager.isKeyPressed('KeyA') ||
-        this.inputManager.isKeyPressed('KeyS') ||
-        this.inputManager.isKeyPressed('KeyD')
-      ) {
+      if (this.isMoving) {
         if (
           !this.playerSprite.playing ||
           this.playerSprite.textures !== this.playerMovingTextures
