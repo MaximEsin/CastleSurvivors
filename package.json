@@ -17,6 +17,7 @@
     "vite": "^5.0.8"
   },
   "dependencies": {
+    "@pixi/sound": "^5.2.2",
     "pixi.js": "^7.4.0",
     "rollup": "^4.9.6"
   }

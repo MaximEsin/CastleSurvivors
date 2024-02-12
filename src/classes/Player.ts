@@ -37,6 +37,7 @@ export class Player {
   private kebabCooldown: number = 5000;
   public isEyePurchased: boolean = false;
   public isKebabPurchased: boolean = false;
+  private isWalkingSoundPlaying: boolean = false;
 
   constructor(
     animationManager: AnimationManager,
@@ -91,7 +92,11 @@ export class Player {
 
     if (distance > 30) {
       this.isMoving = true;
-      this.playMovingSound();
+
+      if (!this.isWalkingSoundPlaying) {
+        this.playMovingSound();
+        this.isWalkingSoundPlaying = true;
+      }
 
       const directionX = dx / distance;
       const directionY = dy / distance;
@@ -104,6 +109,8 @@ export class Player {
 
     if (distance < 30) {
       this.isMoving = false;
+      this.isWalkingSoundPlaying = false;
+      this.audioManager.stopSound('walkingSound');
     }
 
     if (this.inputManager.isKeyPressed('KeyC')) {
@@ -206,7 +213,7 @@ export class Player {
   }
 
   private playMovingSound() {
-    this.audioManager.playSound('walkingSound');
+    this.audioManager.playSound('walkingSound', true);
     this.audioManager.setVolume('walkingSound', 0.5);
   }
 
