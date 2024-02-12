@@ -7,8 +7,8 @@ export class Timer {
     this.currentTime = totalTime;
   }
 
-  public update(): void {
-    this.currentTime -= 0.015;
+  public update(deltaMS: number): void {
+    this.currentTime -= deltaMS / 66;
     if (this.currentTime < 0) {
       this.currentTime = 0;
     }

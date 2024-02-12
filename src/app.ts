@@ -130,9 +130,9 @@ export class Game {
     this.gameLayer.sortChildren();
   }
 
-  private gameLoop(): void {
+  private gameLoop(deltaMS: number): void {
     if (this.gameActive) {
-      this.timer.update();
+      this.timer.update(deltaMS);
       const timerString = this.timer.getTimeString();
       this.playerInterface.updateTimer(timerString);
 
