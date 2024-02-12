@@ -120,18 +120,13 @@ export class Game {
   private updateRenderingOrder(): void {
     this.enemies.sort((a, b) => a.getSprite().y - b.getSprite().y);
 
-    this.enemies.forEach((enemy) => {
-      this.layers[1].removeChild(enemy.getSprite());
-      this.layers[1].addChild(enemy.getSprite());
-    });
+    this.layers[1].sortableChildren = true;
 
-    // Ensure player is rendered on top of enemies
-    this.layers[1].removeChild(this.player.getSprite());
     this.layers[1].addChild(this.player.getSprite());
 
-    // Ensure background is rendered behind everything
-    this.layers[0].removeChild(this.background.getSprite());
     this.layers[0].addChildAt(this.background.getSprite(), 0);
+
+    this.layers[1].sortChildren();
   }
 
   private gameLoop(): void {
