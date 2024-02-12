@@ -23,13 +23,20 @@ export class AudioManager {
     }
   }
 
-  public stopSoundAfterFinish(key: string, duration: number): void {
-    const sound = this.sounds[key];
-    if (sound && sound.isPlaying) {
-      setTimeout(() => {
-        sound.stop();
-      }, duration);
-    }
+  public pauseAllSounds(): void {
+    Object.values(this.sounds).forEach((sound) => {
+      if (sound && sound.isPlaying) {
+        sound.pause();
+      }
+    });
+  }
+
+  public resumeAllPausedSounds(): void {
+    Object.values(this.sounds).forEach((sound) => {
+      if (sound && sound.paused) {
+        sound.resume();
+      }
+    });
   }
 
   public pauseSound(key: string): void {

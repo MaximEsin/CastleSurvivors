@@ -106,8 +106,10 @@ export class Game {
       if (event.key === 'Escape') {
         if (this.app.ticker.started) {
           this.app.ticker.stop();
+          this.audioManager.pauseAllSounds();
         } else {
           this.app.ticker.start();
+          this.audioManager.resumeAllPausedSounds();
         }
       }
     });
