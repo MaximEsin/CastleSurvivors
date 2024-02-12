@@ -19,7 +19,10 @@ import { WinScreen } from './classes/UI/WinScreen';
 
 export class Game {
   private app: PIXI.Application;
-  private layers: PIXI.Container[] = [];
+  private backgroundLayer: PIXI.Container;
+  private gameLayer: PIXI.Container;
+  private interfaceLayer: PIXI.Container;
+  private endScreenLayer: PIXI.Container;
   private background: Background;
   private animationManager: AnimationManager;
   private inputManager: InputManager;
@@ -44,37 +47,35 @@ export class Game {
 
     document.body.appendChild(this.app.view as unknown as Node);
 
-    const backgroundLayer = new PIXI.Container();
-    const gameLayer = new PIXI.Container();
-    const interfaceLayer = new PIXI.Container();
-    const endScreenLayer = new PIXI.Container();
+    this.backgroundLayer = new PIXI.Container();
+    this.gameLayer = new PIXI.Container();
+    this.interfaceLayer = new PIXI.Container();
+    this.endScreenLayer = new PIXI.Container();
 
-    this.layers.push(backgroundLayer);
-    this.layers.push(gameLayer);
-    this.layers.push(interfaceLayer);
-    this.layers.push(endScreenLayer);
-
-    this.layers.forEach((layer) => this.app.stage.addChild(layer));
+    this.app.stage.addChild(this.backgroundLayer);
+    this.app.stage.addChild(this.gameLayer);
+    this.app.stage.addChild(this.interfaceLayer);
+    this.app.stage.addChild(this.endScreenLayer);
 
     this.background = new Background(
       '/Backgrounds/CastleBG.webp',
       this.app,
-      backgroundLayer
+      this.backgroundLayer
     );
     this.animationManager = new AnimationManager();
     this.inputManager = new InputManager();
     this.audioManager = new AudioManager();
     this.timer = new Timer(300);
-    this.playerInterface = new PlayerInterface(this.app, interfaceLayer);
+    this.playerInterface = new PlayerInterface(this.app, this.interfaceLayer);
     this.deathScreen = new DeathScreen(
       this.app,
       this.resetGame.bind(this),
-      endScreenLayer
+      this.endScreenLayer
     );
     this.winScreen = new WinScreen(
       this.app,
       this.resetGame.bind(this),
-      endScreenLayer
+      this.endScreenLayer
     );
     this.player = new Player(
       this.animationManager,
@@ -84,11 +85,11 @@ export class Game {
       this.playerInterface,
       this.deathScreen,
       this.stopEnemies.bind(this),
-      gameLayer
+      this.gameLayer
     );
     this.merchant = new Merchant(
       this.app,
-      gameLayer,
+      this.gameLayer,
       this.animationManager,
       this.playerInterface,
       this.player
@@ -120,13 +121,13 @@ export class Game {
   private updateRenderingOrder(): void {
     this.enemies.sort((a, b) => a.getSprite().y - b.getSprite().y);
 
-    this.layers[1].sortableChildren = true;
+    this.gameLayer.sortableChildren = true;
 
-    this.layers[1].addChild(this.player.getSprite());
+    this.gameLayer.addChild(this.player.getSprite());
 
-    this.layers[0].addChildAt(this.background.getSprite(), 0);
+    this.backgroundLayer.addChildAt(this.background.getSprite(), 0);
 
-    this.layers[1].sortChildren();
+    this.gameLayer.sortChildren();
   }
 
   private gameLoop(): void {
@@ -158,7 +159,7 @@ export class Game {
                 enemy.getSprite().x,
                 enemy.getSprite().y,
                 '/Shop/coin.png',
-                this.layers[1]
+                this.gameLayer
               );
               this.coins.push(coin);
             }
@@ -168,7 +169,7 @@ export class Game {
                 enemy.getSprite().x,
                 enemy.getSprite().y,
                 '/Shop/diamond.png',
-                this.layers[1]
+                this.gameLayer
               );
               this.coins.push(coin);
             }
@@ -178,7 +179,7 @@ export class Game {
                 enemy.getSprite().x,
                 enemy.getSprite().y,
                 '/Shop/megaDiamond.png',
-                this.layers[1]
+                this.gameLayer
               );
               this.coins.push(coin);
             }
@@ -230,7 +231,7 @@ export class Game {
 
   private removeEnemies(): void {
     for (const enemy of this.enemies) {
-      this.layers[1].removeChild(enemy.getSprite());
+      this.gameLayer.removeChild(enemy.getSprite());
       enemy.projectiles.forEach((projectile) => projectile.destroy());
       enemy.projectiles = [];
     }
@@ -239,7 +240,7 @@ export class Game {
 
   private removeCoins(): void {
     for (const coin of this.coins) {
-      this.layers[1].removeChild(coin.getSprite());
+      this.gameLayer.removeChild(coin.getSprite());
     }
     this.coins = [];
   }
@@ -247,7 +248,7 @@ export class Game {
   private spriteCleaner() {
     this.enemies.forEach((enemy) => {
       if (enemy.isDead) {
-        this.layers[1].removeChild(enemy.getSprite());
+        this.gameLayer.removeChild(enemy.getSprite());
       }
     });
   }
@@ -293,9 +294,9 @@ export class Game {
           const mushroom = new Mushroom(
             this.animationManager,
             this.app,
-            this.layers[1]
+            this.gameLayer
           );
-          this.layers[1].addChild(mushroom.getSprite());
+          this.gameLayer.addChild(mushroom.getSprite());
           this.enemies.push(mushroom);
         }
         break;
@@ -304,29 +305,29 @@ export class Game {
           const mushroom = new Mushroom(
             this.animationManager,
             this.app,
-            this.layers[1]
+            this.gameLayer
           );
-          this.layers[1].addChild(mushroom.getSprite());
+          this.gameLayer.addChild(mushroom.getSprite());
           this.enemies.push(mushroom);
         }
 
         for (let i = 0; i < 5; i++) {
-          const eye = new Eye(this.animationManager, this.app, this.layers[1]);
-          this.layers[1].addChild(eye.getSprite());
+          const eye = new Eye(this.animationManager, this.app, this.gameLayer);
+          this.gameLayer.addChild(eye.getSprite());
           this.enemies.push(eye);
         }
         break;
       case 3:
         for (let i = 0; i < 15; i++) {
-          const eye = new Eye(this.animationManager, this.app, this.layers[1]);
-          this.layers[1].addChild(eye.getSprite());
+          const eye = new Eye(this.animationManager, this.app, this.gameLayer);
+          this.gameLayer.addChild(eye.getSprite());
           this.enemies.push(eye);
         }
         break;
       case 4:
         for (let i = 0; i < 5; i++) {
-          const eye = new Eye(this.animationManager, this.app, this.layers[1]);
-          this.layers[1].addChild(eye.getSprite());
+          const eye = new Eye(this.animationManager, this.app, this.gameLayer);
+          this.gameLayer.addChild(eye.getSprite());
           this.enemies.push(eye);
         }
 
@@ -334,9 +335,9 @@ export class Game {
           const skeleton = new Skeleton(
             this.animationManager,
             this.app,
-            this.layers[1]
+            this.gameLayer
           );
-          this.layers[1].addChild(skeleton.getSprite());
+          this.gameLayer.addChild(skeleton.getSprite());
           this.enemies.push(skeleton);
         }
         break;
@@ -345,9 +346,9 @@ export class Game {
           const skeleton = new Skeleton(
             this.animationManager,
             this.app,
-            this.layers[1]
+            this.gameLayer
           );
-          this.layers[1].addChild(skeleton.getSprite());
+          this.gameLayer.addChild(skeleton.getSprite());
           this.enemies.push(skeleton);
         }
         break;
