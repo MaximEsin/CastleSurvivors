@@ -15,6 +15,7 @@ import { InputManager } from '../Managers/InputManager';
 import { AudioManager } from '../Managers/AudioManager';
 import { PlayerInterface } from '../UI/PlayerInterface';
 import { Timer } from '../UI/Timer';
+import { PlayerWeaponsManager } from '../Managers/PlayerWeaponManager';
 
 export class GameObjectManager {
   private app: PIXI.Application;
@@ -27,6 +28,7 @@ export class GameObjectManager {
   private audioManager: AudioManager;
   private timer: Timer;
   private playerInterface: PlayerInterface;
+  private playerWeaponsManager: PlayerWeaponsManager;
   private gameLayer: PIXI.Container;
   private endScreenLayer: PIXI.Container;
   public enemies: Enemy[] = [];
@@ -68,12 +70,18 @@ export class GameObjectManager {
       this.deathScreen,
       this.gameLayer
     );
+    this.playerWeaponsManager = new PlayerWeaponsManager(
+      this.app,
+      this.gameLayer,
+      this.player,
+      this.playerInterface
+    );
     this.merchant = new Merchant(
       this.app,
       this.gameLayer,
       this.animationManager,
       this.playerInterface,
-      this.player
+      this.playerWeaponsManager
     );
   }
 
@@ -88,9 +96,10 @@ export class GameObjectManager {
   }
 
   updateProjectiles(): void {
-    const playerKnives = this.player.getKnives();
-    const playerCursedEyes = this.player.getEyes();
-    const playerKebabs = this.player.getKebabs();
+    this.playerWeaponsManager.update(this.inputManager.getMousePosition());
+    const playerKnives = this.playerWeaponsManager.getKnives();
+    const playerCursedEyes = this.playerWeaponsManager.getEyes();
+    const playerKebabs = this.playerWeaponsManager.getKebabs();
     const playerProjectiles = [
       ...playerKnives,
       ...playerCursedEyes,
@@ -98,7 +107,6 @@ export class GameObjectManager {
     ];
 
     playerProjectiles.forEach((projectile) => {
-      projectile.update();
       for (const enemy of this.enemies) {
         const deathState = enemy.getDeathState();
         if (deathState) {

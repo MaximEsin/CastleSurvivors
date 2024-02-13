@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { AnimationManager } from './Managers/AnimationManager';
 import { Player } from './Player';
 import { PlayerInterface } from './UI/PlayerInterface';
+import { PlayerWeaponsManager } from './Managers/PlayerWeaponManager';
 
 export class Merchant {
   private app: PIXI.Application;
@@ -17,20 +18,20 @@ export class Merchant {
   private isPlayerNear: boolean = false;
   private isEyePurchased: boolean = false;
   private isKebabPurchased: boolean = false;
-  private player: Player;
+  private playerWeaponsManager: PlayerWeaponsManager;
 
   constructor(
     app: PIXI.Application,
     layer: PIXI.Container<PIXI.DisplayObject>,
     animationManager: AnimationManager,
     playerInterface: PlayerInterface,
-    player: Player
+    playerWeaponsManager: PlayerWeaponsManager
   ) {
     this.app = app;
     this.layer = layer;
     this.animationManager = animationManager;
     this.playerInterface = playerInterface;
-    this.player = player;
+    this.playerWeaponsManager = playerWeaponsManager;
     this.container = new PIXI.Container();
     this.container.interactive = true;
     this.standingTextures =
@@ -204,7 +205,7 @@ export class Merchant {
         this.app.screen.width,
         this.app.screen.height
       );
-      this.player.isEyePurchased = true;
+      this.playerWeaponsManager.isEyePurchased = true;
     }
   }
 
@@ -215,7 +216,7 @@ export class Merchant {
         this.app.screen.width,
         this.app.screen.height
       );
-      this.player.isKebabPurchased = true;
+      this.playerWeaponsManager.isKebabPurchased = true;
     }
   }
 }

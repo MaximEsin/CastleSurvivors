@@ -2,15 +2,21 @@ import * as PIXI from 'pixi.js';
 import { Knife } from '../Weapons/Knife';
 import { CursedEye } from '../Weapons/CursedEye';
 import { Kebab } from '../Weapons/Kebab';
+import { PlayerInterface } from '../UI/PlayerInterface';
+import { Player } from '../Player';
 
 export class PlayerWeaponsManager {
   private app: PIXI.Application;
   private layer: PIXI.Container<PIXI.DisplayObject>;
-  private playerSprite: PIXI.AnimatedSprite;
+  private player: Player;
+  private playerInterface: PlayerInterface;
 
   public knives: Knife[] = [];
   public cursedEyes: CursedEye[] = [];
   public kebabs: Kebab[] = [];
+
+  public isEyePurchased: boolean = false;
+  public isKebabPurchased: boolean = false;
 
   private lastKnifeThrowTime: number = 0;
   private knifeCooldown: number = 2000;
@@ -24,36 +30,57 @@ export class PlayerWeaponsManager {
   constructor(
     app: PIXI.Application,
     layer: PIXI.Container<PIXI.DisplayObject>,
-    playerSprite: PIXI.AnimatedSprite
+    player: Player,
+    playerinterface: PlayerInterface
   ) {
     this.app = app;
     this.layer = layer;
-    this.playerSprite = playerSprite;
+    this.player = player;
+    this.playerInterface = playerinterface;
     this.app.renderer.plugins.interaction.autoPreventDefault = false;
   }
 
-  public update() {
-    this.updateKnives();
-    this.updateCursedEyes();
-    this.updateKebabs();
+  public update(mousePosition: { x: number; y: number }) {
+    this.updateKnives(mousePosition);
+    this.updateCursedEyes(mousePosition);
+    this.updateKebabs(mousePosition);
   }
 
-  private updateKnives() {
+  private updateKnives(mousePosition: { x: number; y: number }) {
+    this.throwKnife(mousePosition);
     this.knives.forEach((knife) => {
       knife.update();
     });
   }
 
-  private updateCursedEyes() {
+  private updateCursedEyes(mousePosition: { x: number; y: number }) {
+    if (this.isEyePurchased) {
+      this.throwEye(mousePosition);
+    }
     this.cursedEyes.forEach((eye) => {
       eye.update();
     });
   }
 
-  private updateKebabs() {
+  private updateKebabs(mousePosition: { x: number; y: number }) {
+    if (this.isKebabPurchased) {
+      this.throwKebab(mousePosition);
+    }
     this.kebabs.forEach((kebab) => {
       kebab.update();
     });
+  }
+
+  getKnives() {
+    return this.knives;
+  }
+
+  getEyes() {
+    return this.cursedEyes;
+  }
+
+  getKebabs() {
+    return this.kebabs;
   }
 
   private throwProjectile(
@@ -65,8 +92,8 @@ export class PlayerWeaponsManager {
     const currentTime = Date.now();
 
     if (currentTime - lastItemThrowTimer >= coolDown) {
-      const dx = mousePosition.x - this.playerSprite.x;
-      const dy = mousePosition.y - this.playerSprite.y;
+      const dx = mousePosition.x - this.player.getSprite().x;
+      const dy = mousePosition.y - this.player.getSprite().y;
 
       const length = Math.sqrt(dx ** 2 + dy ** 2);
       const direction = new PIXI.Point(dx / length, dy / length);
@@ -76,8 +103,8 @@ export class PlayerWeaponsManager {
         const knife = new Knife(
           this.app,
           this.layer,
-          this.playerSprite.x,
-          this.playerSprite.y,
+          this.player.getSprite().x,
+          this.player.getSprite().y,
           direction,
           5,
           rotation
@@ -94,8 +121,8 @@ export class PlayerWeaponsManager {
         const eye = new CursedEye(
           this.app,
           this.layer,
-          this.playerSprite.x,
-          this.playerSprite.y,
+          this.player.getSprite().x,
+          this.player.getSprite().y,
           direction,
           20,
           rotation
@@ -112,12 +139,15 @@ export class PlayerWeaponsManager {
         const kebab = new Kebab(
           this.app,
           this.layer,
-          this.playerSprite.x,
-          this.playerSprite.y,
+          this.player.getSprite().x,
+          this.player.getSprite().y,
           direction,
           10,
           rotation
         );
+
+        this.player.health += 5;
+        this.playerInterface.updateHealthText(this.player.health);
 
         this.kebabs.push(kebab);
 

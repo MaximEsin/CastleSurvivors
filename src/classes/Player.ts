@@ -5,10 +5,7 @@ import { AudioManager } from './Managers/AudioManager';
 import { Projectile } from './Projectile';
 import { PlayerInterface } from './UI/PlayerInterface';
 import { DeathScreen } from './UI/DeathScreen';
-import { Knife } from './Weapons/Knife';
 import { Coin } from './Money/Coin';
-import { CursedEye } from './Weapons/CursedEye';
-import { PlayerWeaponsManager } from './Managers/PlayerWeaponManager';
 
 export class Player {
   private app: PIXI.Application;
@@ -21,14 +18,11 @@ export class Player {
   private playerDamagedTextures: PIXI.Texture[];
   private playerInterface: PlayerInterface;
   private deathScreen: DeathScreen;
-  private health: number;
+  public health: number;
   private layer: PIXI.Container<PIXI.DisplayObject>;
   private isDamaged: boolean = false;
   private isMoving: boolean = false;
-  public isEyePurchased: boolean = false;
-  public isKebabPurchased: boolean = false;
   private isWalkingSoundPlaying: boolean = false;
-  private playerWeaponsManager: PlayerWeaponsManager;
 
   constructor(
     animationManager: AnimationManager,
@@ -54,11 +48,6 @@ export class Player {
     this.playerDamagedTextures =
       this.animationManager.getPlayerDamagedAnimation();
     this.deathScreen = deathScreen;
-    this.playerWeaponsManager = new PlayerWeaponsManager(
-      app,
-      layer,
-      this.playerSprite
-    );
   }
 
   private createPlayerSprite(): PIXI.AnimatedSprite {
@@ -107,27 +96,6 @@ export class Player {
     this.isMoving = false;
     this.isWalkingSoundPlaying = false;
     this.audioManager.stopSound('walkingSound');
-  }
-
-  public handlePlayerKeyboardInput(): void {
-    const mousePosition = this.inputManager.getMousePosition();
-    if (this.inputManager.isKeyPressed('KeyC')) {
-      this.playerWeaponsManager.throwKnife(mousePosition);
-    }
-
-    if (this.inputManager.isKeyPressed('KeyV')) {
-      if (this.isEyePurchased) {
-        this.playerWeaponsManager.throwEye(mousePosition);
-      }
-    }
-
-    if (this.inputManager.isKeyPressed('KeyX')) {
-      if (this.isKebabPurchased) {
-        this.playerWeaponsManager.throwKebab(mousePosition);
-        this.health += 5;
-        this.playerInterface.updateHealthText(this.health);
-      }
-    }
   }
 
   private adjustPlayerRotation(): void {
@@ -242,7 +210,6 @@ export class Player {
   private handlePlayerDefeat(): void {
     this.playDeathAnimation();
 
-    this.inputManager.disableInput();
     this.playDeathSound();
 
     setTimeout(() => {
@@ -276,20 +243,6 @@ export class Player {
     this.health = 100;
     this.isDamaged = false;
     this.playerInterface.updateHealthText(this.health);
-
-    this.inputManager.enableInput();
-  }
-
-  public getKnives(): Knife[] {
-    return this.playerWeaponsManager.knives;
-  }
-
-  public getEyes(): CursedEye[] {
-    return this.playerWeaponsManager.cursedEyes;
-  }
-
-  public getKebabs(): CursedEye[] {
-    return this.playerWeaponsManager.kebabs;
   }
 
   public getSprite() {
@@ -323,11 +276,9 @@ export class Player {
       this.handlePlayerHalt();
     }
 
-    this.handlePlayerKeyboardInput();
     this.handleBorderWrap();
     this.adjustPlayerRotation();
     this.updatePlayerAnimation();
     this.checkCoinCollision(coins);
-    this.playerWeaponsManager.update();
   }
 }
