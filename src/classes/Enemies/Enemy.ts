@@ -218,6 +218,12 @@ export class Enemy {
     return this.projectiles;
   }
 
+  public destroy() {
+    if (this.enemySprite.parent) {
+      this.enemySprite.parent.removeChild(this.enemySprite);
+    }
+  }
+
   public update() {
     this.moveRandomly();
 

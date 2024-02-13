@@ -156,6 +156,7 @@ export class GameObjectManager {
       this.gameLayer.removeChild(enemy.getSprite());
       enemy.projectiles.forEach((projectile) => projectile.destroy());
       enemy.projectiles = [];
+      enemy.destroy();
     }
     this.enemies = [];
   }
