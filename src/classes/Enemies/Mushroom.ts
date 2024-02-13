@@ -39,10 +39,6 @@ export class Mushroom extends Enemy {
     return animation;
   }
 
-  public switchToStandingAnimation(): void {
-    super.switchToStandingAnimation(this.standingAnimation);
-  }
-
   override getDeathState(): boolean {
     return super.getDeathState();
   }

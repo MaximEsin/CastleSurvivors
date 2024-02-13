@@ -37,10 +37,6 @@ export class Eye extends Enemy {
     return animation;
   }
 
-  public switchToStandingAnimation(): void {
-    super.switchToStandingAnimation(this.standingAnimation);
-  }
-
   public resetEye(): void {
     this.setRandomPosition(this.enemySprite);
     this.projectiles.forEach((projectile) => projectile.destroy());

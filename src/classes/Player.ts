@@ -25,7 +25,6 @@ export class Player {
   private layer: PIXI.Container<PIXI.DisplayObject>;
   private isDamaged: boolean = false;
   private isMoving: boolean = false;
-  private stopEnemiesCallback: () => void;
   public isEyePurchased: boolean = false;
   public isKebabPurchased: boolean = false;
   private isWalkingSoundPlaying: boolean = false;
@@ -38,7 +37,6 @@ export class Player {
     audioManager: AudioManager,
     playerInterface: PlayerInterface,
     deathScreen: DeathScreen,
-    stopEnemiesCallback: () => void,
     layer: PIXI.Container<PIXI.DisplayObject>
   ) {
     this.animationManager = animationManager;
@@ -48,7 +46,6 @@ export class Player {
     this.layer = layer;
     this.health = 100;
     this.playerInterface = playerInterface;
-    this.stopEnemiesCallback = stopEnemiesCallback;
     this.playerSprite = this.createPlayerSprite();
     this.playerStandingTextures =
       this.animationManager.getPlayerStandingAnimation();
@@ -256,7 +253,6 @@ export class Player {
 
     this.inputManager.disableInput();
     this.playDeathSound();
-    this.stopEnemiesCallback();
 
     setTimeout(() => {
       this.deathScreen.showDeathScreen();
