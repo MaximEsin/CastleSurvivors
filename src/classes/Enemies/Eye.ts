@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../Managers/AnimationManager';
 import { Enemy } from './Enemy';
+import { Diamond } from '../Money/Diamond';
 
 export class Eye extends Enemy {
   protected layer: PIXI.Container<PIXI.DisplayObject>;
@@ -49,6 +50,17 @@ export class Eye extends Enemy {
 
   override handleDeath(): void {
     super.handleDeath();
+  }
+
+  override spawnCoin() {
+    super.spawnCoin();
+    return new Diamond(
+      this.app,
+      this.getSprite().x,
+      this.getSprite().y,
+      '/Shop/diamond.png',
+      this.layer
+    );
   }
 
   public update(): void {

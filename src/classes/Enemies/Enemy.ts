@@ -224,6 +224,8 @@ export class Enemy {
     }
   }
 
+  public spawnCoin() {}
+
   public update() {
     this.moveRandomly();
 

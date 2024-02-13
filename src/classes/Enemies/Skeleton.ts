@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../Managers/AnimationManager';
 import { Enemy } from './Enemy';
+import { MegaDiamond } from '../Money/MegaDiamond';
 
 export class Skeleton extends Enemy {
   protected layer: PIXI.Container<PIXI.DisplayObject>;
@@ -45,6 +46,17 @@ export class Skeleton extends Enemy {
 
   override handleDeath(): void {
     super.handleDeath();
+  }
+
+  override spawnCoin() {
+    super.spawnCoin();
+    return new MegaDiamond(
+      this.app,
+      this.getSprite().x,
+      this.getSprite().y,
+      '/Shop/megaDiamond.png',
+      this.layer
+    );
   }
 
   public update(): void {

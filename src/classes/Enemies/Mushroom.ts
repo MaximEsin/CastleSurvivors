@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../Managers/AnimationManager';
 import { Enemy } from './Enemy';
+import { Coin } from '../Money/Coin';
 
 export class Mushroom extends Enemy {
   protected layer: PIXI.Container<PIXI.DisplayObject>;
@@ -45,6 +46,17 @@ export class Mushroom extends Enemy {
 
   override handleDeath(): void {
     super.handleDeath();
+  }
+
+  override spawnCoin() {
+    super.spawnCoin();
+    return new Coin(
+      this.app,
+      this.getSprite().x,
+      this.getSprite().y,
+      '/Shop/coin.png',
+      this.layer
+    );
   }
 
   public update(): void {

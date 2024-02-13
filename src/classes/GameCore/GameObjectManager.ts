@@ -1,6 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { Diamond } from '../Money/Diamond';
-import { MegaDiamond } from '../Money/MegaDiamond';
 import { Enemy } from '../Enemies/Enemy';
 import { Player } from '../Player';
 import { Mushroom } from '../Enemies/Mushroom';
@@ -115,34 +113,12 @@ export class GameObjectManager {
       for (const enemy of this.enemies) {
         const deathState = enemy.getDeathState();
         if (deathState) {
-          if (enemy instanceof Mushroom) {
-            const coin = new Coin(
-              this.app,
-              enemy.getSprite().x,
-              enemy.getSprite().y,
-              '/Shop/coin.png',
-              this.gameLayer
-            );
-            this.coins.push(coin);
-          }
-          if (enemy instanceof Eye) {
-            const coin = new Diamond(
-              this.app,
-              enemy.getSprite().x,
-              enemy.getSprite().y,
-              '/Shop/diamond.png',
-              this.gameLayer
-            );
-            this.coins.push(coin);
-          }
-          if (enemy instanceof Skeleton) {
-            const coin = new MegaDiamond(
-              this.app,
-              enemy.getSprite().x,
-              enemy.getSprite().y,
-              '/Shop/megaDiamond.png',
-              this.gameLayer
-            );
+          if (
+            enemy instanceof Mushroom ||
+            enemy instanceof Eye ||
+            enemy instanceof Skeleton
+          ) {
+            const coin = enemy.spawnCoin();
             this.coins.push(coin);
           }
 
