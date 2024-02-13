@@ -1,14 +1,14 @@
 import * as PIXI from 'pixi.js';
-import { AnimationManager } from './AnimationManager';
-import { InputManager } from './InputManager';
-import { AudioManager } from './AudioManager';
+import { AnimationManager } from './Managers/AnimationManager';
+import { InputManager } from './Managers/InputManager';
+import { AudioManager } from './Managers/AudioManager';
 import { Projectile } from './Projectile';
 import { PlayerInterface } from './UI/PlayerInterface';
 import { DeathScreen } from './UI/DeathScreen';
 import { Knife } from './Weapons/Knife';
 import { Coin } from './Money/Coin';
 import { CursedEye } from './Weapons/CursedEye';
-import { Kebab } from './Weapons/Kebab';
+import { PlayerWeaponsManager } from './Managers/PlayerWeaponManager';
 
 export class Player {
   private app: PIXI.Application;
@@ -26,18 +26,10 @@ export class Player {
   private isDamaged: boolean = false;
   private isMoving: boolean = false;
   private stopEnemiesCallback: () => void;
-  private knives: Knife[] = [];
-  private cursedEyes: CursedEye[] = [];
-  private kebabs: Kebab[] = [];
-  private lastKnifeThrowTime: number = 0;
-  private knifeCooldown: number = 2000;
-  private lastEyeThrowTime: number = 0;
-  private EyeCooldown: number = 3000;
-  private lastKebabThrowTime: number = 0;
-  private kebabCooldown: number = 5000;
   public isEyePurchased: boolean = false;
   public isKebabPurchased: boolean = false;
   private isWalkingSoundPlaying: boolean = false;
+  private playerWeaponsManager: PlayerWeaponsManager;
 
   constructor(
     animationManager: AnimationManager,
@@ -65,6 +57,11 @@ export class Player {
     this.playerDamagedTextures =
       this.animationManager.getPlayerDamagedAnimation();
     this.deathScreen = deathScreen;
+    this.playerWeaponsManager = new PlayerWeaponsManager(
+      app,
+      layer,
+      this.playerSprite
+    );
   }
 
   private createPlayerSprite(): PIXI.AnimatedSprite {
@@ -116,19 +113,22 @@ export class Player {
   }
 
   public handlePlayerKeyboardInput(): void {
+    const mousePosition = this.inputManager.getMousePosition();
     if (this.inputManager.isKeyPressed('KeyC')) {
-      this.throwKnife();
+      this.playerWeaponsManager.throwKnife(mousePosition);
     }
 
     if (this.inputManager.isKeyPressed('KeyV')) {
       if (this.isEyePurchased) {
-        this.throwEye();
+        this.playerWeaponsManager.throwEye(mousePosition);
       }
     }
 
     if (this.inputManager.isKeyPressed('KeyX')) {
       if (this.isKebabPurchased) {
-        this.throwKebab();
+        this.playerWeaponsManager.throwKebab(mousePosition);
+        this.health += 5;
+        this.playerInterface.updateHealthText(this.health);
       }
     }
   }
@@ -293,121 +293,16 @@ export class Player {
     this.inputManager.enableInput();
   }
 
-  private throwKnife(): void {
-    const currentTime = Date.now();
-
-    if (currentTime - this.lastKnifeThrowTime >= this.knifeCooldown) {
-      // Calculate the direction vector from player to mouse cursor
-      const dx = this.inputManager.getMousePosition().x - this.playerSprite.x;
-      const dy = this.inputManager.getMousePosition().y - this.playerSprite.y;
-
-      // Calculate the length of the direction vector
-      const length = Math.sqrt(dx ** 2 + dy ** 2);
-
-      // Normalize the direction vector to get a unit vector
-      const direction = new PIXI.Point(dx / length, dy / length);
-
-      const rotation = Math.atan2(dy, dx);
-
-      const knife = new Knife(
-        this.app,
-        this.layer,
-        this.playerSprite.x,
-        this.playerSprite.y,
-        direction,
-        5,
-        rotation
-      );
-
-      this.knives.push(knife);
-
-      this.layer.addChildAt(knife.getSprite(), 1);
-
-      this.lastKnifeThrowTime = currentTime;
-    }
-  }
-
-  private throwEye(): void {
-    const currentTime = Date.now();
-
-    if (currentTime - this.lastEyeThrowTime >= this.EyeCooldown) {
-      // Calculate the direction vector from player to mouse cursor
-      const dx = this.inputManager.getMousePosition().x - this.playerSprite.x;
-      const dy = this.inputManager.getMousePosition().y - this.playerSprite.y;
-
-      // Calculate the length of the direction vector
-      const length = Math.sqrt(dx ** 2 + dy ** 2);
-
-      // Normalize the direction vector to get a unit vector
-      const direction = new PIXI.Point(dx / length, dy / length);
-
-      const rotation = Math.atan2(dy, dx);
-
-      const eye = new CursedEye(
-        this.app,
-        this.layer,
-        this.playerSprite.x,
-        this.playerSprite.y,
-        direction,
-        20,
-        rotation
-      );
-
-      this.cursedEyes.push(eye);
-
-      this.layer.addChildAt(eye.getSprite(), 1);
-
-      this.lastEyeThrowTime = currentTime;
-    }
-  }
-
-  private throwKebab(): void {
-    const currentTime = Date.now();
-
-    if (currentTime - this.lastKebabThrowTime >= this.kebabCooldown) {
-      // Calculate the direction vector from player to mouse cursor
-      const dx = this.inputManager.getMousePosition().x - this.playerSprite.x;
-      const dy = this.inputManager.getMousePosition().y - this.playerSprite.y;
-
-      // Calculate the length of the direction vector
-      const length = Math.sqrt(dx ** 2 + dy ** 2);
-
-      // Normalize the direction vector to get a unit vector
-      const direction = new PIXI.Point(dx / length, dy / length);
-
-      const rotation = Math.atan2(dy, dx);
-
-      const kebab = new Kebab(
-        this.app,
-        this.layer,
-        this.playerSprite.x,
-        this.playerSprite.y,
-        direction,
-        10,
-        rotation
-      );
-
-      this.health += 5;
-      this.playerInterface.updateHealthText(this.health);
-
-      this.kebabs.push(kebab);
-
-      this.layer.addChildAt(kebab.getSprite(), 1);
-
-      this.lastKebabThrowTime = currentTime;
-    }
-  }
-
   public getKnives(): Knife[] {
-    return this.knives;
+    return this.playerWeaponsManager.knives;
   }
 
   public getEyes(): CursedEye[] {
-    return this.cursedEyes;
+    return this.playerWeaponsManager.cursedEyes;
   }
 
   public getKebabs(): CursedEye[] {
-    return this.kebabs;
+    return this.playerWeaponsManager.kebabs;
   }
 
   public getSprite() {
@@ -446,5 +341,6 @@ export class Player {
     this.adjustPlayerRotation();
     this.updatePlayerAnimation();
     this.checkCoinCollision(coins);
+    this.playerWeaponsManager.update();
   }
 }

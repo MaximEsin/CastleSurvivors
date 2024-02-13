@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { AnimationManager } from '../AnimationManager';
+import { AnimationManager } from '../Managers/AnimationManager';
 import { Projectile } from '../Projectile';
 
 export class Enemy {

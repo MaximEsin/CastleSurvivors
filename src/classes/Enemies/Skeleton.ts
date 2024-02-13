@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { AnimationManager } from '../AnimationManager';
+import { AnimationManager } from '../Managers/AnimationManager';
 import { Enemy } from './Enemy';
 
 export class Skeleton extends Enemy {

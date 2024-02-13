@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { Background } from './classes/Background';
-import { AnimationManager } from './classes/AnimationManager';
+import { AnimationManager } from './classes/Managers/AnimationManager';
 import { Player } from './classes/Player';
-import { InputManager } from './classes/InputManager';
-import { AudioManager } from './classes/AudioManager';
+import { InputManager } from './classes/Managers/InputManager';
+import { AudioManager } from './classes/Managers/AudioManager';
 import { Mushroom } from './classes/Enemies/Mushroom';
 import { PlayerInterface } from './classes/UI/PlayerInterface';
 import { DeathScreen } from './classes/UI/DeathScreen';
