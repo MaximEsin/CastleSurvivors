@@ -136,22 +136,13 @@ export class Player {
 
     const dx = mouseX - playerX;
 
-    const direction = dx > 0 ? 1 : -1;
-
-    if (direction === -1) {
+    if (dx < 0) {
       this.playerSprite.scale.x = -1;
     } else {
       this.playerSprite.scale.x = 1;
     }
 
-    const dy = this.inputManager.getMousePosition().y - this.playerSprite.y;
-    const rotation = Math.atan2(dy, dx);
-
-    if (direction === -1) {
-      this.playerSprite.rotation = rotation + Math.PI;
-    } else {
-      this.playerSprite.rotation = rotation;
-    }
+    this.playerSprite.rotation = 0;
   }
 
   public updatePlayerAnimation(): void {

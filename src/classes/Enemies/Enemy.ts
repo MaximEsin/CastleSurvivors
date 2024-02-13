@@ -73,24 +73,15 @@ export class Enemy {
 
   protected adjustEnemyRotation(): void {
     if (this.direction.x !== 0 && this.direction.y !== 0) {
-      if (this.direction.x > 0 && this.direction.y < 0) {
-        this.enemySprite.rotation = 7 * (Math.PI / 4);
-      }
-      if (this.direction.x > 0 && this.direction.y > 0) {
-        this.enemySprite.rotation = Math.PI / 4;
-      }
-      if (this.direction.x < 0 && this.direction.y < 0) {
-        this.enemySprite.rotation = 1.5 * (Math.PI / 4);
-      }
-      if (this.direction.x < 0 && this.direction.y > 0) {
-        this.enemySprite.rotation = 7 * (Math.PI / 4);
-      }
-      if (this.direction.x < 0 && this.direction.y === 0) {
-        this.enemySprite.rotation = Math.PI;
+      if (this.direction.x > 0) {
+        this.enemySprite.scale.x = 1;
+      } else {
+        this.enemySprite.scale.x = -1;
       }
     } else {
-      this.enemySprite.rotation = 0;
+      this.enemySprite.scale.x = 1;
     }
+    this.enemySprite.rotation = 0;
   }
 
   protected handleBorderWrap(): void {
