@@ -135,9 +135,7 @@ export class Game {
       this.timer.update(deltaMS);
       const timerString = this.timer.getTimeString();
       this.playerInterface.updateTimer(timerString);
-
-      this.player.handlePlayerInput();
-      this.player.updatePlayerAnimation();
+      this.player.update(this.coins);
 
       const playerKnives = this.player.getKnives();
       const playerCursedEyes = this.player.getEyes();
@@ -192,8 +190,6 @@ export class Game {
           }
         }
       });
-
-      this.player.checkCoinCollision(this.coins);
 
       this.merchant.checkPlayerCollision(this.player);
 

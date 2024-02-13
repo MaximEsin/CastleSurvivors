@@ -81,13 +81,10 @@ export class Player {
     return animation;
   }
 
-  public handlePlayerInput(): void {
+  public handlePlayerMovement(mousePosition: { x: number; y: number }): void {
     const playerPosition = this.playerSprite.position;
-    const mousePosition = this.inputManager.getMousePosition();
-
     const dx = mousePosition.x - playerPosition.x;
     const dy = mousePosition.y - playerPosition.y;
-
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (distance > 30) {
@@ -108,11 +105,17 @@ export class Player {
     }
 
     if (distance < 30) {
-      this.isMoving = false;
-      this.isWalkingSoundPlaying = false;
-      this.audioManager.stopSound('walkingSound');
+      this.handlePlayerHalt();
     }
+  }
 
+  private handlePlayerHalt(): void {
+    this.isMoving = false;
+    this.isWalkingSoundPlaying = false;
+    this.audioManager.stopSound('walkingSound');
+  }
+
+  public handlePlayerKeyboardInput(): void {
     if (this.inputManager.isKeyPressed('KeyC')) {
       this.throwKnife();
     }
@@ -128,9 +131,6 @@ export class Player {
         this.throwKebab();
       }
     }
-
-    this.handleBorderWrap();
-    this.adjustPlayerRotation();
   }
 
   private adjustPlayerRotation(): void {
@@ -414,7 +414,7 @@ export class Player {
     return this.playerSprite;
   }
 
-  public checkCoinCollision(coins: Coin[]): void {
+  private checkCoinCollision(coins: Coin[]): void {
     const playerBounds = this.playerSprite.getBounds();
     for (const coin of coins) {
       const coinBounds = coin.getSprite().getBounds();
@@ -431,5 +431,20 @@ export class Player {
 
   public getBounds() {
     return this.playerSprite.getBounds();
+  }
+
+  update(coins: Coin[]) {
+    if (this.inputManager.isMousePressed()) {
+      const mousePosition = this.inputManager.getMousePosition();
+      this.handlePlayerMovement(mousePosition);
+    } else {
+      this.handlePlayerHalt();
+    }
+
+    this.handlePlayerKeyboardInput();
+    this.handleBorderWrap();
+    this.adjustPlayerRotation();
+    this.updatePlayerAnimation();
+    this.checkCoinCollision(coins);
   }
 }
