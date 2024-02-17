@@ -8,6 +8,7 @@ export class Timer {
   }
 
   public update(deltaMS: number): void {
+    // Что это за 66?
     this.currentTime -= deltaMS / 66;
     if (this.currentTime < 0) {
       this.currentTime = 0;

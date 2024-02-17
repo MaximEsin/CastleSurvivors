@@ -37,7 +37,13 @@ export class Player {
     this.inputManager = inputManager;
     this.audioManager = audioManager;
     this.app = app;
+    // За положением на родительском слое объекта пусть следит
+    // тот объект, который его создал.
+    // Тут я тебе посоветую для всех визуальных сущностей (игрока, монстров, проджекттайлов) 
+    // сразу отнаследоваться от пикси-контейнера. 
     this.layer = layer;
+
+    // Снова магическое число + повторяющийся функционал (то-же самое у тебя происходит в ресете)
     this.health = 100;
     this.playerInterface = playerInterface;
     this.playerSprite = this.createPlayerSprite();
@@ -70,6 +76,7 @@ export class Player {
     const dy = mousePosition.y - playerPosition.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
+    // Магические цифры лучше как минимум выносить в константы
     if (distance > 30) {
       this.isMoving = true;
 
@@ -81,6 +88,8 @@ export class Player {
       const directionX = dx / distance;
       const directionY = dy / distance;
 
+      // Так будет проще манипулировать ими в дальнейшем
+      // Затем, при необходимости их можно преобразовать например в геттеры
       playerPosition.x += directionX * 5;
       playerPosition.y += directionY * 5;
 
@@ -268,6 +277,10 @@ export class Player {
     return this.playerSprite.getBounds();
   }
 
+  // Передавать в апдейт игрока монеты точно не стоит.
+  // Больше смысла имеет передавать в апдейт dt
+  // И уже с его помощью невелировать воздействие потенциальных лагов на перемещение
+  // т.е. умножать на тд скорость
   update(coins: Coin[]) {
     if (this.inputManager.isMousePressed()) {
       const mousePosition = this.inputManager.getMousePosition();
@@ -279,6 +292,9 @@ export class Player {
     this.handleBorderWrap();
     this.adjustPlayerRotation();
     this.updatePlayerAnimation();
+    //Коллизии имеет смысл сделать общей функцией и вынести на уровень выше (на уровень менеджера)
+    // + на самом деле, скорее всего функция вычисления коллизий будет крайне похожа
+    // как для коллизий с монетами, так и для коллизий с врагами и проджекттайлами.
     this.checkCoinCollision(coins);
   }
 }

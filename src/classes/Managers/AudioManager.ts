@@ -4,6 +4,9 @@ export class AudioManager {
   protected sounds: { [key: string]: Sound } = {};
 
   constructor() {
+    // Загрузку ресурсов лучше организовать в рамках общего класса-прелоудера
+    // который будет добавлять ресурсы в общий кэш, из которого уже и можно будет
+    // подтягивать нудные ресурсы в любом месте. 
     this.loadSound('ingameMusic', '/sounds/ingame.mp3');
     this.loadSound('walkingSound', '/sounds/footsteps.mp3');
     this.loadSound('playerHit', '/sounds/Hit.wav');
@@ -16,6 +19,8 @@ export class AudioManager {
   }
 
   public playSound(key: string, loop: boolean = false): void {
+    // Что будешь делать, если придётся запустить несколько одинаковых звуков
+    // внахлёст?
     const sound = this.sounds[key];
     if (sound) {
       sound.loop = loop;

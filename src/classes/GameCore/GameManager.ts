@@ -64,12 +64,13 @@ export class GameManager {
     this.app.ticker.add(this.gameLoop.bind(this));
   }
 
+  // на самом деле, dt вполне подойдёт для наименования
+  // это устойчивый нейминг
   private gameLoop(deltaMS: number): void {
     this.updateTimer(deltaMS);
     this.gameObjectManager.player.update(this.gameObjectManager.coins);
 
     this.gameObjectManager.updateProjectiles();
-
     this.gameObjectManager.merchant.checkPlayerCollision(
       this.gameObjectManager.player
     );
@@ -89,12 +90,22 @@ export class GameManager {
       (a, b) => a.getSprite().y - b.getSprite().y
     );
 
+    // Достаточно устновить в ините
     this.gameLayer.sortableChildren = true;
 
+    // Почему ты добавляешь персонажа адчайлдом в самый верх каждый тик?
+    // sortableChildren по идее и так сортирует их на основе z-индекса
+    // а вот уже этот индекс как раз нужно указывать вручную. 
+    // Я бы указывал его в том месте, где происходит перемещение объектов.
+    // Там-же можно устанавливать его для игрока.
     this.gameLayer.addChild(this.gameObjectManager.player.getSprite());
 
+    // Зачем класть бэкграунд на самый низ? У нас на слое backgroundLayer находятся какие-то
+    // другие объекты?
     this.backgroundLayer.addChildAt(this.background.getSprite(), 0);
 
+    // По идее, (если не путаю), парамтер sortableChildren как раз отвечает за вызов
+    // sortChildren
     this.gameLayer.sortChildren();
   }
 
