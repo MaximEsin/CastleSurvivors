@@ -143,6 +143,21 @@ export class GameObjectManager {
     });
   }
 
+  public checkCoinCollision(): void {
+    const playerBounds = this.player.getSprite().getBounds();
+    for (const coin of this.coins) {
+      const coinBounds = coin.getSprite().getBounds();
+
+      if (playerBounds.intersects(coinBounds)) {
+        if (!coin.getIsCollected()) {
+          const value = coin.coinPoints;
+          coin.collect();
+          this.playerInterface.updateCoinCount(value);
+        }
+      }
+    }
+  }
+
   private removeEnemies(): void {
     for (const enemy of this.enemies) {
       this.gameLayer.removeChild(enemy.getSprite());

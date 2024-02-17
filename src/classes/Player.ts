@@ -5,7 +5,6 @@ import { AudioManager } from './Managers/AudioManager';
 import { Projectile } from './Projectile';
 import { PlayerInterface } from './UI/PlayerInterface';
 import { DeathScreen } from './UI/DeathScreen';
-import { Coin } from './Money/Coin';
 
 export class Player extends PIXI.Container {
   private app: PIXI.Application;
@@ -65,7 +64,10 @@ export class Player extends PIXI.Container {
     return animation;
   }
 
-  public handlePlayerMovement(mousePosition: { x: number; y: number }): void {
+  public handlePlayerMovement(
+    mousePosition: { x: number; y: number },
+    dt: number
+  ): void {
     const playerPosition = this.playerSprite.position;
     const dx = mousePosition.x - playerPosition.x;
     const dy = mousePosition.y - playerPosition.y;
@@ -82,8 +84,8 @@ export class Player extends PIXI.Container {
       const directionX = dx / distance;
       const directionY = dy / distance;
 
-      playerPosition.x += directionX * this.movementSpeed;
-      playerPosition.y += directionY * this.movementSpeed;
+      playerPosition.x += directionX * this.movementSpeed * dt;
+      playerPosition.y += directionY * this.movementSpeed * dt;
 
       this.playerSprite.rotation = Math.atan2(dy, dx);
 
@@ -248,21 +250,6 @@ export class Player extends PIXI.Container {
     return this.playerSprite;
   }
 
-  private checkCoinCollision(coins: Coin[]): void {
-    const playerBounds = this.playerSprite.getBounds();
-    for (const coin of coins) {
-      const coinBounds = coin.getSprite().getBounds();
-
-      if (playerBounds.intersects(coinBounds)) {
-        if (!coin.getIsCollected()) {
-          const value = coin.coinPoints;
-          coin.collect();
-          this.playerInterface.updateCoinCount(value);
-        }
-      }
-    }
-  }
-
   public getBounds() {
     return this.playerSprite.getBounds();
   }
@@ -271,10 +258,10 @@ export class Player extends PIXI.Container {
   // Больше смысла имеет передавать в апдейт dt
   // И уже с его помощью невелировать воздействие потенциальных лагов на перемещение
   // т.е. умножать на тд скорость
-  update(coins: Coin[]) {
+  update(dt: number) {
     if (this.inputManager.isMousePressed()) {
       const mousePosition = this.inputManager.getMousePosition();
-      this.handlePlayerMovement(mousePosition);
+      this.handlePlayerMovement(mousePosition, dt);
     } else {
       this.handlePlayerHalt();
     }
@@ -282,9 +269,5 @@ export class Player extends PIXI.Container {
     this.handleBorderWrap();
     this.adjustPlayerRotation();
     this.updatePlayerAnimation();
-    //Коллизии имеет смысл сделать общей функцией и вынести на уровень выше (на уровень менеджера)
-    // + на самом деле, скорее всего функция вычисления коллизий будет крайне похожа
-    // как для коллизий с монетами, так и для коллизий с врагами и проджекттайлами.
-    this.checkCoinCollision(coins);
   }
 }

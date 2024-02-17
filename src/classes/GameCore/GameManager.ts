@@ -61,7 +61,7 @@ export class GameManager {
 
   private gameLoop(dt: number): void {
     this.updateTimer(dt);
-    this.gameObjectManager.player.update(this.gameObjectManager.coins);
+    this.gameObjectManager.player.update(dt);
 
     this.gameObjectManager.updateProjectiles();
     this.gameObjectManager.merchant.checkPlayerCollision(
@@ -74,6 +74,7 @@ export class GameManager {
     this.gameObjectManager.updateEnemies();
 
     this.gameObjectManager.removeCollectedCoins();
+    this.gameObjectManager.checkCoinCollision();
 
     this.waveManager.checkForNewWave();
 
