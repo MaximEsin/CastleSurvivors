@@ -21,8 +21,4 @@ export class MegaDiamond extends Coin {
   override getSprite(): PIXI.Sprite {
     return super.getSprite();
   }
-
-  override destroy(): void {
-    super.destroy();
-  }
 }

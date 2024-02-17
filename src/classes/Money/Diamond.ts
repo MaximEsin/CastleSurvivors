@@ -20,8 +20,4 @@ export class Diamond extends Coin {
   override getSprite(): PIXI.Sprite {
     return super.getSprite();
   }
-
-  override destroy(): void {
-    super.destroy();
-  }
 }
