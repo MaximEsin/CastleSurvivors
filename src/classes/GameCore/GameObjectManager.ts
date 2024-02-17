@@ -16,6 +16,8 @@ import { Timer } from '../UI/Timer';
 import { PlayerWeaponsManager } from '../Managers/PlayerWeaponManager';
 
 export class GameObjectManager {
+  private static instance: GameObjectManager;
+
   private app: PIXI.Application;
   public player: Player;
   public merchant: Merchant;
@@ -41,11 +43,6 @@ export class GameObjectManager {
     endScreenLayer: PIXI.Container,
     timer: Timer
   ) {
-    // Некоторые подобные сущности, которые мы создали в единственном экземпляре
-    // и затем прокидываем их в другие места, имеет смысл заменить на 
-    // синглтон с параметрами, откуда мы уже и будем получать доступ к общим функциям.
-    // Но такой подход нужно использовать с отсторожностью. 
-    // В первую очередь стоит сконцентрироваться на задачах информационного характера.
     this.app = app;
     this.audioManager = audioManager;
     this.playerInterface = playerInterface;
@@ -86,6 +83,27 @@ export class GameObjectManager {
       this.playerInterface,
       this.playerWeaponsManager
     );
+  }
+
+  public static getInstance(
+    app: PIXI.Application,
+    audioManager: AudioManager,
+    playerInterface: PlayerInterface,
+    gameLayer: PIXI.Container,
+    endScreenLayer: PIXI.Container,
+    timer: Timer
+  ): GameObjectManager {
+    if (!GameObjectManager.instance) {
+      GameObjectManager.instance = new GameObjectManager(
+        app,
+        audioManager,
+        playerInterface,
+        gameLayer,
+        endScreenLayer,
+        timer
+      );
+    }
+    return GameObjectManager.instance;
   }
 
   updateEnemies(): void {
