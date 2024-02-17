@@ -10,7 +10,6 @@ import { DeathScreen } from '../UI/DeathScreen';
 import { WinScreen } from '../UI/WinScreen';
 import { AnimationManager } from '../Managers/AnimationManager';
 import { InputManager } from '../Managers/InputManager';
-import { AudioManager } from '../Managers/AudioManager';
 import { PlayerInterface } from '../UI/PlayerInterface';
 import { Timer } from '../UI/Timer';
 import { PlayerWeaponsManager } from '../Managers/PlayerWeaponManager';
@@ -25,7 +24,6 @@ export class GameObjectManager {
   public winScreen: WinScreen;
   public animationManager: AnimationManager;
   private inputManager: InputManager;
-  private audioManager: AudioManager;
   private timer: Timer;
   private playerInterface: PlayerInterface;
   private playerWeaponsManager: PlayerWeaponsManager;
@@ -37,14 +35,12 @@ export class GameObjectManager {
 
   constructor(
     app: PIXI.Application,
-    audioManager: AudioManager,
     playerInterface: PlayerInterface,
     gameLayer: PIXI.Container,
     endScreenLayer: PIXI.Container,
     timer: Timer
   ) {
     this.app = app;
-    this.audioManager = audioManager;
     this.playerInterface = playerInterface;
     this.gameLayer = gameLayer;
     this.endScreenLayer = endScreenLayer;
@@ -65,7 +61,6 @@ export class GameObjectManager {
       this.animationManager,
       this.app,
       this.inputManager,
-      this.audioManager,
       this.playerInterface,
       this.deathScreen,
       this.gameLayer
@@ -87,7 +82,6 @@ export class GameObjectManager {
 
   public static getInstance(
     app: PIXI.Application,
-    audioManager: AudioManager,
     playerInterface: PlayerInterface,
     gameLayer: PIXI.Container,
     endScreenLayer: PIXI.Container,
@@ -96,7 +90,6 @@ export class GameObjectManager {
     if (!GameObjectManager.instance) {
       GameObjectManager.instance = new GameObjectManager(
         app,
-        audioManager,
         playerInterface,
         gameLayer,
         endScreenLayer,

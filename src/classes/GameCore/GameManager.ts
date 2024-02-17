@@ -48,7 +48,6 @@ export class GameManager {
     );
     this.gameObjectManager = GameObjectManager.getInstance(
       this.app,
-      this.audioManager,
       this.playerInterface,
       this.gameLayer,
       this.endScreenLayer,

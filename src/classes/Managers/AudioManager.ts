@@ -1,26 +1,28 @@
 import { Sound } from '@pixi/sound';
 
 export class AudioManager {
-  protected sounds: { [key: string]: Sound } = {};
+  protected static sounds: { [key: string]: Sound } = {};
 
-  constructor() {
-    // Загрузку ресурсов лучше организовать в рамках общего класса-прелоудера
-    // который будет добавлять ресурсы в общий кэш, из которого уже и можно будет
-    // подтягивать нудные ресурсы в любом месте. 
+  protected static loadSound(id: string, src: string): void {
+    const sound = Sound.from(src);
+    this.sounds[id] = sound;
+  }
+
+  static initialize(): void {
     this.loadSound('ingameMusic', '/sounds/ingame.mp3');
     this.loadSound('walkingSound', '/sounds/footsteps.mp3');
     this.loadSound('playerHit', '/sounds/Hit.wav');
     this.loadSound('playerDead', '/sounds/Death.wav');
   }
 
-  protected loadSound(id: string, src: string): void {
-    const sound = Sound.from(src);
-    this.sounds[id] = sound;
+  public static playSound(key: string): void {
+    const sound = this.sounds[key];
+    if (sound) {
+      sound.play();
+    }
   }
 
-  public playSound(key: string, loop: boolean = false): void {
-    // Что будешь делать, если придётся запустить несколько одинаковых звуков
-    // внахлёст?
+  public static playSoundWithLoop(key: string, loop: boolean = false): void {
     const sound = this.sounds[key];
     if (sound) {
       sound.loop = loop;
@@ -28,7 +30,7 @@ export class AudioManager {
     }
   }
 
-  public pauseAllSounds(): void {
+  public static pauseAllSounds(): void {
     Object.values(this.sounds).forEach((sound) => {
       if (sound && sound.isPlaying) {
         sound.pause();
@@ -36,7 +38,7 @@ export class AudioManager {
     });
   }
 
-  public resumeAllPausedSounds(): void {
+  public static resumeAllPausedSounds(): void {
     Object.values(this.sounds).forEach((sound) => {
       if (sound && sound.paused) {
         sound.resume();
@@ -44,24 +46,26 @@ export class AudioManager {
     });
   }
 
-  public pauseSound(key: string): void {
+  public static pauseSound(key: string): void {
     const sound = this.sounds[key];
     if (sound) {
       sound.pause();
     }
   }
 
-  public stopSound(key: string): void {
+  public static stopSound(key: string): void {
     const sound = this.sounds[key];
     if (sound) {
       sound.stop();
     }
   }
 
-  public setVolume(key: string, volume: number): void {
+  public static setVolume(key: string, volume: number): void {
     const sound = this.sounds[key];
     if (sound) {
       sound.volume = volume;
     }
   }
 }
+
+AudioManager.initialize();

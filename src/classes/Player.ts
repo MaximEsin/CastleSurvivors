@@ -11,7 +11,6 @@ export class Player {
   private app: PIXI.Application;
   private animationManager: AnimationManager;
   private inputManager: InputManager;
-  private audioManager: AudioManager;
   private playerSprite: PIXI.AnimatedSprite;
   private playerStandingTextures: PIXI.Texture[];
   private playerMovingTextures: PIXI.Texture[];
@@ -29,14 +28,12 @@ export class Player {
     animationManager: AnimationManager,
     app: PIXI.Application,
     inputManager: InputManager,
-    audioManager: AudioManager,
     playerInterface: PlayerInterface,
     deathScreen: DeathScreen,
     layer: PIXI.Container<PIXI.DisplayObject>
   ) {
     this.animationManager = animationManager;
     this.inputManager = inputManager;
-    this.audioManager = audioManager;
     this.app = app;
     // За положением на родительском слое объекта пусть следит
     // тот объект, который его создал.
@@ -107,7 +104,7 @@ export class Player {
   private handlePlayerHalt(): void {
     this.isMoving = false;
     this.isWalkingSoundPlaying = false;
-    this.audioManager.stopSound('walkingSound');
+    AudioManager.stopSound('walkingSound');
   }
 
   private adjustPlayerRotation(): void {
@@ -181,16 +178,16 @@ export class Player {
   }
 
   private playMovingSound() {
-    this.audioManager.playSound('walkingSound', true);
-    this.audioManager.setVolume('walkingSound', 0.5);
+    AudioManager.playSoundWithLoop('walkingSound', true);
+    AudioManager.setVolume('walkingSound', 0.5);
   }
 
   private playHitSound(): void {
-    this.audioManager.playSound('playerHit');
+    AudioManager.playSound('playerHit');
   }
 
   private playDeathSound(): void {
-    this.audioManager.playSound('playerDead');
+    AudioManager.playSound('playerDead');
   }
 
   public checkProjectileCollision(projectiles: Projectile[]): void {
