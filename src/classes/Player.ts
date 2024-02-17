@@ -17,12 +17,14 @@ export class Player extends PIXI.Container {
   private playerDamagedTextures: PIXI.Texture[];
   private playerInterface: PlayerInterface;
   private deathScreen: DeathScreen;
-  public health: number;
+  public health: number = 100;
   private layer: PIXI.Container<PIXI.DisplayObject>;
   private isDamaged: boolean = false;
   private isMoving: boolean = false;
   private isWalkingSoundPlaying: boolean = false;
-  public ZIndex: number = 100;
+  private movementTreshhold: number = 30;
+  private movementSpeed: number = 5;
+  private ZIndex: number = 100;
 
   constructor(
     animationManager: AnimationManager,
@@ -38,8 +40,6 @@ export class Player extends PIXI.Container {
     this.app = app;
     this.layer = layer;
 
-    // Снова магическое число + повторяющийся функционал (то-же самое у тебя происходит в ресете)
-    this.health = 100;
     this.playerInterface = playerInterface;
     this.playerSprite = this.createPlayerSprite();
     this.playerStandingTextures =
@@ -71,8 +71,7 @@ export class Player extends PIXI.Container {
     const dy = mousePosition.y - playerPosition.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    // Магические цифры лучше как минимум выносить в константы
-    if (distance > 30) {
+    if (distance > this.movementTreshhold) {
       this.isMoving = true;
 
       if (!this.isWalkingSoundPlaying) {
@@ -83,17 +82,15 @@ export class Player extends PIXI.Container {
       const directionX = dx / distance;
       const directionY = dy / distance;
 
-      // Так будет проще манипулировать ими в дальнейшем
-      // Затем, при необходимости их можно преобразовать например в геттеры
-      playerPosition.x += directionX * 5;
-      playerPosition.y += directionY * 5;
+      playerPosition.x += directionX * this.movementSpeed;
+      playerPosition.y += directionY * this.movementSpeed;
 
       this.playerSprite.rotation = Math.atan2(dy, dx);
 
       this.playerSprite.zIndex = this.ZIndex;
     }
 
-    if (distance < 30) {
+    if (distance < this.movementTreshhold) {
       this.handlePlayerHalt();
     }
   }
@@ -241,11 +238,7 @@ export class Player extends PIXI.Container {
     this.layer.removeChild(this.playerSprite);
 
     this.playerSprite = this.createPlayerSprite();
-    this.playerSprite.animationSpeed = 0.1;
-    this.playerSprite.play();
 
-    this.playerSprite.x = window.innerWidth / 2 - 100;
-    this.playerSprite.y = window.innerHeight / 2 - 100;
     this.health = 100;
     this.isDamaged = false;
     this.playerInterface.updateHealthText(this.health);
