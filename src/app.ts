@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js';
 import { GameManager } from './classes/GameCore/GameManager';
 
 export class Game {
-  // Лучше вот так
   private app: PIXI.Application<HTMLCanvasElement>;
   private gameManager: GameManager;
 
@@ -11,8 +10,7 @@ export class Game {
       width: window.innerWidth,
       height: window.innerHeight,
     });
-    // И теперь можно избавиться от as as конструкции
-    document.body.appendChild(this.app.view as unknown as Node);
+    document.body.appendChild(this.app.view);
 
     this.gameManager = new GameManager(this.app);
   }

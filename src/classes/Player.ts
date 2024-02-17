@@ -23,6 +23,7 @@ export class Player {
   private isDamaged: boolean = false;
   private isMoving: boolean = false;
   private isWalkingSoundPlaying: boolean = false;
+  private zIndex: number = 100;
 
   constructor(
     animationManager: AnimationManager,
@@ -39,8 +40,8 @@ export class Player {
     this.app = app;
     // За положением на родительском слое объекта пусть следит
     // тот объект, который его создал.
-    // Тут я тебе посоветую для всех визуальных сущностей (игрока, монстров, проджекттайлов) 
-    // сразу отнаследоваться от пикси-контейнера. 
+    // Тут я тебе посоветую для всех визуальных сущностей (игрока, монстров, проджекттайлов)
+    // сразу отнаследоваться от пикси-контейнера.
     this.layer = layer;
 
     // Снова магическое число + повторяющийся функционал (то-же самое у тебя происходит в ресете)
@@ -94,6 +95,8 @@ export class Player {
       playerPosition.y += directionY * 5;
 
       this.playerSprite.rotation = Math.atan2(dy, dx);
+
+      this.playerSprite.zIndex = this.zIndex;
     }
 
     if (distance < 30) {
