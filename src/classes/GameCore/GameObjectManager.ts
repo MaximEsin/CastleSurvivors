@@ -168,6 +168,16 @@ export class GameObjectManager {
     });
   }
 
+  removeCollectedCoins() {
+    this.coins.forEach((coin) => {
+      if (coin.getIsCollected()) {
+        const index = this.coins.indexOf(coin);
+        this.coins.splice(index, 1);
+        this.gameLayer.removeChild(coin.getSprite());
+      }
+    });
+  }
+
   getCurrentWave() {
     return this.currentWave;
   }

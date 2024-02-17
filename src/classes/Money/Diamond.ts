@@ -2,16 +2,15 @@ import * as PIXI from 'pixi.js';
 import { Coin } from './Coin';
 
 export class Diamond extends Coin {
-  protected value = 5;
+  public coinPoints = 5;
 
   constructor(
-    app: PIXI.Application,
     x: number,
     y: number,
     sprite: string,
     layer: PIXI.Container<PIXI.DisplayObject>
   ) {
-    super(app, x, y, sprite, layer);
+    super(x, y, sprite, layer);
   }
 
   override getIsCollected() {
@@ -20,10 +19,6 @@ export class Diamond extends Coin {
 
   override getSprite(): PIXI.Sprite {
     return super.getSprite();
-  }
-
-  override getValue() {
-    return this.value;
   }
 
   override destroy(): void {

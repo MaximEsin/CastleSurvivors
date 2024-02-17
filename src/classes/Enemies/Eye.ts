@@ -55,7 +55,6 @@ export class Eye extends Enemy {
   override spawnCoin() {
     super.spawnCoin();
     return new Diamond(
-      this.app,
       this.getSprite().x,
       this.getSprite().y,
       '/Shop/diamond.png',

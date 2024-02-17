@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import { Background } from '../Background';
-import { AudioManager } from '../Managers/AudioManager';
 import { PlayerInterface } from '../UI/PlayerInterface';
 import { Timer } from '../UI/Timer';
 import { GameEventHandler } from './GameEventHandler';
@@ -14,7 +13,6 @@ export class GameManager {
   private interfaceLayer: PIXI.Container;
   private endScreenLayer: PIXI.Container;
   private background: Background;
-  private audioManager: AudioManager;
   private playerInterface: PlayerInterface;
   private timer: Timer;
   private gameEventHandler: GameEventHandler;
@@ -38,13 +36,11 @@ export class GameManager {
       this.app,
       this.backgroundLayer
     );
-    this.audioManager = new AudioManager();
     this.timer = new Timer(300);
     this.playerInterface = new PlayerInterface(this.app, this.interfaceLayer);
     this.gameEventHandler = new GameEventHandler(
       this.app,
-      this.playerInterface,
-      this.audioManager
+      this.playerInterface
     );
     this.gameObjectManager = GameObjectManager.getInstance(
       this.app,
@@ -76,6 +72,8 @@ export class GameManager {
     this.gameObjectManager.spriteCleaner();
 
     this.gameObjectManager.updateEnemies();
+
+    this.gameObjectManager.removeCollectedCoins();
 
     this.waveManager.checkForNewWave();
 

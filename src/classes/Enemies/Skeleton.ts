@@ -51,7 +51,6 @@ export class Skeleton extends Enemy {
   override spawnCoin() {
     super.spawnCoin();
     return new MegaDiamond(
-      this.app,
       this.getSprite().x,
       this.getSprite().y,
       '/Shop/megaDiamond.png',

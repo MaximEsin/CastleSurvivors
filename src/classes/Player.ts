@@ -265,7 +265,7 @@ export class Player {
 
       if (playerBounds.intersects(coinBounds)) {
         if (!coin.getIsCollected()) {
-          const value = coin.getValue();
+          const value = coin.coinPoints;
           coin.collect();
           this.playerInterface.updateCoinCount(value);
         }

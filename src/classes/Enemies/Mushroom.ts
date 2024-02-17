@@ -51,7 +51,6 @@ export class Mushroom extends Enemy {
   override spawnCoin() {
     super.spawnCoin();
     return new Coin(
-      this.app,
       this.getSprite().x,
       this.getSprite().y,
       '/Shop/coin.png',
