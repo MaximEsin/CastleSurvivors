@@ -1,6 +1,7 @@
 export class Timer {
   private totalTime: number;
   private currentTime: number;
+  private frameRate: number = 66;
 
   constructor(totalTime: number) {
     this.totalTime = totalTime;
@@ -8,8 +9,7 @@ export class Timer {
   }
 
   public update(dt: number): void {
-    // Что это за 66?
-    this.currentTime -= dt / 66;
+    this.currentTime -= dt / this.frameRate;
     if (this.currentTime < 0) {
       this.currentTime = 0;
     }
