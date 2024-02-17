@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Enemy } from './Enemies/Enemy';
 
-export class Projectile {
+export class Projectile extends PIXI.Container {
   protected app: PIXI.Application;
   protected layer: PIXI.Container<PIXI.DisplayObject>;
   protected projectileSprite: PIXI.Sprite;
@@ -21,6 +21,7 @@ export class Projectile {
     direction: PIXI.Point,
     damage: number
   ) {
+    super();
     this.app = app;
     this.layer = layer;
     this.projectileSprite = new PIXI.Sprite(

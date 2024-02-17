@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../Managers/AnimationManager';
 import { Projectile } from '../Projectile';
 
-export class Enemy {
+export class Enemy extends PIXI.Container {
   protected app: PIXI.Application;
   protected layer: PIXI.Container<PIXI.DisplayObject>;
   protected animationManager: AnimationManager;
@@ -21,6 +21,7 @@ export class Enemy {
     health: number,
     layer: PIXI.Container<PIXI.DisplayObject>
   ) {
+    super();
     this.animationManager = animationManager;
     this.app = app;
     this.layer = layer;

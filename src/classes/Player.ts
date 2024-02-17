@@ -7,7 +7,7 @@ import { PlayerInterface } from './UI/PlayerInterface';
 import { DeathScreen } from './UI/DeathScreen';
 import { Coin } from './Money/Coin';
 
-export class Player {
+export class Player extends PIXI.Container {
   private app: PIXI.Application;
   private animationManager: AnimationManager;
   private inputManager: InputManager;
@@ -22,7 +22,7 @@ export class Player {
   private isDamaged: boolean = false;
   private isMoving: boolean = false;
   private isWalkingSoundPlaying: boolean = false;
-  private zIndex: number = 100;
+  public ZIndex: number = 100;
 
   constructor(
     animationManager: AnimationManager,
@@ -32,13 +32,10 @@ export class Player {
     deathScreen: DeathScreen,
     layer: PIXI.Container<PIXI.DisplayObject>
   ) {
+    super();
     this.animationManager = animationManager;
     this.inputManager = inputManager;
     this.app = app;
-    // За положением на родительском слое объекта пусть следит
-    // тот объект, который его создал.
-    // Тут я тебе посоветую для всех визуальных сущностей (игрока, монстров, проджекттайлов)
-    // сразу отнаследоваться от пикси-контейнера.
     this.layer = layer;
 
     // Снова магическое число + повторяющийся функционал (то-же самое у тебя происходит в ресете)
@@ -93,7 +90,7 @@ export class Player {
 
       this.playerSprite.rotation = Math.atan2(dy, dx);
 
-      this.playerSprite.zIndex = this.zIndex;
+      this.playerSprite.zIndex = this.ZIndex;
     }
 
     if (distance < 30) {

@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 
-export class Coin {
+export class Coin extends PIXI.Container {
   protected layer: PIXI.Container<PIXI.DisplayObject>;
   protected coinSprite: PIXI.Sprite;
   protected isCollected: boolean = false;
@@ -12,6 +12,7 @@ export class Coin {
     sprite: string,
     layer: PIXI.Container<PIXI.DisplayObject>
   ) {
+    super();
     this.layer = layer;
     this.coinSprite = new PIXI.Sprite(PIXI.Texture.from(sprite));
     this.coinSprite.anchor.set(0.5);
