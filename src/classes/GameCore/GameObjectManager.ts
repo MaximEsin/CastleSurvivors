@@ -102,7 +102,7 @@ export class GameObjectManager {
   updateEnemies(): void {
     for (const enemy of this.enemies) {
       if (!enemy.getDeathState()) {
-        enemy.update();
+        enemy.update(this.player);
       }
 
       this.player.checkProjectileCollision(enemy.getProjectiles());

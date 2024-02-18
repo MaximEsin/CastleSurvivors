@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../Managers/AnimationManager';
 import { Enemy } from './Enemy';
 import { Diamond } from '../Money/Diamond';
+import { Player } from '../Player';
 
 export class Eye extends Enemy {
   protected layer: PIXI.Container<PIXI.DisplayObject>;
@@ -62,8 +63,8 @@ export class Eye extends Enemy {
     );
   }
 
-  public update(): void {
-    super.update();
+  public update(player: Player): void {
+    super.update(player);
     super.attack('/Enemies/Eye/projectile/Slime.png', 20);
     this.updateAnimation(
       this.standingAnimation,

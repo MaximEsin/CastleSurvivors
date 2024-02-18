@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../Managers/AnimationManager';
 import { Projectile } from '../Projectile';
+import { Player } from '../Player';
 
 export class Enemy extends PIXI.Container {
   protected app: PIXI.Application;
@@ -60,13 +61,21 @@ export class Enemy extends PIXI.Container {
     }
   }
 
-  protected moveRandomly(): void {
-    const speed = 2;
+  protected moveRandomly(player: Player): void {
+    const dx = player.getSprite().x - this.enemySprite.x;
+    const dy = player.getSprite().y - this.enemySprite.y;
+    const distanceToPlayer = Math.sqrt(dx ** 2 + dy ** 2);
+    const stopDistance = 50;
 
-    // Move the enemy in the current direction
-    this.enemySprite.x += this.direction.x * speed;
-    this.enemySprite.y += this.direction.y * speed;
+    if (distanceToPlayer > stopDistance) {
+      const length = Math.sqrt(dx ** 2 + dy ** 2);
+      this.direction.x = dx / length;
+      this.direction.y = dy / length;
 
+      const speed = 1;
+      this.enemySprite.x += this.direction.x * speed;
+      this.enemySprite.y += this.direction.y * speed;
+    }
     this.adjustEnemyRotation();
 
     this.handleBorderWrap();
@@ -227,8 +236,8 @@ export class Enemy extends PIXI.Container {
 
   public spawnCoin() {}
 
-  public update() {
-    this.moveRandomly();
+  public update(player: Player) {
+    this.moveRandomly(player);
 
     for (const projectile of this.projectiles) {
       projectile.update();

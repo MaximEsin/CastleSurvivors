@@ -25,7 +25,8 @@ export class Player extends PIXI.Container {
   private movementSpeed: number = 5;
   private ZIndex: number = 100;
   private lastEnemyDamageTime: number = 0;
-  private readonly enemyDamageCooldown: number = 2000;
+  private readonly enemyDamageCooldown: number = 1000;
+  private isDead: boolean = false;
 
   constructor(
     animationManager: AnimationManager,
@@ -214,15 +215,18 @@ export class Player extends PIXI.Container {
       this.lastEnemyDamageTime = currentTime;
     }
 
-    this.health -= damage;
-    this.isDamaged = true;
+    if (!this.isDead) {
+      this.health -= damage;
+      this.isDamaged = true;
 
-    this.playHitSound();
+      this.playHitSound();
 
-    this.playerInterface.updateHealthText(this.health);
+      this.playerInterface.updateHealthText(this.health);
 
-    if (this.health <= 0) {
-      this.handlePlayerDefeat();
+      if (this.health <= 0) {
+        this.isDead = true;
+        this.handlePlayerDefeat();
+      }
     }
   }
 
@@ -251,6 +255,7 @@ export class Player extends PIXI.Container {
   }
 
   public resetPlayer(): void {
+    this.isDead = false;
     this.layer.removeChild(this.playerSprite);
 
     this.playerSprite = this.createPlayerSprite();

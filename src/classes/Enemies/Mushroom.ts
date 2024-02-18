@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../Managers/AnimationManager';
 import { Enemy } from './Enemy';
 import { Coin } from '../Money/Coin';
+import { Player } from '../Player';
 
 export class Mushroom extends Enemy {
   protected layer: PIXI.Container<PIXI.DisplayObject>;
@@ -58,8 +59,8 @@ export class Mushroom extends Enemy {
     );
   }
 
-  public update(): void {
-    super.update();
+  public update(player: Player): void {
+    super.update(player);
     super.attack('/Enemies/Mushroom/projectile/projectile.png', 10);
     this.updateAnimation(
       this.standingAnimation,
