@@ -31,7 +31,7 @@ export class WinScreen {
     resetButton.anchor.set(0.5);
     resetButton.position.set(
       this.app.screen.width / 2,
-      this.app.screen.height / 2 + 150
+      this.app.screen.height / 2 + 100
     );
     resetButton.interactive = true;
     resetButton.on('pointerdown', () => {

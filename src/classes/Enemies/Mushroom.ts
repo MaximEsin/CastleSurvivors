@@ -13,9 +13,10 @@ export class Mushroom extends Enemy {
   constructor(
     animationManager: AnimationManager,
     app: PIXI.Application,
-    layer: PIXI.Container<PIXI.DisplayObject>
+    layer: PIXI.Container<PIXI.DisplayObject>,
+    isMobile: boolean
   ) {
-    super(animationManager, app, 10, layer);
+    super(animationManager, app, 10, layer, isMobile);
     this.layer = layer;
     this.standingAnimation =
       this.animationManager.getMushroomStandingAnimation();
@@ -29,6 +30,8 @@ export class Mushroom extends Enemy {
     const animation = new PIXI.AnimatedSprite(mushroomTextures);
 
     this.enemySprite = animation;
+
+    super.handleMobileResize();
 
     this.setRandomPosition(animation);
 
@@ -55,7 +58,8 @@ export class Mushroom extends Enemy {
       this.getSprite().x,
       this.getSprite().y,
       '/Shop/coin.png',
-      this.layer
+      this.layer,
+      super.getIsMobile()
     );
   }
 

@@ -9,10 +9,11 @@ export class CursedEye extends Projectile {
     y: number,
     direction: PIXI.Point,
     damage: number,
-    rotation: number
+    rotation: number,
+    isMobile: boolean
   ) {
     const eyeTexture = '/Player/weapons/eye.png';
-    super(app, layer, x, y, 8, eyeTexture, direction, damage);
+    super(app, layer, x, y, 8, eyeTexture, direction, damage, isMobile);
 
     this.getSprite().rotation = rotation;
   }

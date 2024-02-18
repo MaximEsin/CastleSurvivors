@@ -15,18 +15,21 @@ export class Enemy extends PIXI.Container {
   protected health: number;
   private isHit: boolean = false;
   public isDead: boolean = false;
+  protected isMobile: boolean;
 
   constructor(
     animationManager: AnimationManager,
     app: PIXI.Application,
     health: number,
-    layer: PIXI.Container<PIXI.DisplayObject>
+    layer: PIXI.Container<PIXI.DisplayObject>,
+    isMobile: boolean
   ) {
     super();
     this.animationManager = animationManager;
     this.app = app;
     this.layer = layer;
     this.health = health;
+    this.isMobile = isMobile;
     this.enemySprite = this.createEnemySprite();
   }
 
@@ -193,7 +196,8 @@ export class Enemy extends PIXI.Container {
       5,
       projectileSprite,
       new PIXI.Point(this.direction.x, this.direction.y),
-      damage
+      damage,
+      this.isMobile
     );
 
     this.projectiles.push(projectile);
@@ -232,6 +236,16 @@ export class Enemy extends PIXI.Container {
     if (this.enemySprite.parent) {
       this.enemySprite.parent.removeChild(this.enemySprite);
     }
+  }
+
+  public handleMobileResize() {
+    if (this.isMobile) {
+      this.enemySprite.scale.set(0.6);
+    }
+  }
+
+  protected getIsMobile() {
+    return this.isMobile;
   }
 
   public spawnCoin() {}

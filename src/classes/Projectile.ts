@@ -10,6 +10,7 @@ export class Projectile extends PIXI.Container {
   protected _isDestroyed: boolean = false;
   public damage: number;
   private collisionCooldown: boolean = false;
+  private isMobile: boolean;
 
   constructor(
     app: PIXI.Application,
@@ -19,11 +20,13 @@ export class Projectile extends PIXI.Container {
     speed: number,
     projectileSprite: string,
     direction: PIXI.Point,
-    damage: number
+    damage: number,
+    isMobile: boolean
   ) {
     super();
     this.app = app;
     this.layer = layer;
+    this.isMobile = isMobile;
     this.projectileSprite = new PIXI.Sprite(
       PIXI.Texture.from(projectileSprite)
     );
@@ -32,6 +35,8 @@ export class Projectile extends PIXI.Container {
     this.speed = speed;
     this.direction = direction;
     this.damage = damage;
+
+    this.handleMobileResize();
 
     layer.addChild(this.projectileSprite);
   }
@@ -83,5 +88,11 @@ export class Projectile extends PIXI.Container {
     setTimeout(() => {
       this.collisionCooldown = false;
     }, 1000);
+  }
+
+  public handleMobileResize() {
+    if (this.isMobile) {
+      this.projectileSprite.scale.set(0.6);
+    }
   }
 }

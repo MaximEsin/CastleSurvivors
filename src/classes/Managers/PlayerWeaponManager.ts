@@ -11,6 +11,7 @@ export class PlayerWeaponsManager {
   private layer: PIXI.Container<PIXI.DisplayObject>;
   private player: Player;
   private playerInterface: PlayerInterface;
+  private isMobile: boolean;
 
   public knives: Knife[] = [];
   public cursedEyes: CursedEye[] = [];
@@ -32,12 +33,14 @@ export class PlayerWeaponsManager {
     app: PIXI.Application,
     layer: PIXI.Container<PIXI.DisplayObject>,
     player: Player,
-    playerinterface: PlayerInterface
+    playerinterface: PlayerInterface,
+    isMobile: boolean
   ) {
     this.app = app;
     this.layer = layer;
     this.player = player;
     this.playerInterface = playerinterface;
+    this.isMobile = isMobile;
     this.app.renderer.plugins.interaction.autoPreventDefault = false;
   }
 
@@ -134,7 +137,8 @@ export class PlayerWeaponsManager {
               this.player.getSprite().y,
               direction,
               5,
-              rotation
+              rotation,
+              this.isMobile
             );
             this.knives.push(knife);
             this.layer.addChildAt(knife.getSprite(), 1);
@@ -149,7 +153,8 @@ export class PlayerWeaponsManager {
               this.player.getSprite().y,
               direction,
               20,
-              rotation
+              rotation,
+              this.isMobile
             );
             this.cursedEyes.push(eye);
             this.layer.addChildAt(eye.getSprite(), 1);
@@ -164,7 +169,8 @@ export class PlayerWeaponsManager {
               this.player.getSprite().y,
               direction,
               10,
-              rotation
+              rotation,
+              this.isMobile
             );
             this.player.health += 5;
             this.playerInterface.updateHealthText(this.player.health);

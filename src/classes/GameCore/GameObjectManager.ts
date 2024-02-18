@@ -32,19 +32,22 @@ export class GameObjectManager {
   public enemies: Enemy[] = [];
   public coins: Coin[] = [];
   private currentWave: number = 0;
+  private isMobile: boolean;
 
   constructor(
     app: PIXI.Application,
     playerInterface: PlayerInterface,
     gameLayer: PIXI.Container,
     endScreenLayer: PIXI.Container,
-    timer: Timer
+    timer: Timer,
+    isMobile: boolean
   ) {
     this.app = app;
     this.playerInterface = playerInterface;
     this.gameLayer = gameLayer;
     this.endScreenLayer = endScreenLayer;
     this.timer = timer;
+    this.isMobile = isMobile;
     this.animationManager = new AnimationManager();
     this.inputManager = new InputManager();
     this.deathScreen = new DeathScreen(
@@ -63,20 +66,23 @@ export class GameObjectManager {
       this.inputManager,
       this.playerInterface,
       this.deathScreen,
-      this.gameLayer
+      this.gameLayer,
+      this.isMobile
     );
     this.playerWeaponsManager = new PlayerWeaponsManager(
       this.app,
       this.gameLayer,
       this.player,
-      this.playerInterface
+      this.playerInterface,
+      this.isMobile
     );
     this.merchant = new Merchant(
       this.app,
       this.gameLayer,
       this.animationManager,
       this.playerInterface,
-      this.playerWeaponsManager
+      this.playerWeaponsManager,
+      this.isMobile
     );
   }
 
@@ -85,7 +91,8 @@ export class GameObjectManager {
     playerInterface: PlayerInterface,
     gameLayer: PIXI.Container,
     endScreenLayer: PIXI.Container,
-    timer: Timer
+    timer: Timer,
+    isMobile: boolean
   ): GameObjectManager {
     if (!GameObjectManager.instance) {
       GameObjectManager.instance = new GameObjectManager(
@@ -93,7 +100,8 @@ export class GameObjectManager {
         playerInterface,
         gameLayer,
         endScreenLayer,
-        timer
+        timer,
+        isMobile
       );
     }
     return GameObjectManager.instance;

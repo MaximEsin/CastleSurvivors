@@ -11,17 +11,20 @@ export class WaveManager {
   private timer: Timer;
   private gameObjectManager: GameObjectManager;
   private waveIntervals: number[] = [300, 240, 180, 120, 60];
+  private isMobile: boolean;
 
   constructor(
     app: PIXI.Application,
     gameLayer: PIXI.Container,
     timer: Timer,
-    gameObjectManager: GameObjectManager
+    gameObjectManager: GameObjectManager,
+    isMobile: boolean
   ) {
     this.app = app;
     this.gameLayer = gameLayer;
     this.timer = timer;
     this.gameObjectManager = gameObjectManager;
+    this.isMobile = isMobile;
   }
 
   public checkForNewWave(): void {
@@ -46,7 +49,8 @@ export class WaveManager {
           const mushroom = new Mushroom(
             this.gameObjectManager.animationManager,
             this.app,
-            this.gameLayer
+            this.gameLayer,
+            this.isMobile
           );
           this.gameLayer.addChild(mushroom.getSprite());
           this.gameObjectManager.enemies.push(mushroom);
@@ -57,7 +61,8 @@ export class WaveManager {
           const mushroom = new Mushroom(
             this.gameObjectManager.animationManager,
             this.app,
-            this.gameLayer
+            this.gameLayer,
+            this.isMobile
           );
           this.gameLayer.addChild(mushroom.getSprite());
           this.gameObjectManager.enemies.push(mushroom);
@@ -67,7 +72,8 @@ export class WaveManager {
           const eye = new Eye(
             this.gameObjectManager.animationManager,
             this.app,
-            this.gameLayer
+            this.gameLayer,
+            this.isMobile
           );
           this.gameLayer.addChild(eye.getSprite());
           this.gameObjectManager.enemies.push(eye);
@@ -78,7 +84,8 @@ export class WaveManager {
           const eye = new Eye(
             this.gameObjectManager.animationManager,
             this.app,
-            this.gameLayer
+            this.gameLayer,
+            this.isMobile
           );
           this.gameLayer.addChild(eye.getSprite());
           this.gameObjectManager.enemies.push(eye);
@@ -89,7 +96,8 @@ export class WaveManager {
           const eye = new Eye(
             this.gameObjectManager.animationManager,
             this.app,
-            this.gameLayer
+            this.gameLayer,
+            this.isMobile
           );
           this.gameLayer.addChild(eye.getSprite());
           this.gameObjectManager.enemies.push(eye);
@@ -99,7 +107,8 @@ export class WaveManager {
           const skeleton = new Skeleton(
             this.gameObjectManager.animationManager,
             this.app,
-            this.gameLayer
+            this.gameLayer,
+            this.isMobile
           );
           this.gameLayer.addChild(skeleton.getSprite());
           this.gameObjectManager.enemies.push(skeleton);
@@ -110,7 +119,8 @@ export class WaveManager {
           const skeleton = new Skeleton(
             this.gameObjectManager.animationManager,
             this.app,
-            this.gameLayer
+            this.gameLayer,
+            this.isMobile
           );
           this.gameLayer.addChild(skeleton.getSprite());
           this.gameObjectManager.enemies.push(skeleton);

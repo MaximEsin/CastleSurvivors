@@ -19,19 +19,22 @@ export class Merchant {
   private isEyePurchased: boolean = false;
   private isKebabPurchased: boolean = false;
   private playerWeaponsManager: PlayerWeaponsManager;
+  private isMobile: boolean;
 
   constructor(
     app: PIXI.Application,
     layer: PIXI.Container<PIXI.DisplayObject>,
     animationManager: AnimationManager,
     playerInterface: PlayerInterface,
-    playerWeaponsManager: PlayerWeaponsManager
+    playerWeaponsManager: PlayerWeaponsManager,
+    isMobile: boolean
   ) {
     this.app = app;
     this.layer = layer;
     this.animationManager = animationManager;
     this.playerInterface = playerInterface;
     this.playerWeaponsManager = playerWeaponsManager;
+    this.isMobile = isMobile;
     this.container = new PIXI.Container();
     this.container.interactive = true;
     this.standingTextures =
@@ -131,6 +134,11 @@ export class Merchant {
     const animation = (this.merchantSprite = new PIXI.AnimatedSprite(
       this.standingTextures
     ));
+
+    if (this.isMobile) {
+      animation.scale.set(0.6);
+    }
+
     animation.animationSpeed = 0.1;
     animation.play();
     this.layer.addChild(animation);

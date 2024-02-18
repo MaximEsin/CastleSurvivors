@@ -18,6 +18,7 @@ export class GameManager {
   private gameEventHandler: GameEventHandler;
   private gameObjectManager: GameObjectManager;
   private waveManager: WaveManager;
+  private isMobile: boolean = window.innerWidth < 600;
 
   constructor(app: PIXI.Application) {
     this.app = app;
@@ -47,13 +48,15 @@ export class GameManager {
       this.playerInterface,
       this.gameLayer,
       this.endScreenLayer,
-      this.timer
+      this.timer,
+      this.isMobile
     );
     this.waveManager = new WaveManager(
       this.app,
       this.gameLayer,
       this.timer,
-      this.gameObjectManager
+      this.gameObjectManager,
+      this.isMobile
     );
 
     this.app.ticker.add(this.gameLoop.bind(this));

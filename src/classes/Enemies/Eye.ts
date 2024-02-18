@@ -13,9 +13,10 @@ export class Eye extends Enemy {
   constructor(
     animationManager: AnimationManager,
     app: PIXI.Application,
-    layer: PIXI.Container<PIXI.DisplayObject>
+    layer: PIXI.Container<PIXI.DisplayObject>,
+    isMobile: boolean
   ) {
-    super(animationManager, app, 20, layer);
+    super(animationManager, app, 20, layer, isMobile);
     this.layer = layer;
     this.standingAnimation = this.animationManager.getEyeFlyingAnimation();
     this.movingAnimation = this.animationManager.getEyeFlyingAnimation();
@@ -27,6 +28,8 @@ export class Eye extends Enemy {
     const animation = new PIXI.AnimatedSprite(eyeTextures);
 
     this.enemySprite = animation;
+
+    super.handleMobileResize();
 
     this.setRandomPosition(animation);
 
@@ -59,7 +62,8 @@ export class Eye extends Enemy {
       this.getSprite().x,
       this.getSprite().y,
       '/Shop/diamond.png',
-      this.layer
+      this.layer,
+      super.getIsMobile()
     );
   }
 

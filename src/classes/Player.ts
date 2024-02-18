@@ -27,6 +27,7 @@ export class Player extends PIXI.Container {
   private lastEnemyDamageTime: number = 0;
   private readonly enemyDamageCooldown: number = 1000;
   private isDead: boolean = false;
+  private isMobile: boolean;
 
   constructor(
     animationManager: AnimationManager,
@@ -34,14 +35,15 @@ export class Player extends PIXI.Container {
     inputManager: InputManager,
     playerInterface: PlayerInterface,
     deathScreen: DeathScreen,
-    layer: PIXI.Container<PIXI.DisplayObject>
+    layer: PIXI.Container<PIXI.DisplayObject>,
+    isMobile: boolean
   ) {
     super();
     this.animationManager = animationManager;
     this.inputManager = inputManager;
     this.app = app;
     this.layer = layer;
-
+    this.isMobile = isMobile;
     this.playerInterface = playerInterface;
     this.playerSprite = this.createPlayerSprite();
     this.playerStandingTextures =
@@ -56,6 +58,11 @@ export class Player extends PIXI.Container {
   private createPlayerSprite(): PIXI.AnimatedSprite {
     const playerTextures = this.animationManager.getPlayerStandingAnimation();
     const animation = new PIXI.AnimatedSprite(playerTextures);
+
+    if (this.isMobile) {
+      animation.scale.set(0.6);
+    }
+
     animation.x = window.innerWidth / 2 - 100;
     animation.y = window.innerHeight / 2 - 100;
     animation.anchor.set(0.5);
@@ -243,6 +250,11 @@ export class Player extends PIXI.Container {
   private playDeathAnimation(): void {
     const deathTextures = this.animationManager.getPlayerDyingAnimation();
     const deathAnimation = new PIXI.AnimatedSprite(deathTextures);
+
+    if (this.isMobile) {
+      deathAnimation.scale.set(0.6);
+    }
+
     this.layer.removeChild(this.playerSprite);
     deathAnimation.x = this.playerSprite.x;
     deathAnimation.y = this.playerSprite.y;

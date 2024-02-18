@@ -9,10 +9,11 @@ export class Knife extends Projectile {
     y: number,
     direction: PIXI.Point,
     damage: number,
-    rotation: number
+    rotation: number,
+    isMobile: boolean
   ) {
     const knifeTexture = '/Player/weapons/knife.png';
-    super(app, layer, x, y, 8, knifeTexture, direction, damage);
+    super(app, layer, x, y, 8, knifeTexture, direction, damage, isMobile);
 
     this.getSprite().rotation = rotation;
   }

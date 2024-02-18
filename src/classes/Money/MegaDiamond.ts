@@ -8,9 +8,10 @@ export class MegaDiamond extends Coin {
     x: number,
     y: number,
     sprite: string,
-    layer: PIXI.Container<PIXI.DisplayObject>
+    layer: PIXI.Container<PIXI.DisplayObject>,
+    isMobile: boolean
   ) {
-    super(x, y, sprite, layer);
+    super(x, y, sprite, layer, isMobile);
     this.coinPoints = 10;
   }
 
