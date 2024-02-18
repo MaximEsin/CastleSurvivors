@@ -92,7 +92,7 @@ export class Projectile extends PIXI.Container {
 
   public handleMobileResize() {
     if (this.isMobile) {
-      this.projectileSprite.scale.set(0.6);
+      this.projectileSprite.scale.set(0.5);
     }
   }
 }
