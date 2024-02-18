@@ -10,12 +10,11 @@ Castle Survivors is a pixel-art survival game where you, the player, must naviga
 
 1. **Movement:**
 
-   - Use the w, a, s, d keys to move your character.
+   - Click on the spot where you want your character to move
 
 2. **Attacking:**
 
-   - Press the "c" key to attack enemies with basic weapon.
-   - Use different weapons strategically.
+   - Your character automatically attacks nearest enemies with accuired wepons
 
 3. **Collecting Coins:**
 
@@ -35,14 +34,6 @@ Castle Survivors is a pixel-art survival game where you, the player, must naviga
 
 7. **Game Timer:**
    - Survive through waves within the time limit to win.
-
-## Controls
-
-- W, A, S, D: Move
-- C: Basic attack
-- V: Cursed Eye attack
-- X: Kebab attack
-- "Escape" key: Pause/Resume
 
 ## Weapons
 
@@ -68,9 +59,7 @@ Visit the merchant to purchase weapons and upgrades using collected coins.
 
 ## Tips
 
-- Strategically use different weapons against various enemies.
 - Keep an eye on the game timer and plan your moves accordingly.
-- Explore the castle to discover hidden coins and power-ups.
 
 ## Timer
 
