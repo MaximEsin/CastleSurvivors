@@ -24,6 +24,8 @@ export class Player extends PIXI.Container {
   private movementTreshhold: number = 30;
   private movementSpeed: number = 5;
   private ZIndex: number = 100;
+  private lastEnemyDamageTime: number = 0;
+  private readonly enemyDamageCooldown: number = 2000;
 
   constructor(
     animationManager: AnimationManager,
@@ -199,7 +201,19 @@ export class Player extends PIXI.Container {
     }
   }
 
-  private receiveDamage(damage: number): void {
+  public receiveDamage(
+    damage: number,
+    isEnemyCollision: boolean = false
+  ): void {
+    const currentTime = Date.now();
+    if (isEnemyCollision) {
+      const timeSinceLastDamage = currentTime - this.lastEnemyDamageTime;
+      if (timeSinceLastDamage < this.enemyDamageCooldown) {
+        return;
+      }
+      this.lastEnemyDamageTime = currentTime;
+    }
+
     this.health -= damage;
     this.isDamaged = true;
 

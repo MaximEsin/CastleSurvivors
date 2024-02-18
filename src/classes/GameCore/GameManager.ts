@@ -75,6 +75,7 @@ export class GameManager {
 
     this.gameObjectManager.removeCollectedCoins();
     this.gameObjectManager.checkCoinCollision();
+    this.gameObjectManager.checkPlayerCollision();
 
     this.waveManager.checkForNewWave();
 

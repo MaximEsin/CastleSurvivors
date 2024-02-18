@@ -158,6 +158,18 @@ export class GameObjectManager {
     }
   }
 
+  checkPlayerCollision(): void {
+    const playerBounds = this.player.getSprite().getBounds();
+
+    for (const enemy of this.enemies) {
+      const enemyBounds = enemy.getSprite().getBounds();
+
+      if (playerBounds.intersects(enemyBounds)) {
+        this.player.receiveDamage(5, true);
+      }
+    }
+  }
+
   private removeEnemies(): void {
     for (const enemy of this.enemies) {
       this.gameLayer.removeChild(enemy.getSprite());
