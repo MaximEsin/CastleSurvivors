@@ -56,15 +56,13 @@ export class Merchant {
       '/Player/weapons/eye.png',
       'Cursed Eye: 50',
       20,
-      20,
-      1
+      20
     );
     this.addWeaponImageWithText(
       '/Player/weapons/kebab.png',
       'Kebab: 50',
       180,
-      40,
-      2
+      40
     );
 
     this.container.position.set(
@@ -72,40 +70,46 @@ export class Merchant {
       (app.screen.height - this.container.height) / 2
     );
 
-    window.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        if (!this.isOpen && this.isPlayerNear) {
-          this.openMerchantWindow();
-        } else {
-          this.closeMerchantWindow();
-        }
-      }
+    this.app.ticker.add(this.checkPlayerProximity.bind(this));
+  }
 
-      if (event.key === '1') {
-        if (this.playerInterface.canPlayerAfford(50) && !this.isEyePurchased) {
-          this.playerInterface.handlePurchase(50);
-          this.handleEyePurchase();
-        }
-      }
+  private checkPlayerProximity(): void {
+    if (this.isPlayerNear && !this.isOpen) {
+      this.openMerchantWindow();
+    } else if (!this.isPlayerNear && this.isOpen) {
+      this.closeMerchantWindow();
+    }
+  }
 
-      if (event.key === '2') {
-        if (
-          this.playerInterface.canPlayerAfford(50) &&
-          !this.isKebabPurchased
-        ) {
-          this.playerInterface.handlePurchase(50);
-          this.handleKebabPurchase();
-        }
+  public checkPlayerCollision(player: Player): void {
+    const playerBounds = player.getBounds();
+    const merchantBounds = this.merchantSprite.getBounds();
+
+    if (playerBounds.intersects(merchantBounds)) {
+      this.playInteractAnimation();
+      this.isPlayerNear = true;
+
+      if (!this.isEyePurchased && this.playerInterface.canPlayerAfford(50)) {
+        this.playerInterface.handlePurchase(50);
+        this.handleEyePurchase();
+      } else if (
+        !this.isKebabPurchased &&
+        this.playerInterface.canPlayerAfford(50)
+      ) {
+        this.playerInterface.handlePurchase(50);
+        this.handleKebabPurchase();
       }
-    });
+    } else {
+      this.playStandingAnimation();
+      this.isPlayerNear = false;
+    }
   }
 
   private addWeaponImageWithText(
     imagePath: string,
     text: string,
     x: number,
-    y: number,
-    key: number
+    y: number
   ): void {
     const weaponImage = PIXI.Sprite.from(imagePath);
     weaponImage.position.set(x, y);
@@ -119,15 +123,6 @@ export class Merchant {
     weaponText.anchor.set(0, 0);
     weaponText.position.set(x + weaponImage.width / 2 + 20, y - 15);
     this.container.addChild(weaponText);
-
-    const weaponText2 = new PIXI.Text(`Press ${key}`, {
-      fill: 'white',
-      fontFamily: 'Times New Roman',
-      fontSize: 12,
-    });
-    weaponText2.anchor.set(0, 0);
-    weaponText2.position.set(x + weaponImage.width / 2 + 35, 130);
-    this.container.addChild(weaponText2);
   }
 
   private createMerchantSprite(): PIXI.AnimatedSprite {
@@ -179,20 +174,6 @@ export class Merchant {
       this.merchantSprite.loop = true;
       this.merchantSprite.play();
       this.metPlayer = false;
-    }
-  }
-
-  public checkPlayerCollision(player: Player): void {
-    const playerBounds = player.getBounds();
-    const merchantBounds = this.merchantSprite.getBounds();
-
-    if (playerBounds.intersects(merchantBounds)) {
-      this.playInteractAnimation();
-      this.isPlayerNear = true;
-    } else {
-      this.playStandingAnimation();
-      this.isPlayerNear = false;
-      this.closeMerchantWindow();
     }
   }
 
