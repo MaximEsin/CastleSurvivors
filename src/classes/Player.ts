@@ -169,17 +169,17 @@ export class Player extends PIXI.Container {
     const screenHeight = this.app.screen.height * 0.8;
 
     // Check and handle border wrap-around horizontally
-    if (this.playerSprite.x < 0) {
+    if (this.playerSprite.x < 20) {
       this.playerSprite.x = screenWidth;
     } else if (this.playerSprite.x > screenWidth) {
-      this.playerSprite.x = 0;
+      this.playerSprite.x = 20;
     }
 
     // Check and handle border wrap-around vertically
-    if (this.playerSprite.y < 0) {
+    if (this.playerSprite.y < 20) {
       this.playerSprite.y = screenHeight;
     } else if (this.playerSprite.y > screenHeight) {
-      this.playerSprite.y = 0;
+      this.playerSprite.y = 20;
     }
   }
 
