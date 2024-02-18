@@ -1,31 +1,58 @@
 export class InputManager {
-  private mousePosition: { x: number; y: number } = { x: 0, y: 0 };
-  private mousePressed: boolean = false;
+  private pointerPosition: { x: number; y: number } = { x: 0, y: 0 };
+  private pointerPressed: boolean = false;
 
   constructor() {
-    window.addEventListener('mousemove', this.handleMouseMove.bind(this));
-    window.addEventListener('mousedown', this.handleMouseDown.bind(this));
-    window.addEventListener('mouseup', this.handleMouseUp.bind(this));
+    window.addEventListener('mousemove', this.handlePointerMove.bind(this));
+    window.addEventListener('mousedown', this.handlePointerDown.bind(this));
+    window.addEventListener('mouseup', this.handlePointerUp.bind(this));
+
+    window.addEventListener('touchmove', this.handleTouchMove.bind(this));
+    window.addEventListener('touchstart', this.handleTouchStart.bind(this));
+    window.addEventListener('touchend', this.handleTouchEnd.bind(this));
   }
 
-  private handleMouseMove(event: MouseEvent): void {
-    this.mousePosition.x = event.clientX;
-    this.mousePosition.y = event.clientY;
+  private handlePointerMove(event: MouseEvent): void {
+    this.setPointerPosition(event.clientX, event.clientY);
   }
 
-  public getMousePosition(): { x: number; y: number } {
-    return this.mousePosition;
+  private handlePointerDown(): void {
+    this.setPointerPressed(true);
   }
 
-  private handleMouseDown(): void {
-    this.mousePressed = true;
+  private handlePointerUp(): void {
+    this.setPointerPressed(false);
   }
 
-  private handleMouseUp(): void {
-    this.mousePressed = false;
+  private handleTouchMove(event: TouchEvent): void {
+    const touch = event.touches[0];
+    if (touch) {
+      this.setPointerPosition(touch.clientX, touch.clientY);
+    }
   }
 
-  public isMousePressed(): boolean {
-    return this.mousePressed;
+  private handleTouchStart(): void {
+    this.setPointerPressed(true);
+  }
+
+  private handleTouchEnd(): void {
+    this.setPointerPressed(false);
+  }
+
+  private setPointerPosition(x: number, y: number): void {
+    this.pointerPosition.x = x;
+    this.pointerPosition.y = y;
+  }
+
+  public getPointerPosition(): { x: number; y: number } {
+    return this.pointerPosition;
+  }
+
+  private setPointerPressed(pressed: boolean): void {
+    this.pointerPressed = pressed;
+  }
+
+  public isPointerPressed(): boolean {
+    return this.pointerPressed;
   }
 }

@@ -107,7 +107,7 @@ export class Player extends PIXI.Container {
   }
 
   private adjustPlayerRotation(): void {
-    const mouseX = this.inputManager.getMousePosition().x;
+    const mouseX = this.inputManager.getPointerPosition().x;
     const playerX = this.playerSprite.x;
 
     const dx = mouseX - playerX;
@@ -273,13 +273,9 @@ export class Player extends PIXI.Container {
     return this.playerSprite.getBounds();
   }
 
-  // Передавать в апдейт игрока монеты точно не стоит.
-  // Больше смысла имеет передавать в апдейт dt
-  // И уже с его помощью невелировать воздействие потенциальных лагов на перемещение
-  // т.е. умножать на тд скорость
   update(dt: number) {
-    if (this.inputManager.isMousePressed()) {
-      const mousePosition = this.inputManager.getMousePosition();
+    if (this.inputManager.isPointerPressed()) {
+      const mousePosition = this.inputManager.getPointerPosition();
       this.handlePlayerMovement(mousePosition, dt);
     } else {
       this.handlePlayerHalt();
