@@ -66,4 +66,19 @@ Visit the merchant to purchase weapons and upgrades using collected coins.
 - You need to survive 5 minutes.
 - Each minute a wave of monsters spawn, so make sure to clear them as fast as possible.
 
+## Technologies Used:
+
+- **Vite.js**: This project utilizes Vite.js as the build tool and development server. Vite.js offers fast builds and instant hot module replacement (HMR) for a smooth development experience.
+- **Pixi.js**: Castle Survivors relies on Pixi.js for rendering the pixel-art graphics and handling animations within the game.
+- **@pixi/sound**: Sound effects are managed using the @pixi/sound library, allowing for easy integration and manipulation of audio elements.
+- **Rollup**: While not strictly necessary for development, Rollup can be used for building the application for deployment, ensuring optimized bundle sizes and efficient production-ready code.
+
+## Setup Instructions:
+
+1. Clone the repository to your local machine.
+2. Navigate to the project directory.
+3. Install dependencies by running `npm install`.
+4. Start the development server using `npm run dev`.
+5. Open your browser and navigate to the specified local URL to view the game.
+
 Enjoy playing Castle Survivors!
