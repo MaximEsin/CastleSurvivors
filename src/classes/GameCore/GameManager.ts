@@ -18,7 +18,7 @@ export class GameManager {
   private gameEventHandler: GameEventHandler;
   private gameObjectManager: GameObjectManager;
   private waveManager: WaveManager;
-  private isMobile: boolean = window.innerWidth < 600;
+  private isMobile: boolean = window.innerWidth < 700;
 
   constructor(app: PIXI.Application) {
     this.app = app;

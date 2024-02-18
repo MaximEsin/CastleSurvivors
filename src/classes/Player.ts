@@ -60,7 +60,7 @@ export class Player extends PIXI.Container {
     const animation = new PIXI.AnimatedSprite(playerTextures);
 
     if (this.isMobile) {
-      animation.scale.set(0.5);
+      animation.scale.set(0.4);
     }
 
     animation.x = window.innerWidth / 2 - 100;

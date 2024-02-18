@@ -42,7 +42,7 @@ export class Coin extends PIXI.Container {
 
   public handleMobileResize() {
     if (this.isMobile) {
-      this.coinSprite.scale.set(0.5);
+      this.coinSprite.scale.set(0.4);
     }
   }
 }

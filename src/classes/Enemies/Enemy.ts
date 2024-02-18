@@ -240,7 +240,7 @@ export class Enemy extends PIXI.Container {
 
   public handleMobileResize() {
     if (this.isMobile) {
-      this.enemySprite.scale.set(0.5);
+      this.enemySprite.scale.set(0.4);
     }
   }
 

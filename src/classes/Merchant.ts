@@ -136,7 +136,7 @@ export class Merchant {
     ));
 
     if (this.isMobile) {
-      animation.scale.set(0.6);
+      animation.scale.set(0.5);
     }
 
     animation.animationSpeed = 0.1;
