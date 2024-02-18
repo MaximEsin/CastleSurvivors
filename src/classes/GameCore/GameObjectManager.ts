@@ -110,7 +110,7 @@ export class GameObjectManager {
   }
 
   updateProjectiles(): void {
-    this.playerWeaponsManager.update(this.inputManager.getMousePosition());
+    this.playerWeaponsManager.update(this.enemies);
     const playerKnives = this.playerWeaponsManager.getKnives();
     const playerCursedEyes = this.playerWeaponsManager.getEyes();
     const playerKebabs = this.playerWeaponsManager.getKebabs();
