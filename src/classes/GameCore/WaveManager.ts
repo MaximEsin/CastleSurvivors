@@ -45,6 +45,8 @@ export class WaveManager {
   private spawnEnemiesForWave(waveNumber: number): void {
     switch (waveNumber) {
       case 1:
+        // Магические цифры, лучше вынести в константы
+        // Так будет проще настраивать баланс
         for (let i = 0; i < 10; i++) {
           const mushroom = new Mushroom(
             this.gameObjectManager.animationManager,
@@ -68,6 +70,9 @@ export class WaveManager {
           this.gameObjectManager.enemies.push(mushroom);
         }
 
+        /// Ты вот сейчас передаешь и слой внутри класса варага, сверху в форе
+        /// а там ты кстати хех, УЖЕ кладёшь анимацию на слой
+        /// а потом на тот-же слой ещё раз кладёшь эту анимацию.
         for (let i = 0; i < 5; i++) {
           const eye = new Eye(
             this.gameObjectManager.animationManager,
@@ -75,6 +80,9 @@ export class WaveManager {
             this.gameLayer,
             this.isMobile
           );
+          /// На самом деле, так как ты наследуешь энеми от контейнера, можно было сразу сделать так
+          /// this.gameLayer.addChild(eye);
+          /// А уже в самом контейнере адчайлдить анимацию не на слой, а this.addChild()
           this.gameLayer.addChild(eye.getSprite());
           this.gameObjectManager.enemies.push(eye);
         }

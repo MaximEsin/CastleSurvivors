@@ -72,6 +72,13 @@ export class GameManager {
     );
 
     this.updateRenderingOrder();
+
+    // Плохая практика. Ты каждый тик создаёшь
+    // новый массив объектов (forEach создаёт новый массив)
+    // и проверяешь их, не умерли ли они.
+    // Хотя до этого, в том-же самом месте, наносил им урон в checkEnemyCollision
+    // пусть лучше прямо там по факту произошедшего, принимается решение об удалении
+    // конкретного объекта
     this.gameObjectManager.spriteCleaner();
 
     this.gameObjectManager.updateEnemies();
@@ -86,10 +93,14 @@ export class GameManager {
   }
 
   private updateRenderingOrder(): void {
+    // А зачем ты тут в менеджере сортируешь врагов?
+    // там же просто массив сущностей. Или с ним что-то происходит?
     this.gameObjectManager.enemies.sort(
       (a, b) => a.getSprite().y - b.getSprite().y
     );
 
+    // Так, а враги тут сортируются по чему?
+    // У них вроде нигде не устанавливается zIndex
     this.gameLayer.sortChildren();
   }
 

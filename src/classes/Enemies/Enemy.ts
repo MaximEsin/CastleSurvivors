@@ -31,6 +31,10 @@ export class Enemy extends PIXI.Container {
     this.health = health;
     this.isMobile = isMobile;
     this.enemySprite = this.createEnemySprite();
+
+    // Тут было бы лучше положить спрайт в собственный контейнер
+    // this.addChild(this.enemySprite);
+    // а от слоя можно вообще отказаться.
   }
 
   protected createEnemySprite(): PIXI.AnimatedSprite {
@@ -64,6 +68,7 @@ export class Enemy extends PIXI.Container {
     }
   }
 
+  // Почему рандомли, если они конкретно бегут к игроку?
   protected moveRandomly(player: Player): void {
     const dx = player.getSprite().x - this.enemySprite.x;
     const dy = player.getSprite().y - this.enemySprite.y;
@@ -75,6 +80,7 @@ export class Enemy extends PIXI.Container {
       this.direction.x = dx / length;
       this.direction.y = dy / length;
 
+      // Странно что у всех врагов одинаковая скорость
       const speed = 1;
       this.enemySprite.x += this.direction.x * speed;
       this.enemySprite.y += this.direction.y * speed;
@@ -248,7 +254,7 @@ export class Enemy extends PIXI.Container {
     return this.isMobile;
   }
 
-  public spawnCoin() {}
+  public spawnCoin() { }
 
   public update(player: Player) {
     this.moveRandomly(player);

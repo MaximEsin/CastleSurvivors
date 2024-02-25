@@ -15,6 +15,7 @@ import { Timer } from '../UI/Timer';
 import { PlayerWeaponsManager } from '../Managers/PlayerWeaponManager';
 
 export class GameObjectManager {
+  //Смотри, её лучше переименовать в _instance
   private static instance: GameObjectManager;
 
   private app: PIXI.Application;
@@ -42,6 +43,8 @@ export class GameObjectManager {
     timer: Timer,
     isMobile: boolean
   ) {
+    // Затем вот тут this._instance = this;
+
     this.app = app;
     this.playerInterface = playerInterface;
     this.gameLayer = gameLayer;
@@ -86,6 +89,11 @@ export class GameObjectManager {
     );
   }
 
+  // А вот тут вместо того, чтобы повторять функционал конструктора
+  // лучше просто вернуть this._instance
+  // а само название функции переделать в
+  // public static get instance
+  // и получать экземпляр как GameObjectManager.instance
   public static getInstance(
     app: PIXI.Application,
     playerInterface: PlayerInterface,
@@ -133,6 +141,8 @@ export class GameObjectManager {
         const deathState = enemy.getDeathState();
         if (deathState) {
           if (
+            // Проверка тут уже не нужна. Ты и так все существующие
+            // типы врагов проверяешь
             enemy instanceof Mushroom ||
             enemy instanceof Eye ||
             enemy instanceof Skeleton
@@ -145,6 +155,11 @@ export class GameObjectManager {
           this.enemies.splice(index, 1);
         }
         if (!deathState) {
+          // Смотри, у тебя функция называется ЧЕК, но на самом деле ты чекаешь коллизию
+          // И наносишь урон И проверяешь, не умер ли враг.
+          // Лучше отдельно чекать коллизию и возвращать результат сюда-же в иф
+          // А потом тут внутри ифа, наносить урон и опять-же, возвращать результат
+          // Ииии, если у врага здоровье меньше или равно нулю, делать с ним всякие действия
           projectile.checkEnemyCollision(this.enemies);
         }
       }
@@ -173,6 +188,8 @@ export class GameObjectManager {
       const enemyBounds = enemy.getSprite().getBounds();
 
       if (playerBounds.intersects(enemyBounds)) {
+        // Так-так-таааак, опять магические цифры!
+        // Тут сам бог велел получать мили-дамаг у экземпляра врага
         this.player.receiveDamage(5, true);
       }
     }
@@ -198,14 +215,24 @@ export class GameObjectManager {
   spriteCleaner() {
     this.enemies.forEach((enemy) => {
       if (enemy.isDead) {
+        // Окей, враг умер, ты его удаляешь из слоя отображения
+        // но его экземпляр так-же остаётся в this.enemies ?
+        // Или он где-то ещё дополнительно очищается?
         this.gameLayer.removeChild(enemy.getSprite());
       }
     });
   }
 
+  //Тут такая-же тема, что и с врагами. Лучше удалять монету по факту сбора.
   removeCollectedCoins() {
     this.coins.forEach((coin) => {
       if (coin.getIsCollected()) {
+        // Советую почитать про функции которыми пользуешься.
+        // Например, forEach может отдавать индекс текущего объекта, который возвращает
+        // Но на самом деле, если ты удаляешь объекты из массива, будто бы нет ничего лучше
+        // Чем проходиться по нему в обратном порядке.
+        // for (let i = this.coins.length - 1; i >= 0; i--) {}
+        // Тогда удаление объектов не приведёт к сдвигу индексов
         const index = this.coins.indexOf(coin);
         this.coins.splice(index, 1);
         this.gameLayer.removeChild(coin.getSprite());

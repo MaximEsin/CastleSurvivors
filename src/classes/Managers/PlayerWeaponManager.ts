@@ -45,6 +45,10 @@ export class PlayerWeaponsManager {
   }
 
   public update(enemies: Enemy[]) {
+    // Советую передавать сюда dt и из last...ThrowTime вычитать dt
+    // Если меньше или равно 0, кидаем проджектайл без проверки внутри
+    // И приравниваем last...ThrowTime к ...Cooldown
+    // чуть подробнее описал в throwProjectile
     this.updateKnives(enemies);
     this.updateCursedEyes(enemies);
     this.updateKebabs(enemies);
@@ -118,7 +122,13 @@ export class PlayerWeaponsManager {
     const currentTime = Date.now();
     const playerPosition = this.player.getSprite().position;
 
+    // Проверку на куррент тайм лучше вынести на два шаг назад
+    // в update-функцию
     if (currentTime - lastItemThrowTimer >= coolDown) {
+      // Нахрждение ближайшего врага на самом деле нужно делать только один раз
+      // для всех видов оружия. Это можно перенести в update.
+      // Типа, вначале обновляем таймеры, если хотя бы один из них прошел,
+      // ищем врага, а затем уже кидаем оружие с вышедшим таймером.
       const nearestEnemy = this.findNearestEnemy(playerPosition, enemies);
 
       if (nearestEnemy) {
@@ -128,6 +138,7 @@ export class PlayerWeaponsManager {
         const direction = new PIXI.Point(dx / length, dy / length);
         const rotation = Math.atan2(dy, dx);
 
+        // Вот тут можно довольно большую часть кода выделить в общую функцию
         switch (weaponType) {
           case 'knife':
             const knife = new Knife(

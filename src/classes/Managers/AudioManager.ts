@@ -16,6 +16,8 @@ export class AudioManager {
   }
 
   public static playSound(key: string): void {
+    // Тут потенциальная проблема в том, что у тебя есть возможность
+    // проиграть только один экземпляр звука. Или нет? Нужно проверить этот момент.
     const sound = this.sounds[key];
     if (sound) {
       sound.play();
@@ -68,4 +70,6 @@ export class AudioManager {
   }
 }
 
+// Суперсомнительно. Вместо этого лучше иницилизировать класс в
+// "прелоудере" или где ты грузишь начальные ресурсы.
 AudioManager.initialize();
