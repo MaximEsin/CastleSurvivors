@@ -5,6 +5,7 @@ import { Timer } from '../UI/Timer';
 import { GameEventHandler } from './GameEventHandler';
 import { GameObjectManager } from './GameObjectManager';
 import { WaveManager } from './WaveManager';
+import { AudioManager } from '../Managers/AudioManager';
 
 export class GameManager {
   private app: PIXI.Application;
@@ -121,5 +122,6 @@ export class GameManager {
     this.app.ticker.start();
     this.background.changeBackground();
     this.gameLayer.sortableChildren = true;
+    AudioManager.initialize();
   }
 }
