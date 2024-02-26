@@ -44,36 +44,71 @@ export class PlayerWeaponsManager {
     this.app.renderer.plugins.interaction.autoPreventDefault = false;
   }
 
-  public update(enemies: Enemy[]) {
-    // Советую передавать сюда dt и из last...ThrowTime вычитать dt
-    // Если меньше или равно 0, кидаем проджектайл без проверки внутри
-    // И приравниваем last...ThrowTime к ...Cooldown
-    // чуть подробнее описал в throwProjectile
-    this.updateKnives(enemies);
-    this.updateCursedEyes(enemies);
-    this.updateKebabs(enemies);
+  public update(enemies: Enemy[], dt: number) {
+    const currentTime = Date.now();
+
+    this.updateTimers(dt);
+
+    if (
+      currentTime - this.lastKnifeThrowTime >= this.knifeCooldown ||
+      currentTime - this.lastEyeThrowTime >= this.EyeCooldown ||
+      currentTime - this.lastKebabThrowTime >= this.kebabCooldown
+    ) {
+      const playerPosition = this.player.getSprite().position;
+      const nearestEnemy = this.findNearestEnemy(playerPosition, enemies);
+
+      if (nearestEnemy) {
+        const dx = nearestEnemy.getSprite().x - this.player.getSprite().x;
+        const dy = nearestEnemy.getSprite().y - this.player.getSprite().y;
+        const length = Math.sqrt(dx ** 2 + dy ** 2);
+        const direction = new PIXI.Point(dx / length, dy / length);
+        const rotation = Math.atan2(dy, dx);
+
+        if (currentTime - this.lastKnifeThrowTime >= this.knifeCooldown) {
+          this.throwProjectile('knife', direction, rotation);
+          this.lastKnifeThrowTime = currentTime;
+        }
+
+        if (currentTime - this.lastEyeThrowTime >= this.EyeCooldown) {
+          if (this.isEyePurchased) {
+            this.throwProjectile('eye', direction, rotation);
+            this.lastEyeThrowTime = currentTime;
+          }
+        }
+
+        if (currentTime - this.lastKebabThrowTime >= this.kebabCooldown) {
+          if (this.isKebabPurchased) {
+            this.throwProjectile('kebab', direction, rotation);
+            this.lastKebabThrowTime = currentTime;
+          }
+        }
+      }
+    }
+
+    this.updateKnives();
+    this.updateCursedEyes();
+    this.updateKebabs();
   }
 
-  private updateKnives(enemies: Enemy[]) {
-    this.throwKnife(enemies);
+  private updateTimers(dt: number) {
+    this.lastKnifeThrowTime -= dt;
+    this.lastEyeThrowTime -= dt;
+    this.lastKebabThrowTime -= dt;
+  }
+
+  private updateKnives() {
     this.knives.forEach((knife) => {
       knife.update();
     });
   }
 
-  private updateCursedEyes(enemies: Enemy[]) {
-    if (this.isEyePurchased) {
-      this.throwEye(enemies);
-    }
+  private updateCursedEyes() {
     this.cursedEyes.forEach((eye) => {
       eye.update();
     });
   }
 
-  private updateKebabs(enemies: Enemy[]) {
-    if (this.isKebabPurchased) {
-      this.throwKebab(enemies);
-    }
+  private updateKebabs() {
     this.kebabs.forEach((kebab) => {
       kebab.update();
     });
@@ -114,113 +149,60 @@ export class PlayerWeaponsManager {
   }
 
   private throwProjectile(
-    lastItemThrowTimer: number,
-    coolDown: number,
     weaponType: string,
-    enemies: Enemy[]
+    direction: PIXI.Point,
+    rotation: number
   ) {
-    const currentTime = Date.now();
-    const playerPosition = this.player.getSprite().position;
+    switch (weaponType) {
+      case 'knife':
+        const knife = new Knife(
+          this.app,
+          this.layer,
+          this.player.getSprite().x,
+          this.player.getSprite().y,
+          direction,
+          5,
+          rotation,
+          this.isMobile
+        );
+        this.knives.push(knife);
+        this.layer.addChildAt(knife.getSprite(), 1);
+        break;
 
-    // Проверку на куррент тайм лучше вынести на два шаг назад
-    // в update-функцию
-    if (currentTime - lastItemThrowTimer >= coolDown) {
-      // Нахрждение ближайшего врага на самом деле нужно делать только один раз
-      // для всех видов оружия. Это можно перенести в update.
-      // Типа, вначале обновляем таймеры, если хотя бы один из них прошел,
-      // ищем врага, а затем уже кидаем оружие с вышедшим таймером.
-      const nearestEnemy = this.findNearestEnemy(playerPosition, enemies);
+      case 'eye':
+        const eye = new CursedEye(
+          this.app,
+          this.layer,
+          this.player.getSprite().x,
+          this.player.getSprite().y,
+          direction,
+          20,
+          rotation,
+          this.isMobile
+        );
+        this.cursedEyes.push(eye);
+        this.layer.addChildAt(eye.getSprite(), 1);
+        break;
 
-      if (nearestEnemy) {
-        const dx = nearestEnemy.getSprite().x - this.player.getSprite().x;
-        const dy = nearestEnemy.getSprite().y - this.player.getSprite().y;
-        const length = Math.sqrt(dx ** 2 + dy ** 2);
-        const direction = new PIXI.Point(dx / length, dy / length);
-        const rotation = Math.atan2(dy, dx);
+      case 'kebab':
+        const kebab = new Kebab(
+          this.app,
+          this.layer,
+          this.player.getSprite().x,
+          this.player.getSprite().y,
+          direction,
+          10,
+          rotation,
+          this.isMobile
+        );
+        this.player.health += 5;
+        this.playerInterface.updateHealthText(this.player.health);
+        this.kebabs.push(kebab);
+        this.layer.addChildAt(kebab.getSprite(), 1);
+        break;
 
-        // Вот тут можно довольно большую часть кода выделить в общую функцию
-        switch (weaponType) {
-          case 'knife':
-            const knife = new Knife(
-              this.app,
-              this.layer,
-              this.player.getSprite().x,
-              this.player.getSprite().y,
-              direction,
-              5,
-              rotation,
-              this.isMobile
-            );
-            this.knives.push(knife);
-            this.layer.addChildAt(knife.getSprite(), 1);
-            this.lastKnifeThrowTime = currentTime;
-            break;
-
-          case 'eye':
-            const eye = new CursedEye(
-              this.app,
-              this.layer,
-              this.player.getSprite().x,
-              this.player.getSprite().y,
-              direction,
-              20,
-              rotation,
-              this.isMobile
-            );
-            this.cursedEyes.push(eye);
-            this.layer.addChildAt(eye.getSprite(), 1);
-            this.lastEyeThrowTime = currentTime;
-            break;
-
-          case 'kebab':
-            const kebab = new Kebab(
-              this.app,
-              this.layer,
-              this.player.getSprite().x,
-              this.player.getSprite().y,
-              direction,
-              10,
-              rotation,
-              this.isMobile
-            );
-            this.player.health += 5;
-            this.playerInterface.updateHealthText(this.player.health);
-            this.kebabs.push(kebab);
-            this.layer.addChildAt(kebab.getSprite(), 1);
-            this.lastKebabThrowTime = currentTime;
-            break;
-
-          default:
-            break;
-        }
-      }
+      default:
+        break;
     }
-  }
-
-  public throwKnife(enemies: Enemy[]) {
-    this.throwProjectile(
-      this.lastKnifeThrowTime,
-      this.knifeCooldown,
-      'knife',
-      enemies
-    );
-  }
-
-  public throwEye(enemies: Enemy[]) {
-    this.throwProjectile(
-      this.lastEyeThrowTime,
-      this.EyeCooldown,
-      'eye',
-      enemies
-    );
-  }
-
-  public throwKebab(enemies: Enemy[]) {
-    this.throwProjectile(
-      this.lastKebabThrowTime,
-      this.kebabCooldown,
-      'kebab',
-      enemies
-    );
   }
 }

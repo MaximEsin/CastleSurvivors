@@ -66,7 +66,7 @@ export class GameManager {
     this.updateTimer(dt);
     this.gameObjectManager.player.update(dt);
 
-    this.gameObjectManager.updateProjectiles();
+    this.gameObjectManager.updateProjectiles(dt);
     this.gameObjectManager.merchant.checkPlayerCollision(
       this.gameObjectManager.player
     );
