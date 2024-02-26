@@ -4,17 +4,7 @@ export class Coin extends PIXI.Container {
   protected layer: PIXI.Container<PIXI.DisplayObject>;
   protected coinSprite: PIXI.Sprite;
   protected isCollected: boolean = false;
-  // Не, лол, теперь установить количество очков
-  // может каждый, кто обращается к объекту.
-  // Лучше переменуй его в private _coinPoints
-  // и создай геттер
-  // public get coinPoints(): number {
-  //   return this._coinPoints;
-  // }
-  // Теперь обратиться к этому полю сможет любой, а вот установить
-  // количество очков будет нельзя.
-  // Ну и вообще почитай про get set в TypeScript
-  public coinPoints: number = 1;
+  protected _coinPoints: number = 1;
   private isMobile: boolean;
 
   constructor(
@@ -54,5 +44,9 @@ export class Coin extends PIXI.Container {
     if (this.isMobile) {
       this.coinSprite.scale.set(0.6);
     }
+  }
+
+  public get coinPoints(): number {
+    return this._coinPoints;
   }
 }

@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { Coin } from './Coin';
 
 export class MegaDiamond extends Coin {
-  public coinPoints: number = 10;
+  protected _coinPoints: number = 10;
 
   constructor(
     x: number,
@@ -12,7 +12,7 @@ export class MegaDiamond extends Coin {
     isMobile: boolean
   ) {
     super(x, y, sprite, layer, isMobile);
-    this.coinPoints = 10;
+    this._coinPoints = 10;
   }
 
   override getIsCollected() {

@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { Coin } from './Coin';
 
 export class Diamond extends Coin {
-  public coinPoints = 5;
+  protected _coinPoints = 5;
 
   constructor(
     x: number,

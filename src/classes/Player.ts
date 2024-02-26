@@ -114,11 +114,10 @@ export class Player extends PIXI.Container {
   }
 
   private adjustPlayerRotation(): void {
-    // уже не маус, а поинтер
-    const mouseX = this.inputManager.getPointerPosition().x;
+    const pointerX = this.inputManager.getPointerPosition().x;
     const playerX = this.playerSprite.x;
 
-    const dx = mouseX - playerX;
+    const dx = pointerX - playerX;
 
     if (dx < 0) {
       this.playerSprite.scale.x = -1;
