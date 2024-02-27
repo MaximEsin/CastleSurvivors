@@ -16,6 +16,7 @@ export class Enemy extends PIXI.Container {
   private isHit: boolean = false;
   public isDead: boolean = false;
   protected isMobile: boolean;
+  protected speed: number = Math.floor(Math.random() * 2) + 1;
 
   constructor(
     animationManager: AnimationManager,
@@ -32,9 +33,7 @@ export class Enemy extends PIXI.Container {
     this.isMobile = isMobile;
     this.enemySprite = this.createEnemySprite();
 
-    // Тут было бы лучше положить спрайт в собственный контейнер
-    // this.addChild(this.enemySprite);
-    // а от слоя можно вообще отказаться.
+    this.addChild(this.enemySprite);
   }
 
   protected createEnemySprite(): PIXI.AnimatedSprite {
@@ -68,8 +67,7 @@ export class Enemy extends PIXI.Container {
     }
   }
 
-  // Почему рандомли, если они конкретно бегут к игроку?
-  protected moveRandomly(player: Player): void {
+  protected moveToPlayer(player: Player): void {
     const dx = player.getSprite().x - this.enemySprite.x;
     const dy = player.getSprite().y - this.enemySprite.y;
     const distanceToPlayer = Math.sqrt(dx ** 2 + dy ** 2);
@@ -80,8 +78,7 @@ export class Enemy extends PIXI.Container {
       this.direction.x = dx / length;
       this.direction.y = dy / length;
 
-      // Странно что у всех врагов одинаковая скорость
-      const speed = 1;
+      const speed = this.speed;
       this.enemySprite.x += this.direction.x * speed;
       this.enemySprite.y += this.direction.y * speed;
     }
@@ -222,7 +219,7 @@ export class Enemy extends PIXI.Container {
 
   protected handleDeath() {
     this.isDead = true;
-    this.layer.removeChild(this.enemySprite);
+    this.removeChild(this.enemySprite);
     this.projectiles.forEach((projectile) => projectile.destroy());
   }
 
@@ -254,10 +251,10 @@ export class Enemy extends PIXI.Container {
     return this.isMobile;
   }
 
-  public spawnCoin() { }
+  public spawnCoin() {}
 
   public update(player: Player) {
-    this.moveRandomly(player);
+    this.moveToPlayer(player);
 
     for (const projectile of this.projectiles) {
       projectile.update();
