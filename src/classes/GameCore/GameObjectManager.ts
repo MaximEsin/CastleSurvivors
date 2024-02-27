@@ -1,10 +1,12 @@
 import * as PIXI from 'pixi.js';
-import { Enemy } from '../Enemies/Enemy';
+import { Enemy, LootType } from '../Enemies/Enemy';
 import { Player } from '../Player';
 import { Mushroom } from '../Enemies/Mushroom';
 import { Eye } from '../Enemies/Eye';
 import { Skeleton } from '../Enemies/Skeleton';
 import { Coin } from '../Money/Coin';
+import { Diamond } from '../Money/Diamond';
+import { MegaDiamond } from '../Money/MegaDiamond';
 import { Merchant } from '../Merchant';
 import { DeathScreen } from '../UI/DeathScreen';
 import { WinScreen } from '../UI/WinScreen';
@@ -147,8 +149,8 @@ export class GameObjectManager {
             enemy instanceof Eye ||
             enemy instanceof Skeleton
           ) {
-            const coin = enemy.spawnCoin();
-            this.coins.push(coin);
+            const coin = this.createLoot(enemy.lootType, enemy);
+            if (coin) this.coins.push(coin);
           }
 
           const index = this.enemies.indexOf(enemy);
@@ -164,6 +166,38 @@ export class GameObjectManager {
         }
       }
     });
+  }
+
+  private createLoot(lootType: LootType, enemy: Enemy) {
+    switch (lootType) {
+      case LootType.Coin: {
+        return new Coin(
+          enemy.getSprite().x,
+          enemy.getSprite().y,
+          '/Shop/coin.png',
+          this.gameLayer,
+          this.isMobile
+        );
+      }
+      case LootType.Diamond: {
+        return new Diamond(
+          enemy.getSprite().x,
+          enemy.getSprite().y,
+          '/Shop/diamond.png',
+          this.gameLayer,
+          this.isMobile
+        );
+      }
+      case LootType.MegaDiamond: {
+        return new MegaDiamond(
+          enemy.getSprite().x,
+          enemy.getSprite().y,
+          '/Shop/megaDiamond.png',
+          this.gameLayer,
+          this.isMobile
+        );
+      }
+    }
   }
 
   public checkCoinCollision(): void {

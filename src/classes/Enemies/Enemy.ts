@@ -3,6 +3,12 @@ import { AnimationManager } from '../Managers/AnimationManager';
 import { Projectile } from '../Projectile';
 import { Player } from '../Player';
 
+export enum LootType {
+  Coin,
+  Diamond,
+  MegaDiamond,
+}
+
 export class Enemy extends PIXI.Container {
   protected app: PIXI.Application;
   protected layer: PIXI.Container<PIXI.DisplayObject>;
@@ -16,6 +22,7 @@ export class Enemy extends PIXI.Container {
   private isHit: boolean = false;
   public isDead: boolean = false;
   protected isMobile: boolean;
+  public lootType: LootType = LootType.Coin;
   protected speed: number = Math.floor(Math.random() * 2) + 1;
 
   constructor(
@@ -250,8 +257,6 @@ export class Enemy extends PIXI.Container {
   protected getIsMobile() {
     return this.isMobile;
   }
-
-  public spawnCoin() {}
 
   public update(player: Player) {
     this.moveToPlayer(player);

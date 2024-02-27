@@ -1,11 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../Managers/AnimationManager';
-import { Enemy } from './Enemy';
-import { MegaDiamond } from '../Money/MegaDiamond';
+import { Enemy, LootType } from './Enemy';
 import { Player } from '../Player';
 
 export class Skeleton extends Enemy {
-  protected layer: PIXI.Container<PIXI.DisplayObject>;
   private standingAnimation: PIXI.Texture[];
   private movingAnimation: PIXI.Texture[];
   private damagedAnimation: PIXI.Texture[];
@@ -17,11 +15,11 @@ export class Skeleton extends Enemy {
     isMobile: boolean
   ) {
     super(animationManager, app, 50, layer, isMobile);
-    this.layer = layer;
     this.standingAnimation =
       this.animationManager.getSkeletonStandingAnimation();
     this.movingAnimation = this.animationManager.getSkeletonMovingAnimation();
     this.damagedAnimation = this.animationManager.getSkeletonDamagedAnimation();
+    this.lootType = LootType.MegaDiamond;
   }
 
   protected createEnemySprite(): PIXI.AnimatedSprite {
@@ -39,8 +37,6 @@ export class Skeleton extends Enemy {
     animation.anchor.set(0.5);
     animation.play();
 
-    this.layer.addChild(animation);
-
     return animation;
   }
 
@@ -50,17 +46,6 @@ export class Skeleton extends Enemy {
 
   override handleDeath(): void {
     super.handleDeath();
-  }
-
-  override spawnCoin() {
-    super.spawnCoin();
-    return new MegaDiamond(
-      this.getSprite().x,
-      this.getSprite().y,
-      '/Shop/megaDiamond.png',
-      this.layer,
-      super.getIsMobile()
-    );
   }
 
   public update(player: Player): void {

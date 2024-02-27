@@ -1,11 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../Managers/AnimationManager';
-import { Enemy } from './Enemy';
-import { Coin } from '../Money/Coin';
+import { Enemy, LootType } from './Enemy';
 import { Player } from '../Player';
 
 export class Mushroom extends Enemy {
-  protected layer: PIXI.Container<PIXI.DisplayObject>;
   private standingAnimation: PIXI.Texture[];
   private movingAnimation: PIXI.Texture[];
   private damagedAnimation: PIXI.Texture[];
@@ -17,11 +15,11 @@ export class Mushroom extends Enemy {
     isMobile: boolean
   ) {
     super(animationManager, app, 10, layer, isMobile);
-    this.layer = layer;
     this.standingAnimation =
       this.animationManager.getMushroomStandingAnimation();
     this.movingAnimation = this.animationManager.getMushroomMovingAnimation();
     this.damagedAnimation = this.animationManager.getMushroomDamagedAnimation();
+    this.lootType = LootType.Coin;
   }
 
   protected createEnemySprite(): PIXI.AnimatedSprite {
@@ -39,8 +37,6 @@ export class Mushroom extends Enemy {
     animation.anchor.set(0.5);
     animation.play();
 
-    this.layer.addChild(animation);
-
     return animation;
   }
 
@@ -50,17 +46,6 @@ export class Mushroom extends Enemy {
 
   override handleDeath(): void {
     super.handleDeath();
-  }
-
-  override spawnCoin() {
-    super.spawnCoin();
-    return new Coin(
-      this.getSprite().x,
-      this.getSprite().y,
-      '/Shop/coin.png',
-      this.layer,
-      super.getIsMobile()
-    );
   }
 
   public update(player: Player): void {
