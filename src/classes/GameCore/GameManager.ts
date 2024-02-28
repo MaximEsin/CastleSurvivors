@@ -74,14 +74,6 @@ export class GameManager {
 
     this.updateRenderingOrder();
 
-    // Плохая практика. Ты каждый тик создаёшь
-    // новый массив объектов (forEach создаёт новый массив)
-    // и проверяешь их, не умерли ли они.
-    // Хотя до этого, в том-же самом месте, наносил им урон в checkEnemyCollision
-    // пусть лучше прямо там по факту произошедшего, принимается решение об удалении
-    // конкретного объекта
-    this.gameObjectManager.spriteCleaner();
-
     this.gameObjectManager.updateEnemies();
 
     this.gameObjectManager.removeCollectedCoins();

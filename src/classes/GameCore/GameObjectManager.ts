@@ -1,9 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Enemy, LootType } from '../Enemies/Enemy';
 import { Player } from '../Player';
-import { Mushroom } from '../Enemies/Mushroom';
-import { Eye } from '../Enemies/Eye';
-import { Skeleton } from '../Enemies/Skeleton';
 import { Coin } from '../Money/Coin';
 import { Diamond } from '../Money/Diamond';
 import { MegaDiamond } from '../Money/MegaDiamond';
@@ -142,19 +139,10 @@ export class GameObjectManager {
       for (const enemy of this.enemies) {
         const deathState = enemy.getDeathState();
         if (deathState) {
-          if (
-            // Проверка тут уже не нужна. Ты и так все существующие
-            // типы врагов проверяешь
-            enemy instanceof Mushroom ||
-            enemy instanceof Eye ||
-            enemy instanceof Skeleton
-          ) {
-            const coin = this.createLoot(enemy.lootType, enemy);
-            if (coin) this.coins.push(coin);
-          }
+          const coin = this.createLoot(enemy.lootType, enemy);
+          if (coin) this.coins.push(coin);
 
-          const index = this.enemies.indexOf(enemy);
-          this.enemies.splice(index, 1);
+          this.spriteCleaner();
         }
         if (!deathState) {
           // Смотри, у тебя функция называется ЧЕК, но на самом деле ты чекаешь коллизию
@@ -247,13 +235,12 @@ export class GameObjectManager {
   }
 
   spriteCleaner() {
-    this.enemies.forEach((enemy) => {
+    this.enemies = this.enemies.filter((enemy) => {
       if (enemy.isDead) {
-        // Окей, враг умер, ты его удаляешь из слоя отображения
-        // но его экземпляр так-же остаётся в this.enemies ?
-        // Или он где-то ещё дополнительно очищается?
         this.gameLayer.removeChild(enemy.getSprite());
+        return false;
       }
+      return true;
     });
   }
 
