@@ -200,6 +200,8 @@ export class GameObjectManager {
           this.playerInterface.updateCoinCount(value);
         }
       }
+
+      this.removeCollectedCoins();
     }
   }
 
@@ -242,21 +244,16 @@ export class GameObjectManager {
     });
   }
 
-  //Тут такая-же тема, что и с врагами. Лучше удалять монету по факту сбора.
   removeCollectedCoins() {
-    this.coins.forEach((coin) => {
+    for (let i = this.coins.length - 1; i >= 0; i--) {
+      const coin = this.coins[i];
+
       if (coin.getIsCollected()) {
-        // Советую почитать про функции которыми пользуешься.
-        // Например, forEach может отдавать индекс текущего объекта, который возвращает
-        // Но на самом деле, если ты удаляешь объекты из массива, будто бы нет ничего лучше
-        // Чем проходиться по нему в обратном порядке.
-        // for (let i = this.coins.length - 1; i >= 0; i--) {}
-        // Тогда удаление объектов не приведёт к сдвигу индексов
-        const index = this.coins.indexOf(coin);
-        this.coins.splice(index, 1);
+        this.coins.splice(i, 1);
+
         this.gameLayer.removeChild(coin.getSprite());
       }
-    });
+    }
   }
 
   getCurrentWave() {

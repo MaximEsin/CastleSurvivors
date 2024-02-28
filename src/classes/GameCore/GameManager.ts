@@ -76,7 +76,6 @@ export class GameManager {
 
     this.gameObjectManager.updateEnemies();
 
-    this.gameObjectManager.removeCollectedCoins();
     this.gameObjectManager.checkCoinCollision();
     this.gameObjectManager.checkPlayerCollision();
 
