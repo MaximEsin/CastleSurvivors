@@ -44,7 +44,7 @@ export class GameManager {
       this.app,
       this.playerInterface
     );
-    this.gameObjectManager = GameObjectManager.getInstance(
+    this.gameObjectManager = new GameObjectManager(
       this.app,
       this.playerInterface,
       this.gameLayer,
@@ -56,7 +56,6 @@ export class GameManager {
       this.app,
       this.gameLayer,
       this.timer,
-      this.gameObjectManager,
       this.isMobile
     );
 

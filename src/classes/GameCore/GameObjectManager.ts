@@ -14,8 +14,7 @@ import { Timer } from '../UI/Timer';
 import { PlayerWeaponsManager } from '../Managers/PlayerWeaponManager';
 
 export class GameObjectManager {
-  //Смотри, её лучше переименовать в _instance
-  private static instance: GameObjectManager;
+  private static _instance: GameObjectManager;
 
   private app: PIXI.Application;
   public player: Player;
@@ -42,7 +41,7 @@ export class GameObjectManager {
     timer: Timer,
     isMobile: boolean
   ) {
-    // Затем вот тут this._instance = this;
+    GameObjectManager._instance = this;
 
     this.app = app;
     this.playerInterface = playerInterface;
@@ -88,30 +87,8 @@ export class GameObjectManager {
     );
   }
 
-  // А вот тут вместо того, чтобы повторять функционал конструктора
-  // лучше просто вернуть this._instance
-  // а само название функции переделать в
-  // public static get instance
-  // и получать экземпляр как GameObjectManager.instance
-  public static getInstance(
-    app: PIXI.Application,
-    playerInterface: PlayerInterface,
-    gameLayer: PIXI.Container,
-    endScreenLayer: PIXI.Container,
-    timer: Timer,
-    isMobile: boolean
-  ): GameObjectManager {
-    if (!GameObjectManager.instance) {
-      GameObjectManager.instance = new GameObjectManager(
-        app,
-        playerInterface,
-        gameLayer,
-        endScreenLayer,
-        timer,
-        isMobile
-      );
-    }
-    return GameObjectManager.instance;
+  public static get instance(): GameObjectManager {
+    return GameObjectManager._instance;
   }
 
   updateEnemies(): void {

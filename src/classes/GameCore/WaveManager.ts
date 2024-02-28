@@ -9,7 +9,6 @@ export class WaveManager {
   private app: PIXI.Application;
   private gameLayer: PIXI.Container;
   private timer: Timer;
-  private gameObjectManager: GameObjectManager;
   private waveIntervals: number[] = [300, 240, 180, 120, 60];
   private easyWaveEnemyCounts: number = 5;
   private mediumWaveEnemyCounts: number = 10;
@@ -20,19 +19,17 @@ export class WaveManager {
     app: PIXI.Application,
     gameLayer: PIXI.Container,
     timer: Timer,
-    gameObjectManager: GameObjectManager,
     isMobile: boolean
   ) {
     this.app = app;
     this.gameLayer = gameLayer;
     this.timer = timer;
-    this.gameObjectManager = gameObjectManager;
     this.isMobile = isMobile;
   }
 
   public checkForNewWave(): void {
     const remainingTime =
-      this.waveIntervals[this.gameObjectManager.getCurrentWave()];
+      this.waveIntervals[GameObjectManager.instance.getCurrentWave()];
 
     if (this.timer.getTime() <= remainingTime) {
       this.startWave();
@@ -40,9 +37,9 @@ export class WaveManager {
   }
 
   private startWave(): void {
-    this.gameObjectManager.incrementCurrentWave();
+    GameObjectManager.instance.incrementCurrentWave();
 
-    this.spawnEnemiesForWave(this.gameObjectManager.getCurrentWave());
+    this.spawnEnemiesForWave(GameObjectManager.instance.getCurrentWave());
   }
 
   private spawnEnemiesForWave(waveNumber: number): void {
@@ -50,83 +47,83 @@ export class WaveManager {
       case 1:
         for (let i = 0; i < this.mediumWaveEnemyCounts; i++) {
           const mushroom = new Mushroom(
-            this.gameObjectManager.animationManager,
+            GameObjectManager.instance.animationManager,
             this.app,
             this.gameLayer,
             this.isMobile
           );
           this.gameLayer.addChild(mushroom);
-          this.gameObjectManager.enemies.push(mushroom);
+          GameObjectManager.instance.enemies.push(mushroom);
         }
         break;
       case 2:
         for (let i = 0; i < this.easyWaveEnemyCounts; i++) {
           const mushroom = new Mushroom(
-            this.gameObjectManager.animationManager,
+            GameObjectManager.instance.animationManager,
             this.app,
             this.gameLayer,
             this.isMobile
           );
           this.gameLayer.addChild(mushroom);
-          this.gameObjectManager.enemies.push(mushroom);
+          GameObjectManager.instance.enemies.push(mushroom);
         }
 
         for (let i = 0; i < this.easyWaveEnemyCounts; i++) {
           const eye = new Eye(
-            this.gameObjectManager.animationManager,
+            GameObjectManager.instance.animationManager,
             this.app,
             this.gameLayer,
             this.isMobile
           );
           this.gameLayer.addChild(eye);
-          this.gameObjectManager.enemies.push(eye);
+          GameObjectManager.instance.enemies.push(eye);
         }
         break;
       case 3:
         for (let i = 0; i < this.hardWaveEnemyCounts; i++) {
           const eye = new Eye(
-            this.gameObjectManager.animationManager,
+            GameObjectManager.instance.animationManager,
             this.app,
             this.gameLayer,
             this.isMobile
           );
           this.gameLayer.addChild(eye);
-          this.gameObjectManager.enemies.push(eye);
+          GameObjectManager.instance.enemies.push(eye);
         }
         break;
       case 4:
         for (let i = 0; i < this.easyWaveEnemyCounts; i++) {
           const eye = new Eye(
-            this.gameObjectManager.animationManager,
+            GameObjectManager.instance.animationManager,
             this.app,
             this.gameLayer,
             this.isMobile
           );
           this.gameLayer.addChild(eye);
-          this.gameObjectManager.enemies.push(eye);
+          GameObjectManager.instance.enemies.push(eye);
         }
 
         for (let i = 0; i < this.easyWaveEnemyCounts; i++) {
           const skeleton = new Skeleton(
-            this.gameObjectManager.animationManager,
+            GameObjectManager.instance.animationManager,
             this.app,
             this.gameLayer,
             this.isMobile
           );
           this.gameLayer.addChild(skeleton);
-          this.gameObjectManager.enemies.push(skeleton);
+          GameObjectManager.instance.enemies.push(skeleton);
         }
         break;
       case 5:
         for (let i = 0; i < this.hardWaveEnemyCounts; i++) {
           const skeleton = new Skeleton(
-            this.gameObjectManager.animationManager,
+            GameObjectManager.instance.animationManager,
             this.app,
             this.gameLayer,
             this.isMobile
           );
           this.gameLayer.addChild(skeleton);
-          this.gameObjectManager.enemies.push(skeleton);
+          GameObjectManager.instance.enemies.push(skeleton);
         }
         break;
     }
