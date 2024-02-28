@@ -94,15 +94,17 @@ export class GameManager {
   }
 
   private updateRenderingOrder(): void {
-    // А зачем ты тут в менеджере сортируешь врагов?
-    // там же просто массив сущностей. Или с ним что-то происходит?
-    this.gameObjectManager.enemies.sort(
-      (a, b) => a.getSprite().y - b.getSprite().y
+    const children = this.gameLayer.children;
+
+    children.sort((a, b) =>
+      a.y !== b.y
+        ? a.y - b.y
+        : this.gameLayer.getChildIndex(a) - this.gameLayer.getChildIndex(b)
     );
 
-    // Так, а враги тут сортируются по чему?
-    // У них вроде нигде не устанавливается zIndex
-    this.gameLayer.sortChildren();
+    children.forEach((child, index) => {
+      this.gameLayer.setChildIndex(child, index);
+    });
   }
 
   private updateTimer(dt: number): void {
