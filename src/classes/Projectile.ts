@@ -64,23 +64,23 @@ export class Projectile extends PIXI.Container {
     return this._isDestroyed;
   }
 
-  public checkEnemyCollision(enemies: Enemy[]): void {
+  public checkEnemyCollision(enemy: Enemy): boolean | void {
     if (this.collisionCooldown) {
       return;
     }
-
-    for (const enemy of enemies) {
-      if (
-        this.projectileSprite
-          .getBounds()
-          .intersects(enemy.getSprite().getBounds())
-      ) {
-        enemy.receiveDamage(this.damage);
-        this.destroy();
-        this.setCollisionCooldown();
-        break;
-      }
+    if (
+      this.projectileSprite
+        .getBounds()
+        .intersects(enemy.getSprite().getBounds())
+    ) {
+      this.destroy();
+      this.setCollisionCooldown();
+      return true;
     }
+  }
+
+  public getDamage() {
+    return this.damage;
   }
 
   private setCollisionCooldown(): void {

@@ -145,12 +145,9 @@ export class GameObjectManager {
           this.spriteCleaner();
         }
         if (!deathState) {
-          // Смотри, у тебя функция называется ЧЕК, но на самом деле ты чекаешь коллизию
-          // И наносишь урон И проверяешь, не умер ли враг.
-          // Лучше отдельно чекать коллизию и возвращать результат сюда-же в иф
-          // А потом тут внутри ифа, наносить урон и опять-же, возвращать результат
-          // Ииии, если у врага здоровье меньше или равно нулю, делать с ним всякие действия
-          projectile.checkEnemyCollision(this.enemies);
+          if (projectile.checkEnemyCollision(enemy)) {
+            enemy.receiveDamage(projectile.getDamage());
+          }
         }
       }
     });
