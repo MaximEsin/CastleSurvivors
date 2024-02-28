@@ -210,9 +210,7 @@ export class GameObjectManager {
       const enemyBounds = enemy.getSprite().getBounds();
 
       if (playerBounds.intersects(enemyBounds)) {
-        // Так-так-таааак, опять магические цифры!
-        // Тут сам бог велел получать мили-дамаг у экземпляра врага
-        this.player.receiveDamage(5, true);
+        this.player.receiveDamage(enemy.meleeDamage, true);
       }
     }
   }

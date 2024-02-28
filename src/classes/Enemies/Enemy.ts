@@ -24,6 +24,7 @@ export class Enemy extends PIXI.Container {
   protected isMobile: boolean;
   public lootType: LootType = LootType.Coin;
   protected speed: number = Math.floor(Math.random() * 2) + 1;
+  public meleeDamage: number = 5;
 
   constructor(
     animationManager: AnimationManager,
