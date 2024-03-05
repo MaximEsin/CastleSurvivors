@@ -7,6 +7,7 @@ export class Enemy {
   private enemySprite: PIXI.AnimatedSprite;
   private direction: PIXI.Point = new PIXI.Point(1, 1);
   private speed: number = Math.floor(Math.random() * 2) + 1;
+  private meleeDamage: number = 5;
 
   constructor(enemyType: EnemyType) {
     this.enemySprite = this.createEnemy(enemyType);
@@ -87,5 +88,9 @@ export class Enemy {
       this.enemySprite.y += this.direction.y * speed;
     }
     this.adjustEnemyRotation();
+  }
+
+  public getMeleeDamage(): number {
+    return this.meleeDamage;
   }
 }

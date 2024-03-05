@@ -90,7 +90,7 @@ export class Interface {
     this.timerText.text = timerString;
   }
 
-  public addCursedEyeIcon(width: number, height: number) {
+  public addCursedEyeIcon(width: number, height: number): void {
     const eyeIconSize = this.backgroundSprite.height;
     const eyeIcon = PIXI.Sprite.from('/Player/weapons/eye.png');
     eyeIcon.anchor.set(0.5);
@@ -100,7 +100,7 @@ export class Interface {
     this.centerContainer.addChild(eyeIcon);
   }
 
-  public addKebabIcon(width: number, height: number) {
+  public addKebabIcon(width: number, height: number): void {
     const eyeIconSize = this.backgroundSprite.height * 0.9;
     const eyeIcon = PIXI.Sprite.from('/Player/weapons/kebab.png');
     eyeIcon.anchor.set(0.5);
@@ -110,7 +110,7 @@ export class Interface {
     this.centerContainer.addChild(eyeIcon);
   }
 
-  public handlePurchase(cost: number) {
+  public handlePurchase(cost: number): void {
     this.coinCount -= cost;
     this.coinText.text = `Coins: ${this.coinCount}`;
   }
@@ -120,7 +120,7 @@ export class Interface {
     this.coinText.text = `Coins: ${this.coinCount}`;
   }
 
-  public resetCoins() {
+  public resetCoins(): void {
     this.coinCount = 0;
     this.coinText.text = `Coins: ${this.coinCount}`;
   }
@@ -166,19 +166,19 @@ export class Interface {
     this.timerText.position.set(width / 2, 10);
   }
 
-  public getBackgroundSprite() {
+  public getBackgroundSprite(): PIXI.Sprite {
     return this.backgroundSprite;
   }
 
-  public getCenterContainer() {
+  public getCenterContainer(): PIXI.Container {
     return this.centerContainer;
   }
 
-  public getTimerText() {
+  public getTimerText(): PIXI.Text {
     return this.timerText;
   }
 
-  public getCoinCount() {
+  public getCoinCount(): number {
     return this.coinCount;
   }
 }

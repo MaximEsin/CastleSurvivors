@@ -6,8 +6,18 @@ export class Player {
   private playerSprite: PIXI.AnimatedSprite;
   private isMoving: boolean = false;
   private isWalkingSoundPlaying: boolean = false;
+  private isDamaged: boolean = false;
+  private health: number = 100;
   private movementTreshhold: number = 30;
   private movementSpeed: number = 5;
+  private lastMeleeDamageTime: number = 0;
+  private readonly meleeDamageCooldown: number = 1000;
+  private standingAnimation: PIXI.Texture[] =
+    AnimationManager.getPlayerStandingAnimation();
+  private movingAnimation: PIXI.Texture[] =
+    AnimationManager.getPlayerMovingAnimation();
+  private hitAnimation: PIXI.Texture[] =
+    AnimationManager.getPlayerDamagedAnimation();
 
   constructor() {
     this.playerSprite = this.createPlayer();
@@ -82,5 +92,69 @@ export class Player {
 
   public getSprite() {
     return this.playerSprite;
+  }
+
+  public getHealth() {
+    return this.health;
+  }
+
+  public setHealth(value: number) {
+    this.health -= value;
+  }
+
+  public getLastMeleeDamageTime(): number {
+    return this.lastMeleeDamageTime;
+  }
+
+  public setLastMeleeDamageTime(value: number) {
+    this.lastMeleeDamageTime = value;
+  }
+
+  public getMeleeDamageCooldown(): number {
+    return this.meleeDamageCooldown;
+  }
+
+  public playHitSound(): void {
+    AudioManager.playSound('playerHit');
+  }
+
+  public setIsDamaged(value: boolean) {
+    return (this.isDamaged = value);
+  }
+
+  public updatePlayerAnimation(): void {
+    if (this.isDamaged) {
+      if (
+        !this.playerSprite.playing ||
+        this.playerSprite.textures !== this.hitAnimation
+      ) {
+        this.playerSprite.textures = this.hitAnimation;
+        this.playerSprite.loop = false;
+        this.playerSprite.onComplete = () => {
+          this.isDamaged = false;
+          this.playerSprite.textures = this.standingAnimation;
+          this.playerSprite.loop = true;
+        };
+        this.playerSprite.play();
+      }
+    } else {
+      if (this.isMoving) {
+        if (
+          !this.playerSprite.playing ||
+          this.playerSprite.textures !== this.movingAnimation
+        ) {
+          this.playerSprite.textures = this.movingAnimation;
+          this.playerSprite.play();
+        }
+      } else {
+        if (
+          !this.playerSprite.playing ||
+          this.playerSprite.textures !== this.standingAnimation
+        ) {
+          this.playerSprite.textures = this.standingAnimation;
+          this.playerSprite.play();
+        }
+      }
+    }
   }
 }

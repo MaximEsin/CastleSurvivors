@@ -23,14 +23,14 @@ export class ObjectManager {
     this.player = new Player();
   }
 
-  public spawnPlayer() {
+  public spawnPlayer(): void {
     const playerSprite = this.player.getSprite();
     playerSprite.x = this.app.screen.width / 2;
     playerSprite.y = this.app.screen.height / 2;
     this.gameLayer.addChild(playerSprite);
   }
 
-  public handlePlayerMovement(dt: number) {
+  public handlePlayerMovement(dt: number): void {
     if (this.inputManager.isPointerPressed()) {
       const mousePosition = this.inputManager.getPointerPosition();
       this.player.handlePlayerMovement(mousePosition, dt);
@@ -59,7 +59,7 @@ export class ObjectManager {
     }
   }
 
-  public spawnEnemies() {
+  public spawnEnemies(): void {
     const enemy = new Enemy(EnemyType.Mushroom);
     this.enemies.push(enemy);
     enemy.setRandomPosition(this.app, enemy.getSprite());
@@ -67,9 +67,45 @@ export class ObjectManager {
     this.gameLayer.addChild(enemy.getSprite());
   }
 
-  public handleEnemyMovement() {
+  public handleEnemyMovement(): void {
     this.enemies.forEach((enemy) => {
       enemy.moveToPlayer(this.player);
     });
+  }
+
+  public checkCollisionBetweenPlayerAndEnemy(enemy: Enemy): boolean {
+    const playerBounds = this.player.getSprite().getBounds();
+    const enemyBounds = enemy.getSprite().getBounds();
+
+    if (playerBounds.intersects(enemyBounds)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public handleMeleeDamageDealing() {
+    const currentTime = Date.now();
+    for (const enemy of this.enemies) {
+      if (this.checkCollisionBetweenPlayerAndEnemy(enemy)) {
+        const timeSinceLastDamage =
+          currentTime - this.player.getLastMeleeDamageTime();
+        if (timeSinceLastDamage < this.player.getMeleeDamageCooldown()) {
+          return;
+        }
+        this.player.setLastMeleeDamageTime(currentTime);
+        this.player.setHealth(enemy.getMeleeDamage());
+        this.player.playHitSound();
+        this.player.setIsDamaged(true);
+      }
+    }
+  }
+
+  public handlePlayerAnimationUpdate() {
+    this.player.updatePlayerAnimation();
+  }
+
+  public getPlayer(): Player {
+    return this.player;
   }
 }
