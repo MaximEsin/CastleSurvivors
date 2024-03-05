@@ -85,24 +85,44 @@ export class ObjectManager {
   }
 
   public handleMeleeDamageDealing() {
-    const currentTime = Date.now();
-    for (const enemy of this.enemies) {
-      if (this.checkCollisionBetweenPlayerAndEnemy(enemy)) {
-        const timeSinceLastDamage =
-          currentTime - this.player.getLastMeleeDamageTime();
-        if (timeSinceLastDamage < this.player.getMeleeDamageCooldown()) {
-          return;
+    if (!this.player.getIsDead()) {
+      const currentTime = Date.now();
+      for (const enemy of this.enemies) {
+        if (this.checkCollisionBetweenPlayerAndEnemy(enemy)) {
+          const timeSinceLastDamage =
+            currentTime - this.player.getLastMeleeDamageTime();
+          if (timeSinceLastDamage < this.player.getMeleeDamageCooldown()) {
+            return;
+          }
+          this.player.setLastMeleeDamageTime(currentTime);
+          this.player.setHealth(enemy.getMeleeDamage());
+          this.player.playHitSound();
+          this.player.setIsDamaged(true);
         }
-        this.player.setLastMeleeDamageTime(currentTime);
-        this.player.setHealth(enemy.getMeleeDamage());
-        this.player.playHitSound();
-        this.player.setIsDamaged(true);
       }
     }
   }
 
   public handlePlayerAnimationUpdate() {
     this.player.updatePlayerAnimation();
+  }
+
+  public handlePlayerDeath() {
+    if (this.player.getHealth() <= 0 && !this.player.getIsDead()) {
+      this.player.handlePlayerDefeat();
+    }
+  }
+
+  public resetEntities() {
+    this.enemies.forEach((enemy) => {
+      this.gameLayer.removeChild(enemy.getSprite());
+    });
+    this.enemies = [];
+
+    this.gameLayer.removeChild(this.player.getSprite());
+    this.player = new Player();
+    this.spawnPlayer();
+    this.spawnEnemies();
   }
 
   public getPlayer(): Player {

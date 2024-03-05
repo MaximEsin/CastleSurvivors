@@ -7,7 +7,8 @@ export class Player {
   private isMoving: boolean = false;
   private isWalkingSoundPlaying: boolean = false;
   private isDamaged: boolean = false;
-  private health: number = 100;
+  private isDead: boolean = false;
+  private health: number = 10;
   private movementTreshhold: number = 30;
   private movementSpeed: number = 5;
   private lastMeleeDamageTime: number = 0;
@@ -18,6 +19,8 @@ export class Player {
     AnimationManager.getPlayerMovingAnimation();
   private hitAnimation: PIXI.Texture[] =
     AnimationManager.getPlayerDamagedAnimation();
+  private deathAnimation: PIXI.Texture[] =
+    AnimationManager.getPlayerDyingAnimation();
 
   constructor() {
     this.playerSprite = this.createPlayer();
@@ -35,6 +38,16 @@ export class Player {
   private playMovingSound() {
     AudioManager.playSoundWithLoop('walkingSound', true);
     AudioManager.setVolume('walkingSound', 0.5);
+  }
+
+  private playDeathSound(): void {
+    AudioManager.playSound('playerDead');
+  }
+
+  public handlePlayerDefeat(): void {
+    this.isDead = true;
+    this.playDeathAnimation();
+    this.playDeathSound();
   }
 
   public handlePlayerMovement(
@@ -102,6 +115,10 @@ export class Player {
     this.health -= value;
   }
 
+  public getIsDead(): boolean {
+    return this.isDead;
+  }
+
   public getLastMeleeDamageTime(): number {
     return this.lastMeleeDamageTime;
   }
@@ -122,37 +139,45 @@ export class Player {
     return (this.isDamaged = value);
   }
 
+  private playDeathAnimation(): void {
+    this.playerSprite.textures = this.deathAnimation;
+    this.playerSprite.loop = false;
+    this.playerSprite.play();
+  }
+
   public updatePlayerAnimation(): void {
-    if (this.isDamaged) {
-      if (
-        !this.playerSprite.playing ||
-        this.playerSprite.textures !== this.hitAnimation
-      ) {
-        this.playerSprite.textures = this.hitAnimation;
-        this.playerSprite.loop = false;
-        this.playerSprite.onComplete = () => {
-          this.isDamaged = false;
-          this.playerSprite.textures = this.standingAnimation;
-          this.playerSprite.loop = true;
-        };
-        this.playerSprite.play();
-      }
-    } else {
-      if (this.isMoving) {
+    if (!this.isDead) {
+      if (this.isDamaged) {
         if (
           !this.playerSprite.playing ||
-          this.playerSprite.textures !== this.movingAnimation
+          this.playerSprite.textures !== this.hitAnimation
         ) {
-          this.playerSprite.textures = this.movingAnimation;
+          this.playerSprite.textures = this.hitAnimation;
+          this.playerSprite.loop = false;
+          this.playerSprite.onComplete = () => {
+            this.isDamaged = false;
+            this.playerSprite.textures = this.standingAnimation;
+            this.playerSprite.loop = true;
+          };
           this.playerSprite.play();
         }
       } else {
-        if (
-          !this.playerSprite.playing ||
-          this.playerSprite.textures !== this.standingAnimation
-        ) {
-          this.playerSprite.textures = this.standingAnimation;
-          this.playerSprite.play();
+        if (this.isMoving) {
+          if (
+            !this.playerSprite.playing ||
+            this.playerSprite.textures !== this.movingAnimation
+          ) {
+            this.playerSprite.textures = this.movingAnimation;
+            this.playerSprite.play();
+          }
+        } else {
+          if (
+            !this.playerSprite.playing ||
+            this.playerSprite.textures !== this.standingAnimation
+          ) {
+            this.playerSprite.textures = this.standingAnimation;
+            this.playerSprite.play();
+          }
         }
       }
     }
