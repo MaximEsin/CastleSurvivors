@@ -46,6 +46,8 @@ export class BaseLevel {
     // Player
     this.objectManager.handlePlayerMovement(dt);
     this.objectManager.handlePlayerBorderWrap();
+
+    this.objectManager.handleEnemyMovement();
   }
 
   public canPlayerAfford(cost: number) {
@@ -66,5 +68,6 @@ export class BaseLevel {
     AudioManager.initialize();
     this.eventHandler.setUpGlobalEventListeners(this.interface);
     this.objectManager.spawnPlayer();
+    this.objectManager.spawnEnemies();
   }
 }
