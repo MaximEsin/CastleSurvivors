@@ -1,10 +1,13 @@
 import * as PIXI from 'pixi.js';
 import { Background } from './Background';
 import { ObjectManager } from './ObjectManager';
+import { InputManager } from './InputManager';
+import { AudioManager } from './AudioManager';
 
 export class BaseLevel {
   private app: PIXI.Application;
   private objectManager: ObjectManager;
+  private inputManager: InputManager;
   private backgroundLayer: PIXI.Container;
   private gameLayer: PIXI.Container;
   private background: Background;
@@ -18,7 +21,12 @@ export class BaseLevel {
     this.app.stage.addChild(this.backgroundLayer);
     this.app.stage.addChild(this.gameLayer);
 
-    this.objectManager = new ObjectManager(this.app, this.gameLayer);
+    this.inputManager = new InputManager();
+    this.objectManager = new ObjectManager(
+      this.app,
+      this.gameLayer,
+      this.inputManager
+    );
 
     this.background = new Background('/Backgrounds/CastleBG.webp', this.app);
 
@@ -27,9 +35,12 @@ export class BaseLevel {
     this.app.ticker.add(this.gameLoop.bind(this));
   }
 
-  private gameLoop() {}
+  private gameLoop(dt: number) {
+    this.objectManager.handlePlayerMovement(dt);
+  }
 
   public init() {
+    AudioManager.initialize();
     this.objectManager.spawnPlayer();
   }
 }
