@@ -1,9 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { GameManager } from './classes/GameCore/GameManager';
 
 export class Game {
   private app: PIXI.Application<HTMLCanvasElement>;
-  private gameManager: GameManager;
 
   constructor() {
     this.app = new PIXI.Application({
@@ -11,13 +9,9 @@ export class Game {
       height: window.innerHeight,
     });
     document.body.appendChild(this.app.view);
-
-    this.gameManager = new GameManager(this.app);
   }
 
-  start() {
-    this.gameManager.start();
-  }
+  start() {}
 }
 
 const game = new Game();
