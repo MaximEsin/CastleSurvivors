@@ -7,6 +7,7 @@ export class ObjectManager {
   private inputManager: InputManager;
   private gameLayer: PIXI.Container;
   private entityCreator: EntityCreator;
+  private interfaceSizeMultiplier: number = 0.8;
 
   constructor(
     app: PIXI.Application,
@@ -37,5 +38,23 @@ export class ObjectManager {
     this.entityCreator
       .getPlayer()
       .adjustPlayerRotation(this.inputManager.getPointerPosition().x);
+  }
+
+  public handlePlayerBorderWrap(): void {
+    const screenWidth = this.app.screen.width;
+    const screenHeight = this.app.screen.height * this.interfaceSizeMultiplier;
+    const playerSprite = this.entityCreator.getPlayer().getSprite();
+
+    if (playerSprite.x < 20) {
+      playerSprite.x = screenWidth;
+    } else if (playerSprite.x > screenWidth) {
+      playerSprite.x = 20;
+    }
+
+    if (playerSprite.y < 20) {
+      playerSprite.y = screenHeight;
+    } else if (playerSprite.y > screenHeight) {
+      playerSprite.y = 20;
+    }
   }
 }

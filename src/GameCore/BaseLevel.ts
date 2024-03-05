@@ -36,7 +36,9 @@ export class BaseLevel {
   }
 
   private gameLoop(dt: number) {
+    // Player
     this.objectManager.handlePlayerMovement(dt);
+    this.objectManager.handlePlayerBorderWrap();
   }
 
   public init() {
