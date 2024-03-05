@@ -1,7 +1,9 @@
 import * as PIXI from 'pixi.js';
+import { BaseLevel } from './GameCore/BaseLevel';
 
 export class Game {
   private app: PIXI.Application<HTMLCanvasElement>;
+  private baseLevel: BaseLevel;
 
   constructor() {
     this.app = new PIXI.Application({
@@ -9,9 +11,13 @@ export class Game {
       height: window.innerHeight,
     });
     document.body.appendChild(this.app.view);
+
+    this.baseLevel = new BaseLevel(this.app);
   }
 
-  start() {}
+  start() {
+    this.baseLevel.init();
+  }
 }
 
 const game = new Game();
