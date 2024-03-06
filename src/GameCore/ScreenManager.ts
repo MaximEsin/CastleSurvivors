@@ -58,7 +58,7 @@ export class ScreenManager {
     this.container.visible = true;
   }
 
-  public hideScreen() {
+  public hideScreen(): void {
     this.isScreenDisplayed = false;
     this.container.visible = false;
     this.isButtonPressed = false;

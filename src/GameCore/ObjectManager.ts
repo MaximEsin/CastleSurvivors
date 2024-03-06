@@ -84,7 +84,7 @@ export class ObjectManager {
     return false;
   }
 
-  public handleMeleeDamageDealing() {
+  public handleMeleeDamageDealing(): void {
     if (!this.player.getIsDead()) {
       const currentTime = Date.now();
       for (const enemy of this.enemies) {
@@ -103,17 +103,17 @@ export class ObjectManager {
     }
   }
 
-  public handlePlayerAnimationUpdate() {
+  public handlePlayerAnimationUpdate(): void {
     this.player.updatePlayerAnimation();
   }
 
-  public handlePlayerDeath() {
+  public handlePlayerDeath(): void {
     if (this.player.getHealth() <= 0 && !this.player.getIsDead()) {
       this.player.handlePlayerDefeat();
     }
   }
 
-  public resetEntities() {
+  public resetEntities(): void {
     this.enemies.forEach((enemy) => {
       this.gameLayer.removeChild(enemy.getSprite());
     });

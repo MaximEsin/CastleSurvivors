@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { AnimationManager } from '../GameCore/AnimationManager';
 import { AudioManager } from '../GameCore/AudioManager';
 
-export class Player {
+export class Player extends PIXI.Container {
   private playerSprite: PIXI.AnimatedSprite;
   private isMoving: boolean = false;
   private isWalkingSoundPlaying: boolean = false;
@@ -23,6 +23,7 @@ export class Player {
     AnimationManager.getPlayerDyingAnimation();
 
   constructor() {
+    super();
     this.playerSprite = this.createPlayer();
   }
 

@@ -90,7 +90,7 @@ export class BaseLevel {
     return false;
   }
 
-  public init() {
+  public init(): void {
     this.backgroundLayer.addChild(this.background.getSprite());
     this.interfaceLayer.addChild(
       this.interface.getBackgroundSprite(),

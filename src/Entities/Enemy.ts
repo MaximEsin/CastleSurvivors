@@ -3,13 +3,14 @@ import { EnemyType } from '../Enums/EnemyType';
 import { AnimationManager } from '../GameCore/AnimationManager';
 import { Player } from './Player';
 
-export class Enemy {
+export class Enemy extends PIXI.Container {
   private enemySprite: PIXI.AnimatedSprite;
   private direction: PIXI.Point = new PIXI.Point(1, 1);
   private speed: number = Math.floor(Math.random() * 2) + 1;
   private meleeDamage: number = 5;
 
   constructor(enemyType: EnemyType) {
+    super();
     this.enemySprite = this.createEnemy(enemyType);
   }
 

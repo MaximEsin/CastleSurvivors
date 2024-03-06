@@ -15,7 +15,7 @@ export class Game {
     this.baseLevel = new BaseLevel(this.app);
   }
 
-  start() {
+  start(): void {
     this.baseLevel.init();
   }
 }
