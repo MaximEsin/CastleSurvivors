@@ -5,6 +5,7 @@ import { Enemy } from '../Entities/Enemy';
 import { EnemyType } from '../Enums/EnemyType';
 import { Weapon } from '../Entities/Weapon';
 import { Loot } from '../Entities/Loot';
+import { LootType } from '../Enums/LootType';
 
 export class ObjectManager {
   private app: PIXI.Application;
@@ -68,10 +69,16 @@ export class ObjectManager {
 
   public spawnEnemies(): void {
     const enemy = new Enemy(EnemyType.Mushroom);
-    this.enemies.push(enemy);
+    const enemy2 = new Enemy(EnemyType.Eye);
+    const enemy3 = new Enemy(EnemyType.Skeleton);
+    this.enemies.push(enemy, enemy2, enemy3);
     enemy.setRandomPosition(this.app, enemy.getSprite());
+    enemy2.setRandomPosition(this.app, enemy2.getSprite());
+    enemy3.setRandomPosition(this.app, enemy3.getSprite());
 
     this.gameLayer.addChild(enemy.getSprite());
+    this.gameLayer.addChild(enemy2.getSprite());
+    this.gameLayer.addChild(enemy3.getSprite());
   }
 
   public handleEnemyMovement(): void {
@@ -229,12 +236,16 @@ export class ObjectManager {
         this.enemies.splice(index, 1);
       }
       this.gameLayer.removeChild(enemy.getSprite());
-      this.spawnLoot(enemy.getSprite().x, enemy.getSprite().y);
+      this.spawnLoot(
+        enemy.getSprite().x,
+        enemy.getSprite().y,
+        enemy.getLootType()
+      );
     }
   }
 
-  private spawnLoot(x: number, y: number) {
-    const loot = new Loot(x, y);
+  private spawnLoot(x: number, y: number, lootType: LootType) {
+    const loot = new Loot(x, y, lootType);
     this.loot.push(loot);
     this.gameLayer.addChild(loot.getSprite());
   }
@@ -252,8 +263,13 @@ export class ObjectManager {
           this.player.setMoney(playerMoney + value);
 
           for (let i = this.loot.length - 1; i >= 0; i--) {
-            this.loot.splice(i, 1);
-            this.gameLayer.removeChild(loot.getSprite());
+            const lootEntity = this.loot[i];
+
+            if (lootEntity.getIsCollected()) {
+              this.loot.splice(i, 1);
+
+              this.gameLayer.removeChild(loot.getSprite());
+            }
           }
         }
       }

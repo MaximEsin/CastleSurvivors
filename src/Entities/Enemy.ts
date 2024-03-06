@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { EnemyType } from '../Enums/EnemyType';
 import { AnimationManager } from '../GameCore/AnimationManager';
 import { Player } from './Player';
+import { LootType } from '../Enums/LootType';
 
 export class Enemy extends PIXI.Container {
   private enemySprite: PIXI.AnimatedSprite;
@@ -14,6 +15,7 @@ export class Enemy extends PIXI.Container {
   private health: number = 10;
   private meleeDamage: number = 5;
   private isDamaged: boolean = false;
+  private lootType: LootType = LootType.Coin;
 
   constructor(enemyType: EnemyType) {
     super();
@@ -26,6 +28,30 @@ export class Enemy extends PIXI.Container {
       const animation = new PIXI.AnimatedSprite(textures);
 
       this.enemySprite = animation;
+    } else if (enemyType === EnemyType.Eye) {
+      const textures = AnimationManager.getEyeFlyingAnimation();
+      const animation = new PIXI.AnimatedSprite(textures);
+
+      this.enemySprite = animation;
+
+      this.movingAnimation = AnimationManager.getEyeFlyingAnimation();
+      this.damagedAnimation = AnimationManager.getEyeDamagedAnimation();
+
+      this.meleeDamage = 10;
+      this.health = 20;
+      this.lootType = LootType.Diamond;
+    } else if (enemyType === EnemyType.Skeleton) {
+      const textures = AnimationManager.getSkeletonMovingAnimation();
+      const animation = new PIXI.AnimatedSprite(textures);
+
+      this.enemySprite = animation;
+
+      this.movingAnimation = AnimationManager.getSkeletonMovingAnimation();
+      this.damagedAnimation = AnimationManager.getSkeletonDamagedAnimation();
+
+      this.meleeDamage = 20;
+      this.health = 30;
+      this.lootType = LootType.Megadiamond;
     }
 
     this.enemySprite.animationSpeed = 0.1;
@@ -137,5 +163,9 @@ export class Enemy extends PIXI.Container {
 
   public getHealth() {
     return this.health;
+  }
+
+  public getLootType() {
+    return this.lootType;
   }
 }
