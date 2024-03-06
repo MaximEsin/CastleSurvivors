@@ -8,7 +8,7 @@ export class Player extends PIXI.Container {
   private isWalkingSoundPlaying: boolean = false;
   private isDamaged: boolean = false;
   private isDead: boolean = false;
-  private health: number = 10;
+  private health: number = 100;
   private movementTreshhold: number = 30;
   private movementSpeed: number = 5;
   private lastMeleeDamageTime: number = 0;

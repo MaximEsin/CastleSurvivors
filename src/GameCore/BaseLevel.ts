@@ -76,10 +76,16 @@ export class BaseLevel {
 
     this.objectManager.handleEnemyMovement();
     this.objectManager.handleMeleeDamageDealing();
+    this.objectManager.handleEnemyAnimationUpdate();
+    this.objectManager.handleWeaponAndEnemyCollision();
 
     this.interface.updateHealthText(this.objectManager.getPlayer().getHealth());
     this.handleDeathScreenDisplay();
     this.handleGameReset();
+
+    this.objectManager.handleWeaponMovement();
+    this.objectManager.handlePlayerAttacks(dt);
+    this.objectManager.cleaner();
   }
 
   public canPlayerAfford(cost: number) {

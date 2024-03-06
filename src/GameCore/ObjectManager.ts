@@ -3,6 +3,7 @@ import { Player } from '../Entities/Player';
 import { InputManager } from './InputManager';
 import { Enemy } from '../Entities/Enemy';
 import { EnemyType } from '../Enums/EnemyType';
+import { Weapon } from '../Entities/Weapon';
 
 export class ObjectManager {
   private app: PIXI.Application;
@@ -10,7 +11,11 @@ export class ObjectManager {
   private gameLayer: PIXI.Container;
   private player: Player;
   private enemies: Enemy[] = [];
+  private weapons: Weapon[] = [];
   private interfaceSizeMultiplier: number = 0.8;
+  private lastWeaponThrowTime: number = 0;
+  private weaponCooldown: number = 2000;
+  private collisionCooldown: boolean = false;
 
   constructor(
     app: PIXI.Application,
@@ -127,5 +132,116 @@ export class ObjectManager {
 
   public getPlayer(): Player {
     return this.player;
+  }
+
+  public handleWeaponMovement() {
+    this.weapons.forEach((weapon) => {
+      weapon.handleWeaponMovement();
+    });
+  }
+
+  private findNearestEnemy(): Enemy | null {
+    let nearestEnemy: Enemy | null = null;
+    let nearestDistanceSquared = Number.MAX_VALUE;
+
+    for (const enemy of this.enemies) {
+      const enemyPosition = enemy.getSprite();
+      const dx = enemyPosition.x - this.player.getSprite().x;
+      const dy = enemyPosition.y - this.player.getSprite().y;
+      const distanceSquared = dx * dx + dy * dy;
+
+      if (distanceSquared < nearestDistanceSquared) {
+        nearestEnemy = enemy;
+        nearestDistanceSquared = distanceSquared;
+      }
+    }
+
+    return nearestEnemy;
+  }
+
+  public handlePlayerAttacks(dt: number) {
+    const currentTime = Date.now();
+
+    this.lastWeaponThrowTime -= dt;
+
+    if (currentTime - this.lastWeaponThrowTime >= this.weaponCooldown) {
+      const nearestEnemy = this.findNearestEnemy();
+
+      if (nearestEnemy) {
+        const dx = nearestEnemy.getSprite().x - this.player.getSprite().x;
+        const dy = nearestEnemy.getSprite().y - this.player.getSprite().y;
+        const length = Math.sqrt(dx ** 2 + dy ** 2);
+        const direction = new PIXI.Point(dx / length, dy / length);
+        const rotation = Math.atan2(dy, dx);
+
+        if (currentTime - this.lastWeaponThrowTime >= this.weaponCooldown) {
+          const weapon = new Weapon(
+            this.app,
+            this.player.getSprite().x,
+            this.player.getSprite().y,
+            direction
+          );
+          weapon.getSprite().rotation = rotation;
+          this.weapons.push(weapon);
+          this.gameLayer.addChild(weapon.getSprite());
+          this.lastWeaponThrowTime = currentTime;
+        }
+      }
+    }
+  }
+
+  public handleEnemyAnimationUpdate() {
+    this.enemies.forEach((enemy) => {
+      enemy.updateEnemyAnimation();
+    });
+  }
+
+  public handleWeaponAndEnemyCollision(): boolean | void {
+    if (this.collisionCooldown) {
+      return;
+    }
+    this.weapons.forEach((weapon) => {
+      this.enemies.forEach((enemy) => {
+        if (
+          weapon
+            .getSprite()
+            .getBounds()
+            .intersects(enemy.getSprite().getBounds())
+        ) {
+          this.handleDamageDealingToEnemy(weapon.getDamage(), enemy);
+          weapon.destroy();
+          this.setCollisionCooldown();
+          return true;
+        }
+      });
+    });
+  }
+
+  private handleDamageDealingToEnemy(damage: number, enemy: Enemy) {
+    enemy.setHealth(damage);
+    enemy.setIsDamaged(true);
+
+    if (enemy.getHealth() <= 0) {
+      const index = this.enemies.indexOf(enemy);
+      if (index !== -1) {
+        this.enemies.splice(index, 1);
+      }
+      this.gameLayer.removeChild(enemy.getSprite());
+    }
+  }
+
+  private setCollisionCooldown(): void {
+    this.collisionCooldown = true;
+    setTimeout(() => {
+      this.collisionCooldown = false;
+    }, 1000);
+  }
+
+  public cleaner() {
+    this.weapons.forEach((weapon) => {
+      if (weapon.getisDestroyed()) {
+        this.gameLayer.removeChild(weapon.getSprite());
+      }
+    });
   }
 }

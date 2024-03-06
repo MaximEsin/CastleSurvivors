@@ -5,9 +5,15 @@ import { Player } from './Player';
 
 export class Enemy extends PIXI.Container {
   private enemySprite: PIXI.AnimatedSprite;
+  private movingAnimation: PIXI.Texture[] =
+    AnimationManager.getMushroomMovingAnimation();
+  private damagedAnimation: PIXI.Texture[] =
+    AnimationManager.getMushroomDamagedAnimation();
   private direction: PIXI.Point = new PIXI.Point(1, 1);
-  private speed: number = Math.floor(Math.random() * 2) + 1;
+  private speed: number = Math.floor(Math.random() * 4) + 1;
+  private health: number = 10;
   private meleeDamage: number = 5;
+  private isDamaged: boolean = false;
 
   constructor(enemyType: EnemyType) {
     super();
@@ -16,7 +22,7 @@ export class Enemy extends PIXI.Container {
 
   private createEnemy(enemyType: EnemyType): PIXI.AnimatedSprite {
     if (enemyType === EnemyType.Mushroom) {
-      const textures = AnimationManager.getMushroomMovingAnimation();
+      const textures = this.movingAnimation;
       const animation = new PIXI.AnimatedSprite(textures);
 
       this.enemySprite = animation;
@@ -93,5 +99,43 @@ export class Enemy extends PIXI.Container {
 
   public getMeleeDamage(): number {
     return this.meleeDamage;
+  }
+
+  public updateEnemyAnimation() {
+    if (this.isDamaged) {
+      if (
+        !this.enemySprite.playing ||
+        this.enemySprite.textures !== this.damagedAnimation
+      ) {
+        this.enemySprite.textures = this.damagedAnimation;
+        this.enemySprite.loop = false;
+        this.enemySprite.onComplete = () => {
+          this.isDamaged = false;
+          this.enemySprite.textures = this.movingAnimation;
+          this.enemySprite.loop = true;
+        };
+        this.enemySprite.play();
+      }
+    } else {
+      if (
+        !this.enemySprite.playing ||
+        this.enemySprite.textures !== this.movingAnimation
+      ) {
+        this.enemySprite.textures = this.movingAnimation;
+        this.enemySprite.play();
+      }
+    }
+  }
+
+  public setIsDamaged(value: boolean) {
+    this.isDamaged = value;
+  }
+
+  public setHealth(value: number) {
+    this.health -= value;
+  }
+
+  public getHealth() {
+    return this.health;
   }
 }
