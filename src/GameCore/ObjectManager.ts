@@ -4,6 +4,7 @@ import { InputManager } from './InputManager';
 import { Enemy } from '../Entities/Enemy';
 import { EnemyType } from '../Enums/EnemyType';
 import { Weapon } from '../Entities/Weapon';
+import { Loot } from '../Entities/Loot';
 
 export class ObjectManager {
   private app: PIXI.Application;
@@ -12,6 +13,7 @@ export class ObjectManager {
   private player: Player;
   private enemies: Enemy[] = [];
   private weapons: Weapon[] = [];
+  private loot: Loot[] = [];
   private interfaceSizeMultiplier: number = 0.8;
   private lastWeaponThrowTime: number = 0;
   private weaponCooldown: number = 2000;
@@ -227,6 +229,34 @@ export class ObjectManager {
         this.enemies.splice(index, 1);
       }
       this.gameLayer.removeChild(enemy.getSprite());
+      this.spawnLoot(enemy.getSprite().x, enemy.getSprite().y);
+    }
+  }
+
+  private spawnLoot(x: number, y: number) {
+    const loot = new Loot(x, y);
+    this.loot.push(loot);
+    this.gameLayer.addChild(loot.getSprite());
+  }
+
+  public handleLootCollision(): void {
+    const playerBounds = this.player.getSprite().getBounds();
+    for (const loot of this.loot) {
+      const lootBounds = loot.getSprite().getBounds();
+
+      if (playerBounds.intersects(lootBounds)) {
+        if (!loot.getIsCollected()) {
+          const value = loot.getLootValue();
+          loot.collect();
+          const playerMoney = this.player.getMoney();
+          this.player.setMoney(playerMoney + value);
+
+          for (let i = this.loot.length - 1; i >= 0; i--) {
+            this.loot.splice(i, 1);
+            this.gameLayer.removeChild(loot.getSprite());
+          }
+        }
+      }
     }
   }
 

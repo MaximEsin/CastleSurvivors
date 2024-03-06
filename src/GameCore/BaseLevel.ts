@@ -80,8 +80,11 @@ export class BaseLevel {
     this.objectManager.handleWeaponAndEnemyCollision();
 
     this.interface.updateHealthText(this.objectManager.getPlayer().getHealth());
+    this.interface.updateCoinCount(this.objectManager.getPlayer().getMoney());
     this.handleDeathScreenDisplay();
     this.handleGameReset();
+
+    this.objectManager.handleLootCollision();
 
     this.objectManager.handleWeaponMovement();
     this.objectManager.handlePlayerAttacks(dt);

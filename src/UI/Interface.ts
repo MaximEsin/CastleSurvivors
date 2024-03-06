@@ -116,8 +116,7 @@ export class Interface {
   }
 
   public updateCoinCount(value: number): void {
-    this.coinCount += value;
-    this.coinText.text = `Coins: ${this.coinCount}`;
+    this.coinText.text = `Coins: ${value}`;
   }
 
   public resetCoins(): void {

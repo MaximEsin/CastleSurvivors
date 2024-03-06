@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js';
 export class Weapon extends PIXI.Container {
   private app: PIXI.Application;
   private projectileSprite: PIXI.Sprite;
-  private speed: number = 5;
+  private speed: number = 8;
   private direction: PIXI.Point;
   private isDestroyed: boolean = false;
   private damage: number = 5;
