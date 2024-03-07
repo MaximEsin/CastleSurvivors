@@ -12,7 +12,7 @@ export class Player extends PIXI.Container {
   private movementTreshhold: number = 30;
   private movementSpeed: number = 5;
   private lastMeleeDamageTime: number = 0;
-  private money: number = 0;
+  private money: number = 100;
   private readonly meleeDamageCooldown: number = 1000;
   private standingAnimation: PIXI.Texture[] =
     AnimationManager.getPlayerStandingAnimation();
@@ -114,7 +114,7 @@ export class Player extends PIXI.Container {
   }
 
   public setHealth(value: number) {
-    this.health -= value;
+    this.health = value;
   }
 
   public getIsDead(): boolean {

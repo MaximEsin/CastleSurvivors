@@ -1,5 +1,5 @@
 export enum WeaponType {
-  Knife,
-  CursedEye,
-  Kebab,
+  Knife = 'Knife',
+  CursedEye = 'CursedEye',
+  Kebab = 'Kebab',
 }

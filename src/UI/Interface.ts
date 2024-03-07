@@ -51,7 +51,7 @@ export class Interface {
     this.centerContainer.addChild(text);
 
     const knifeIconSize = playerInterfaceHeight * 2;
-    const knifeIcon = PIXI.Sprite.from('/Player/weapons/knife.png');
+    const knifeIcon = PIXI.Sprite.from('/Player/weapons/Knife.png');
     knifeIcon.anchor.set(0.5);
     knifeIcon.width = knifeIcon.height = knifeIconSize;
     knifeIcon.x = width * 0.05;
@@ -92,7 +92,7 @@ export class Interface {
 
   public addCursedEyeIcon(width: number, height: number): void {
     const eyeIconSize = this.backgroundSprite.height;
-    const eyeIcon = PIXI.Sprite.from('/Player/weapons/eye.png');
+    const eyeIcon = PIXI.Sprite.from('/Player/weapons/CursedEye.png');
     eyeIcon.anchor.set(0.5);
     eyeIcon.width = eyeIcon.height = eyeIconSize;
     eyeIcon.x = width * 0.12;
@@ -102,17 +102,12 @@ export class Interface {
 
   public addKebabIcon(width: number, height: number): void {
     const eyeIconSize = this.backgroundSprite.height * 0.9;
-    const eyeIcon = PIXI.Sprite.from('/Player/weapons/kebab.png');
+    const eyeIcon = PIXI.Sprite.from('/Player/weapons/Kebab.png');
     eyeIcon.anchor.set(0.5);
     eyeIcon.width = eyeIcon.height = eyeIconSize;
     eyeIcon.x = width * 0.17;
     eyeIcon.y = height - this.backgroundSprite.height / 2;
     this.centerContainer.addChild(eyeIcon);
-  }
-
-  public handlePurchase(cost: number): void {
-    this.coinCount -= cost;
-    this.coinText.text = `Coins: ${this.coinCount}`;
   }
 
   public updateCoinCount(value: number): void {

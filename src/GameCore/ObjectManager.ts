@@ -6,12 +6,17 @@ import { EnemyType } from '../Enums/EnemyType';
 import { Weapon } from '../Entities/Weapon';
 import { Loot } from '../Entities/Loot';
 import { LootType } from '../Enums/LootType';
+import { WeaponType } from '../Enums/WeaponType';
+import { Merchant } from '../Entities/Merchant';
+import { BaseLevel } from './BaseLevel';
 
 export class ObjectManager {
   private app: PIXI.Application;
+  private baseLevel: BaseLevel;
   private inputManager: InputManager;
   private gameLayer: PIXI.Container;
   private player: Player;
+  private merchant: Merchant;
   private enemies: Enemy[] = [];
   private weapons: Weapon[] = [];
   private loot: Loot[] = [];
@@ -19,16 +24,22 @@ export class ObjectManager {
   private lastWeaponThrowTime: number = 0;
   private weaponCooldown: number = 2000;
   private collisionCooldown: boolean = false;
+  private kebabHealAmount: number = 5;
+  private isEyePurchased: boolean = false;
+  private isKebabPurchased: boolean = false;
 
   constructor(
     app: PIXI.Application,
+    baseLevel: BaseLevel,
     gameLayer: PIXI.Container,
     inputManager: InputManager
   ) {
     this.app = app;
+    this.baseLevel = baseLevel;
     this.inputManager = inputManager;
     this.gameLayer = gameLayer;
     this.player = new Player();
+    this.merchant = new Merchant(this.app);
   }
 
   public spawnPlayer(): void {
@@ -109,7 +120,9 @@ export class ObjectManager {
             return;
           }
           this.player.setLastMeleeDamageTime(currentTime);
-          this.player.setHealth(enemy.getMeleeDamage());
+          this.player.setHealth(
+            this.player.getHealth() - enemy.getMeleeDamage()
+          );
           this.player.playHitSound();
           this.player.setIsDamaged(true);
         }
@@ -188,9 +201,16 @@ export class ObjectManager {
             this.app,
             this.player.getSprite().x,
             this.player.getSprite().y,
-            direction
+            direction,
+            this.isEyePurchased,
+            this.isKebabPurchased
           );
           weapon.getSprite().rotation = rotation;
+          if (weapon.getWeaponType() === WeaponType.Kebab) {
+            this.player.setHealth(
+              this.player.getHealth() + this.kebabHealAmount
+            );
+          }
           this.weapons.push(weapon);
           this.gameLayer.addChild(weapon.getSprite());
           this.lastWeaponThrowTime = currentTime;
@@ -289,5 +309,70 @@ export class ObjectManager {
         this.gameLayer.removeChild(weapon.getSprite());
       }
     });
+  }
+
+  public spawnMerchant() {
+    this.gameLayer.addChild(this.merchant.getSprite());
+    this.gameLayer.addChild(this.merchant.getMerchantWindowContainer());
+    this.app.ticker.add(this.checkPlayerProximity.bind(this));
+  }
+
+  private checkPlayerProximity(): void {
+    if (this.merchant.getIsPlayerNear() && !this.merchant.getIsOpen()) {
+      this.merchant.openMerchantWindow();
+    } else if (!this.merchant.getIsPlayerNear() && this.merchant.getIsOpen()) {
+      this.merchant.closeMerchantWindow();
+    }
+  }
+
+  public canPlayerAfford(cost: number) {
+    if (cost <= this.player.getMoney()) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public handleMerchantAndPlayerCollision(): void {
+    const playerBounds = this.player.getSprite().getBounds();
+    const merchantBounds = this.merchant.getSprite().getBounds();
+
+    if (playerBounds.intersects(merchantBounds)) {
+      this.merchant.playInteractAnimation();
+      this.merchant.setIsPlayerNear(true);
+
+      if (!this.isEyePurchased && this.canPlayerAfford(50)) {
+        this.handlePurchase(50);
+        this.handleEyePurchase();
+      } else if (!this.isKebabPurchased && this.canPlayerAfford(50)) {
+        this.handlePurchase(50);
+        this.handleKebabPurchase();
+      }
+    } else {
+      this.merchant.playStandingAnimation();
+      this.merchant.setIsPlayerNear(false);
+    }
+  }
+
+  public handlePurchase(cost: number): void {
+    this.player.setMoney(this.player.getMoney() - cost);
+  }
+
+  public handleEyePurchase() {
+    if (!this.isEyePurchased) {
+      this.isEyePurchased = true;
+      this.baseLevel
+        .getInterface()
+        .addCursedEyeIcon(this.app.screen.width, this.app.screen.height);
+    }
+  }
+
+  public handleKebabPurchase() {
+    if (!this.isKebabPurchased) {
+      this.isKebabPurchased = true;
+      this.baseLevel
+        .getInterface()
+        .addKebabIcon(this.app.screen.width, this.app.screen.height);
+    }
   }
 }

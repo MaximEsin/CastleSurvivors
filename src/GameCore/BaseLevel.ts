@@ -40,6 +40,7 @@ export class BaseLevel {
     this.screenManager = new ScreenManager(this.app, this.screenLayer);
     this.objectManager = new ObjectManager(
       this.app,
+      this,
       this.gameLayer,
       this.inputManager
     );
@@ -79,6 +80,9 @@ export class BaseLevel {
     this.objectManager.handleEnemyAnimationUpdate();
     this.objectManager.handleWeaponAndEnemyCollision();
 
+    this.objectManager.spawnMerchant();
+    this.objectManager.handleMerchantAndPlayerCollision();
+
     this.interface.updateHealthText(this.objectManager.getPlayer().getHealth());
     this.interface.updateCoinCount(this.objectManager.getPlayer().getMoney());
     this.handleDeathScreenDisplay();
@@ -89,14 +93,6 @@ export class BaseLevel {
     this.objectManager.handleWeaponMovement();
     this.objectManager.handlePlayerAttacks(dt);
     this.objectManager.cleaner();
-  }
-
-  public canPlayerAfford(cost: number) {
-    if (cost <= this.interface.getCoinCount()) {
-      return true;
-    }
-
-    return false;
   }
 
   public init(): void {
@@ -110,5 +106,9 @@ export class BaseLevel {
     this.eventHandler.setUpGlobalEventListeners(this.interface);
     this.objectManager.spawnPlayer();
     this.objectManager.spawnEnemies();
+  }
+
+  public getInterface() {
+    return this.interface;
   }
 }
