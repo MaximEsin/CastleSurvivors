@@ -2,17 +2,18 @@ import * as PIXI from 'pixi.js';
 import { Player } from '../Entities/Player';
 import { InputManager } from './InputManager';
 import { Enemy } from '../Entities/Enemy';
-import { EnemyType } from '../Enums/EnemyType';
 import { Weapon } from '../Entities/Weapon';
 import { Loot } from '../Entities/Loot';
 import { LootType } from '../Enums/LootType';
 import { WeaponType } from '../Enums/WeaponType';
 import { Merchant } from '../Entities/Merchant';
 import { BaseLevel } from './BaseLevel';
+import { WaveManager } from './WaveManager';
 
 export class ObjectManager {
   private app: PIXI.Application;
   private baseLevel: BaseLevel;
+  private waveManager: WaveManager;
   private inputManager: InputManager;
   private gameLayer: PIXI.Container;
   private player: Player;
@@ -40,6 +41,12 @@ export class ObjectManager {
     this.gameLayer = gameLayer;
     this.player = new Player();
     this.merchant = new Merchant(this.app);
+    this.waveManager = new WaveManager(
+      this.app,
+      this.baseLevel,
+      this,
+      this.gameLayer
+    );
   }
 
   public spawnPlayer(): void {
@@ -76,20 +83,6 @@ export class ObjectManager {
     } else if (playerSprite.y > screenHeight) {
       playerSprite.y = 20;
     }
-  }
-
-  public spawnEnemies(): void {
-    const enemy = new Enemy(EnemyType.Mushroom);
-    const enemy2 = new Enemy(EnemyType.Eye);
-    const enemy3 = new Enemy(EnemyType.Skeleton);
-    this.enemies.push(enemy, enemy2, enemy3);
-    enemy.setRandomPosition(this.app, enemy.getSprite());
-    enemy2.setRandomPosition(this.app, enemy2.getSprite());
-    enemy3.setRandomPosition(this.app, enemy3.getSprite());
-
-    this.gameLayer.addChild(enemy.getSprite());
-    this.gameLayer.addChild(enemy2.getSprite());
-    this.gameLayer.addChild(enemy3.getSprite());
   }
 
   public handleEnemyMovement(): void {
@@ -145,11 +138,15 @@ export class ObjectManager {
       this.gameLayer.removeChild(enemy.getSprite());
     });
     this.enemies = [];
+    this.loot.forEach((lootItem) => {
+      this.gameLayer.removeChild(lootItem.getSprite());
+    });
+    this.loot = [];
 
     this.gameLayer.removeChild(this.player.getSprite());
     this.player = new Player();
     this.spawnPlayer();
-    this.spawnEnemies();
+    this.baseLevel.resetTimer();
   }
 
   public getPlayer(): Player {
@@ -374,5 +371,13 @@ export class ObjectManager {
         .getInterface()
         .addKebabIcon(this.app.screen.width, this.app.screen.height);
     }
+  }
+
+  public addEnemy(enemy: Enemy) {
+    this.enemies.push(enemy);
+  }
+
+  public getWaveManager() {
+    return this.waveManager;
   }
 }

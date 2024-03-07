@@ -20,6 +20,9 @@ export class BaseLevel {
   private interfaceLayer: PIXI.Container;
   private screenLayer: PIXI.Container;
   private background: Background;
+  private totalTime: number = 300;
+  private currentTime: number;
+  private frameRate: number = 66;
 
   constructor(app: PIXI.Application) {
     this.app = app;
@@ -44,7 +47,7 @@ export class BaseLevel {
       this.gameLayer,
       this.inputManager
     );
-
+    this.currentTime = this.totalTime;
     this.background = new Background('/Backgrounds/CastleBG.webp', this.app);
 
     this.app.ticker.add(this.gameLoop.bind(this));
@@ -65,6 +68,8 @@ export class BaseLevel {
     if (this.screenManager.getIsPressed()) {
       this.objectManager.resetEntities();
       this.screenManager.hideScreen();
+      this.currentTime = this.totalTime;
+      this.objectManager.getWaveManager().resetCurrentWave();
     }
   }
 
@@ -91,8 +96,11 @@ export class BaseLevel {
     this.objectManager.handleLootCollision();
 
     this.objectManager.handleWeaponMovement();
+    this.objectManager.getWaveManager().checkForNewWave();
     this.objectManager.handlePlayerAttacks(dt);
+    this.updateTimer(dt);
     this.objectManager.cleaner();
+    this.checkForWaveCompletion();
   }
 
   public init(): void {
@@ -105,10 +113,39 @@ export class BaseLevel {
     AudioManager.initialize();
     this.eventHandler.setUpGlobalEventListeners(this.interface);
     this.objectManager.spawnPlayer();
-    this.objectManager.spawnEnemies();
   }
 
   public getInterface() {
     return this.interface;
+  }
+
+  public updateTimer(dt: number): void {
+    this.currentTime -= dt / this.frameRate;
+    if (this.currentTime < 0) {
+      this.currentTime = 0;
+    }
+    const timerString = this.getTimeString();
+    this.interface.updateTimer(timerString);
+  }
+
+  public getTime() {
+    return this.currentTime;
+  }
+
+  public resetTimer() {
+    this.currentTime = this.totalTime;
+  }
+
+  public getTimeString(): string {
+    const minutes = Math.floor(this.currentTime / 60);
+    const seconds = Math.floor(this.currentTime % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  }
+
+  private checkForWaveCompletion(): void {
+    if (this.currentTime === 0) {
+      this.screenManager.showScreen(ScreenType.Win);
+      this.objectManager.getPlayer().setHealth(0);
+    }
   }
 }
