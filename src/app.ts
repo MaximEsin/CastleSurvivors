@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { GameManager } from './classes/GameCore/GameManager';
+import './analytics';
 
 export class Game {
   private app: PIXI.Application<HTMLCanvasElement>;
